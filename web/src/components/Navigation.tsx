@@ -20,7 +20,7 @@ export default function Navigation() {
     <nav className="w-full py-4">
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
         <div className="flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-3 font-space-grotesk text-2xl font-bold text-white">
+          <Link href="/" className="flex items-center space-x-4 font-space-grotesk text-2xl font-bold text-white">
             <svg className="w-8 h-8" viewBox="0 0 432 432" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="237.073" y="326.634" width="105.366" height="42.1463" rx="21.0731" transform="rotate(90 237.073 326.634)" fill="white"/>
               <rect x="105.366" y="237.073" width="105.366" height="42.1463" rx="21.0732" transform="rotate(180 105.366 237.073)" fill="white"/>
