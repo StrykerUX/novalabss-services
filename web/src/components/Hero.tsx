@@ -199,15 +199,8 @@ export default function Hero({ loaderComplete = false }: HeroProps) {
   return (
     <section className="min-h-screen">
       <div className="w-full max-w-[1780px] mx-auto px-[5%] mt-6">
-        <div className="bg-[#1A1A1A] rounded-[32px] relative overflow-hidden h-[85vh] flex flex-col justify-start">
+        <div className="bg-[#1A1A1A] rounded-[32px] relative overflow-hidden min-h-[600px] h-auto lg:h-[85vh] flex flex-col justify-start">
           
-          {/* Infinity shape as background */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-10 pointer-events-none">
-            <div className="relative">
-              <div className="w-96 h-48 bg-gradient-to-r from-blue-600/30 to-transparent rounded-full transform rotate-45"></div>
-              <div className="absolute top-0 left-0 w-96 h-48 bg-gradient-to-l from-blue-600/30 to-transparent rounded-full transform -rotate-45"></div>
-            </div>
-          </div>
 
           {/* Floating particles */}
           {mounted && particlePositions.length > 0 && (
@@ -235,9 +228,10 @@ export default function Hero({ loaderComplete = false }: HeroProps) {
           )}
           
           {/* Main content */}
-          <div className="flex flex-col justify-between p-8 lg:p-12 h-full relative z-10">
+          <div className="flex flex-col p-6 lg:p-12 h-full relative z-10">
             {/* Title, subtitle and badges at top */}
-            <div className="max-w-4xl xl:max-w-5xl space-y-12">
+            <div className="max-w-4xl xl:max-w-5xl flex-1">
+              <div className="space-y-3 lg:space-y-12">
               <h1 className="hero-title text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[100%] tracking-tight opacity-0">
                 MIENTRAS TU COMPETENCIA LUCHA CON TECNOLOGÍA,
                 <br />
@@ -248,33 +242,34 @@ export default function Hero({ loaderComplete = false }: HeroProps) {
                 Tu ventaja competitiva: tecnología profesional sin complicaciones ni dolores de cabeza
               </p>
               
-              <div className="hero-badges flex flex-wrap gap-3 opacity-0">
+              <div className="hero-badges flex flex-wrap gap-2 sm:gap-3 opacity-0">
                 <AnimatedBadge 
-                  className="animated-badge bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm font-medium text-white"
+                  className="animated-badge bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-white"
                   pulseDelay={0}
                 >
                   Plan desde $999 MXN/bimestre
                 </AnimatedBadge>
                 <AnimatedBadge 
-                  className="animated-badge bg-blue-600/20 backdrop-blur-sm border border-blue-400/30 rounded-full px-4 py-2 text-sm font-medium text-blue-200"
+                  className="animated-badge bg-blue-600/20 backdrop-blur-sm border border-blue-400/30 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-blue-200"
                   pulseDelay={0.5}
                 >
                   Tecnología enterprise
                 </AnimatedBadge>
                 <AnimatedBadge 
-                  className="animated-badge bg-green-600/20 backdrop-blur-sm border border-green-400/30 rounded-full px-4 py-2 text-sm font-medium text-green-200"
+                  className="animated-badge bg-green-600/20 backdrop-blur-sm border border-green-400/30 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-green-200"
                   pulseDelay={1}
                 >
                   Solo queda vender
                 </AnimatedBadge>
               </div>
+              </div>
             </div>
             
             {/* Button at bottom */}
-            <div className="hero-button max-w-4xl mb-8 opacity-0">
+            <div className="hero-button max-w-4xl mt-16 lg:mt-0 mb-4 lg:mb-8 opacity-0">
               <a href="/start">
                 <SmoothMagneticButton 
-                  className="smooth-magnetic-button text-white px-8 py-4 font-space-grotesk font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center space-x-3"
+                  className="smooth-magnetic-button text-white px-8 py-4 font-space-grotesk font-semibold text-base lg:text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center space-x-3"
                   magneticStrength={0.2}
                 >
                   <span>Quiero mi sitio web</span>
