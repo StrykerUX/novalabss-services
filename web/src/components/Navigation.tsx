@@ -2,11 +2,22 @@
 
 import { useSession, signOut } from "next-auth/react"
 import Link from "next/link"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 export default function Navigation() {
   const { data: session, status } = useSession()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY
+      setIsScrolled(scrollTop > 50)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   const handleSignOut = () => {
     signOut({ callbackUrl: "/" })
@@ -17,11 +28,12 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="w-full py-4">
+    <nav className={`w-full sticky top-0 z-50 ${isScrolled ? 'py-0' : 'py-4'} transition-all duration-300`}>
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
-        <div className="flex justify-between items-center">
-          <Link href="/" className="flex items-center space-x-4 font-space-grotesk text-2xl font-bold text-white">
-            <svg className="w-8 h-8" viewBox="0 0 432 432" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className={`${isScrolled ? 'bg-[#1A1A1A] rounded-b-[32px] max-h-[80px] py-4 pl-6 pr-4 shadow-xl shadow-black/40' : ''} transition-all duration-300`}>
+          <div className="flex justify-between items-center">
+          <Link href="/" className="flex items-center font-space-grotesk text-2xl font-bold text-white">
+            <svg className="w-8 h-8 mr-3" viewBox="0 0 432 432" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="237.073" y="326.634" width="105.366" height="42.1463" rx="21.0731" transform="rotate(90 237.073 326.634)" fill="white"/>
               <rect x="105.366" y="237.073" width="105.366" height="42.1463" rx="21.0732" transform="rotate(180 105.366 237.073)" fill="white"/>
               <rect x="279.329" y="122.869" width="105.366" height="42.1463" rx="21.0732" transform="rotate(-45 279.329 122.869)" fill="white"/>
@@ -37,9 +49,6 @@ export default function Navigation() {
             <div className="flex items-center space-x-6">
               <a href="#inicio" className="text-white/80 hover:text-white transition-colors">
                 Inicio
-              </a>
-              <a href="#servicios" className="text-white/80 hover:text-white transition-colors">
-                Servicios
               </a>
               <a href="#planes" className="text-white/80 hover:text-white transition-colors">
                 Planes
@@ -116,13 +125,6 @@ export default function Navigation() {
                 Inicio
               </a>
               <a 
-                href="#servicios" 
-                className="block text-white/80 hover:text-white transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
-              >
-                Servicios
-              </a>
-              <a 
                 href="#planes" 
                 className="block text-white/80 hover:text-white transition-colors py-2"
                 onClick={() => setIsMenuOpen(false)}
@@ -184,6 +186,7 @@ export default function Navigation() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </nav>
   );

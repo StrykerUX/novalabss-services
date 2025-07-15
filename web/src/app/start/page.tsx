@@ -4,6 +4,8 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import FrustrationCard from "@/components/flow/FrustrationCard"
 import AspirationCard from "@/components/flow/AspirationCard"
+import BenefitScreen from "@/components/flow/BenefitScreen"
+import TestimonialScreen from "@/components/flow/TestimonialScreen"
 import ROICard from "@/components/flow/ROICard"
 
 export type Frustration = "pocos_encuentran" | "no_confianza" | "pierdo_competencia" | "no_tiempo"
@@ -22,7 +24,15 @@ export default function WarmLeadJourney() {
 
   const handleAspirationSelect = (selected: Aspiration) => {
     setAspiration(selected)
-    setCurrentStep(3)
+    setCurrentStep(3) // Paso beneficio
+  }
+
+  const handleBenefitContinue = () => {
+    setCurrentStep(4) // Paso testimonio
+  }
+
+  const handleTestimonialContinue = () => {
+    setCurrentStep(5) // Paso final
   }
 
   const handleProceedToCheckout = async (plan: "rocket" | "galaxy") => {
@@ -62,10 +72,10 @@ export default function WarmLeadJourney() {
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
       <div className="w-full max-w-7xl">
         
-        {/* Progress Bar */}
+        {/* Progress Bar - 5 pasos */}
         <div className="mb-8">
           <div className="flex items-center justify-center space-x-4 mb-4">
-            {[1, 2, 3].map((step) => (
+            {[1, 2, 3, 4, 5].map((step) => (
               <div key={step} className="flex items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
                   step <= currentStep 
@@ -74,7 +84,7 @@ export default function WarmLeadJourney() {
                 }`}>
                   {step}
                 </div>
-                {step < 3 && (
+                {step < 5 && (
                   <div className={`w-16 h-0.5 ml-4 ${
                     step < currentStep ? 'bg-blue-600' : 'bg-gray-700'
                   }`} />
@@ -83,7 +93,7 @@ export default function WarmLeadJourney() {
             ))}
           </div>
           <div className="text-center text-gray-400 text-sm">
-            Paso {currentStep} de 3 - Personalizar tu experiencia
+            Paso {currentStep} de 5 - Personalizar tu experiencia
           </div>
         </div>
 
@@ -98,6 +108,22 @@ export default function WarmLeadJourney() {
           )}
           
           {currentStep === 3 && frustration && aspiration && (
+            <BenefitScreen 
+              frustration={frustration}
+              aspiration={aspiration}
+              onContinue={handleBenefitContinue}
+            />
+          )}
+          
+          {currentStep === 4 && frustration && aspiration && (
+            <TestimonialScreen 
+              frustration={frustration}
+              aspiration={aspiration}
+              onContinue={handleTestimonialContinue}
+            />
+          )}
+          
+          {currentStep === 5 && frustration && aspiration && (
             <ROICard 
               frustration={frustration}
               aspiration={aspiration}

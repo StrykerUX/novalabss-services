@@ -244,7 +244,6 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
         
         {/* Solo precio y plan - Ultra clean */}
         <div className="text-center mb-8">
-          <p className="text-gray-400 text-sm mb-2">Tu plan personalizado</p>
           <h3 className="text-white font-bold text-2xl mb-4">
             Plan {flowData.plan.toUpperCase()}
           </h3>
@@ -261,119 +260,43 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
             className="w-full px-8 py-5 font-space-grotesk font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center mb-4"
             magneticStrength={0.2}
           >
-            <span>Continuar al pago</span>
+            <span>Pagar ahora</span>
             <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </SmoothMagneticButton>
-          
-          {/* Micro-validación social */}
-          <p className="text-green-400 text-xs">
-            ✓ Seleccionado para tu meta: {getAspirationText(aspiration)}
-          </p>
-        </div>
-
-        {/* Detalles del plan - Ocultos por defecto */}
-        <div className="mt-8 opacity-60">
-          <details className="bg-transparent">
-            <summary className="text-gray-400 text-sm cursor-pointer text-center hover:text-white transition-colors">
-              Detalles del plan
-            </summary>
-            <div className="mt-4">
-              <PlanCard 
-                plan={flowData.plan} 
-                showButton={false}
-              />
-            </div>
-          </details>
         </div>
       </div>
 
-      {/* Layout Desktop (sin cambios) */}
-      <div className="hidden lg:grid grid-cols-2 gap-8">
+      {/* Layout Desktop - Solo plan y botón */}
+      <div className="hidden lg:flex lg:flex-col lg:items-center lg:justify-center lg:min-h-[400px]">
         
-        {/* Columna Izquierda - Información personalizada */}
-        <div className="space-y-6">
-          
-          {/* Plan Recomendado - Badge */}
-          <div className="text-center">
-            <div className="inline-block bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg px-6 py-3 mb-4">
-              <h3 className="text-white font-bold text-xl">
-                📦 PLAN {flowData.plan.toUpperCase()}
-              </h3>
-            </div>
-          </div>
-
-          {/* Perfecta para tu situación */}
-          <div className="bg-gradient-to-br from-blue-600/20 to-purple-600/20 border border-blue-500/30 rounded-xl p-6">
-            <h4 className="text-white font-semibold mb-3 flex items-center">
-              ✅ Perfecto para tu situación:
-            </h4>
-            <p className="text-blue-200 text-sm mb-2">
-              <span className="font-medium">Problema:</span> {getFrustrationText(frustration)}
-            </p>
-            <p className="text-green-200 text-sm">
-              <span className="font-medium">Meta:</span> {getAspirationText(aspiration)}
-            </p>
-          </div>
-
-          {/* ROI Resumido */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="bg-black/40 rounded-lg p-4 text-center">
-              <p className="text-gray-300 text-sm mb-1">Inversión</p>
-              <p className="text-white font-bold text-2xl">{flowData.planPrice}</p>
-              <p className="text-gray-400 text-xs">MXN bimestral</p>
-            </div>
-            <div className="bg-black/40 rounded-lg p-4 text-center">
-              <p className="text-gray-300 text-sm mb-1">ROI Proyectado</p>
-              <p className="text-yellow-300 font-bold text-2xl">{flowData.roi}</p>
-              <p className="text-gray-400 text-xs">en 60 días</p>
-            </div>
-          </div>
-
-          {/* Caso de Éxito */}
-          <div className="bg-gray-900/30 rounded-xl p-4">
-            <h5 className="text-white font-semibold mb-2">
-              💡 Caso similar: {flowData.caseStudy}
-            </h5>
-            <p className="text-gray-300 text-sm mb-1">
-              {flowData.caseProblem} → {flowData.caseResult}
-            </p>
-            <p className="text-green-300 text-sm font-medium">
-              Resultado: {flowData.caseGain} MXN/mes extra
-            </p>
-          </div>
-
-          {/* Garantías */}
-          <div className="text-center">
-            <p className="text-gray-300 text-sm">
-              🛡️ Garantía de entrega en 72-96 horas | 2 créditos de cambios incluidos
-            </p>
-          </div>
-
-          {/* Botón Principal */}
-          <div className="text-center">
-            <SmoothMagneticButton
-              onClick={() => onProceedToCheckout(flowData.plan)}
-              className="w-full px-8 py-4 font-space-grotesk font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center"
-              magneticStrength={0.2}
-            >
-              <span>Pagar Plan {flowData.plan.toUpperCase()} - {flowData.planPrice} MXN</span>
-              <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </SmoothMagneticButton>
+        {/* Solo precio y plan - Ultra clean */}
+        <div className="text-center mb-8">
+          <h3 className="text-white font-bold text-3xl mb-4">
+            Plan {flowData.plan.toUpperCase()}
+          </h3>
+          <div className="text-white mb-6">
+            <span className="text-5xl font-black">{flowData.planPrice}</span>
+            <span className="text-gray-400 text-lg ml-2">MXN/bimestre</span>
           </div>
         </div>
 
-        {/* Columna Derecha - Card del Plan */}
-        <div className="lg:sticky lg:top-8">
-          <PlanCard 
-            plan={flowData.plan} 
-            showButton={false}
-          />
+        {/* Solo botón de pago - Hierarchy clara */}
+        <div className="text-center">
+          <SmoothMagneticButton
+            onClick={() => onProceedToCheckout(flowData.plan)}
+            className="px-12 py-5 font-space-grotesk font-semibold text-xl hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center"
+            magneticStrength={0.2}
+          >
+            <span>Pagar ahora</span>
+            <svg className="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </SmoothMagneticButton>
         </div>
       </div>
+        
     </div>
   )
 }

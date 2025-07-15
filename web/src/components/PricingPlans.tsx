@@ -32,7 +32,7 @@ export default function PricingPlans() {
   }
 
   return (
-    <section className="py-20">
+    <section id="planes" className="py-20">
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
         {/* Title */}
         <div className="text-center mb-16">

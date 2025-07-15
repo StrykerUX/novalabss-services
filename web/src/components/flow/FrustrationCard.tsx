@@ -13,27 +13,27 @@ export default function FrustrationCard({ onSelect }: FrustrationCardProps) {
   const frustrations = [
     {
       id: "pocos_encuentran" as Frustration,
-      icon: "😤",
-      title: "Pocos clientes me encuentran online",
+      icon: "🔍",
+      title: "Pocos me encuentran",
       description: "Mi negocio es invisible en internet"
     },
     {
       id: "no_confianza" as Frustration,
       icon: "😔", 
-      title: "Mi sitio actual no genera confianza",
-      description: "Se ve amateur o desactualizado"
+      title: "No genero confianza",
+      description: "Mi sitio se ve amateur o desactualizado"
     },
     {
       id: "pierdo_competencia" as Frustration,
-      icon: "😠",
-      title: "Pierdo clientes vs competencia", 
-      description: "Otros se ven más profesionales"
+      icon: "⚡",
+      title: "Pierdo vs competencia", 
+      description: "Otros negocios se ven más profesionales"
     },
     {
       id: "no_tiempo" as Frustration,
-      icon: "😵",
-      title: "No tengo tiempo para tecnología",
-      description: "Necesito enfocarme en mi negocio"
+      icon: "⏰",
+      title: "No tengo tiempo",
+      description: "Necesito enfocarme en vender, no en tecnología"
     }
   ]
 
@@ -49,11 +49,8 @@ export default function FrustrationCard({ onSelect }: FrustrationCardProps) {
     <div className="p-8">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-white mb-3">
-          ¿Cuál es tu mayor frustración digital?
+          ¿Cuál es tu mayor problema con tu presencia digital?
         </h2>
-        <p className="text-gray-400">
-          Entender tu situación nos ayuda a recomendarte la mejor solución
-        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -95,7 +92,7 @@ export default function FrustrationCard({ onSelect }: FrustrationCardProps) {
 
       <div className="mt-8 text-center">
         <p className="text-gray-500 text-sm">
-          💡 Entendemos tu situación, sigamos personalizando tu experiencia...
+          💡 Siguiente paso...
         </p>
       </div>
     </div>

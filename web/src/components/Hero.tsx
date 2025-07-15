@@ -197,7 +197,7 @@ export default function Hero({ loaderComplete = false }: HeroProps) {
     };
   }, [mounted, loaderComplete]);
   return (
-    <section className="min-h-screen">
+    <section id="inicio" className="min-h-screen">
       <div className="w-full max-w-[1780px] mx-auto px-[5%] mt-6">
         <div className="bg-[#1A1A1A] rounded-[32px] relative overflow-hidden min-h-[600px] h-auto lg:h-[85vh] flex flex-col justify-start">
           

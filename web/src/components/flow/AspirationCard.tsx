@@ -14,30 +14,26 @@ export default function AspirationCard({ onSelect }: AspirationCardProps) {
     {
       id: "2-3_clientes" as Aspiration,
       icon: "🎯",
-      title: "Solo 2-3 clientes más me cambiarían la vida",
-      description: "Busco estabilidad y crecimiento sostenible",
-      impact: "Impacto: +$7,500 MXN/mes"
+      title: "2-3 clientes más",
+      description: "Busco estabilidad y crecimiento sostenible"
     },
     {
       id: "5-10_clientes" as Aspiration,
       icon: "📈", 
-      title: "5-10 clientes más me darían estabilidad",
-      description: "Quiero consolidar mi negocio",
-      impact: "Impacto: +$22,500 MXN/mes"
+      title: "5-10 clientes más",
+      description: "Quiero consolidar mi negocio"
     },
     {
       id: "10-20_clientes" as Aspiration,
       icon: "🚀",
-      title: "10-20 clientes más me harían crecer mucho",
-      description: "Estoy listo para escalar seriamente", 
-      impact: "Impacto: +$45,000 MXN/mes"
+      title: "10-20 clientes más",
+      description: "Estoy listo para escalar seriamente"
     },
     {
       id: "20_plus_clientes" as Aspiration,
       icon: "💰",
-      title: "Más de 20 clientes - quiero escalar grande",
-      description: "Busco dominar mi mercado",
-      impact: "Impacto: +$75,000 MXN/mes"
+      title: "20+ clientes",
+      description: "Quiero dominar mi mercado"
     }
   ]
 
@@ -53,11 +49,8 @@ export default function AspirationCard({ onSelect }: AspirationCardProps) {
     <div className="p-8">
       <div className="text-center mb-8">
         <h2 className="text-2xl font-bold text-white mb-3">
-          ¿Cuántos clientes más necesitas por mes?
+          ¿Cuántos clientes más necesitas al mes?
         </h2>
-        <p className="text-gray-400">
-          Esto nos ayuda a calcular el ROI específico para tu situación
-        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -79,11 +72,8 @@ export default function AspirationCard({ onSelect }: AspirationCardProps) {
                 <h3 className="text-white font-semibold mb-2 group-hover:text-green-300 transition-colors">
                   {aspiration.title}
                 </h3>
-                <p className="text-gray-400 text-sm mb-2">
+                <p className="text-gray-400 text-sm">
                   {aspiration.description}
-                </p>
-                <p className="text-green-400 text-sm font-medium">
-                  {aspiration.impact}
                 </p>
               </div>
             </div>
@@ -102,7 +92,7 @@ export default function AspirationCard({ onSelect }: AspirationCardProps) {
 
       <div className="mt-8 text-center">
         <p className="text-gray-500 text-sm">
-          💡 Perfecto, ahora calculemos tu potencial de crecimiento...
+          💡 Calculando tu plan...
         </p>
       </div>
     </div>

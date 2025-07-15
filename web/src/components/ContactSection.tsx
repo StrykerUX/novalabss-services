@@ -28,7 +28,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section className="py-20">
+    <section id="contacto" className="py-20">
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
         {/* Main contact card */}
         <div className="bg-[#1A1A1A] rounded-[40px] relative overflow-hidden border border-white/10 p-8 lg:p-16">
