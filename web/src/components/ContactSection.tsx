@@ -31,7 +31,7 @@ export default function ContactSection() {
     <section id="contacto" className="py-20">
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
         {/* Main contact card */}
-        <div className="bg-[#1A1A1A] rounded-[40px] relative overflow-hidden border border-white/10 p-8 lg:p-16">
+        <div className="bg-[#1A1A1A] rounded-[48px] relative overflow-hidden border border-white/10 p-8 lg:p-16">
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16">
             
@@ -142,7 +142,7 @@ export default function ContactSection() {
             </div>
 
             {/* Right side - Contact form */}
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-[32px] p-8 lg:p-10">
+            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-[24px] p-8 lg:p-10">
               <div className="space-y-6">
                 {/* Form header */}
                 <div className="space-y-3">

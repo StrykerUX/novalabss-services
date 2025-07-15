@@ -30,7 +30,7 @@ export default function Navigation() {
   return (
     <nav className={`w-full sticky top-0 z-50 ${isScrolled ? 'py-0' : 'py-4'} transition-all duration-300`}>
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
-        <div className={`${isScrolled ? 'bg-[#1A1A1A] rounded-b-[32px] max-h-[80px] py-4 pl-6 pr-4 shadow-xl shadow-black/40' : ''} transition-all duration-300`}>
+        <div className={`${isScrolled ? 'bg-[#1A1A1A] rounded-b-[48px] max-h-[80px] py-4 pl-6 pr-4 shadow-xl shadow-black/40' : ''} transition-all duration-300`}>
           <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center font-space-grotesk text-2xl font-bold text-white">
             <svg className="w-8 h-8 mr-3" viewBox="0 0 432 432" fill="none" xmlns="http://www.w3.org/2000/svg">

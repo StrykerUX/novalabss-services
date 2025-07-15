@@ -86,7 +86,7 @@ export default function TeamAndTools() {
         <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
           {/* Abraham Almazan */}
-          <div className="rounded-[32px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
+          <div className="rounded-[48px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
             {/* Background with image placeholder */}
             <div className="h-full bg-gradient-to-br from-blue-500/20 to-blue-700/20 bg-[#1A1A1A] relative p-6 flex flex-col justify-between">
               {/* Name at top left */}
@@ -119,7 +119,7 @@ export default function TeamAndTools() {
           </div>
 
           {/* Claude Code */}
-          <div className="rounded-[32px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
+          <div className="rounded-[48px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
             {/* Background with image */}
             <div className="h-full bg-[#1A1A1A] relative p-6 flex flex-col justify-between">
               {/* Background image */}
@@ -144,7 +144,7 @@ export default function TeamAndTools() {
           </div>
 
           {/* Julio Levien */}
-          <div className="rounded-[32px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
+          <div className="rounded-[48px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
             {/* Background with image placeholder */}
             <div className="h-full bg-gradient-to-br from-green-500/20 to-green-700/20 bg-[#1A1A1A] relative p-6 flex flex-col justify-between">
               {/* Name at top left */}
@@ -177,7 +177,7 @@ export default function TeamAndTools() {
           </div>
 
           {/* Cursor */}
-          <div className="rounded-[32px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
+          <div className="rounded-[48px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
             {/* Background with image */}
             <div className="h-full bg-[#1A1A1A] relative p-6 flex flex-col justify-between">
               {/* Background image */}
@@ -202,7 +202,7 @@ export default function TeamAndTools() {
           </div>
 
           {/* OpenAI CLI */}
-          <div className="rounded-[32px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
+          <div className="rounded-[48px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
             {/* Background with image */}
             <div className="h-full bg-[#1A1A1A] relative p-6 flex flex-col justify-between">
               {/* Background image */}
@@ -227,7 +227,7 @@ export default function TeamAndTools() {
           </div>
 
           {/* Hector Sanchez */}
-          <div className="rounded-[32px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
+          <div className="rounded-[48px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
             {/* Background with image placeholder */}
             <div className="h-full bg-gradient-to-br from-red-500/20 to-red-700/20 bg-[#1A1A1A] relative p-6 flex flex-col justify-between">
               {/* Name at top left */}
@@ -260,7 +260,7 @@ export default function TeamAndTools() {
           </div>
 
           {/* Hostinger */}
-          <div className="rounded-[32px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
+          <div className="rounded-[48px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">
             {/* Background with image */}
             <div className="h-full bg-[#1A1A1A] relative p-6 flex flex-col justify-between">
               {/* Background image */}
@@ -285,7 +285,7 @@ export default function TeamAndTools() {
           </div>
 
           {/* CTA with Discount */}
-          <div className="rounded-[32px] relative overflow-hidden border-2 border-[#0147FF]/40 group hover:border-[#0147FF]/60 transition-all duration-300 h-[480px] flex flex-col">
+          <div className="rounded-[48px] relative overflow-hidden border-2 border-[#0147FF]/40 group hover:border-[#0147FF]/60 transition-all duration-300 h-[480px] flex flex-col">
             {/* Background with discount styling */}
             <div className="h-full bg-gradient-to-br from-[#0147FF]/20 to-[#0147FF]/10 bg-[#1A1A1A] relative p-6 flex flex-col justify-between">
               {/* Discount badge */}

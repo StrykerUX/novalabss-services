@@ -296,7 +296,7 @@ export default function Testimonials() {
                   key={index}
                   className={`w-1/3 flex-shrink-0 px-3`}
                 >
-                  <div className={`${cardStyle} ${opacity} rounded-[32px] p-8 lg:p-10 relative overflow-hidden min-h-[400px] flex flex-col transition-all duration-700 hover:shadow-xl hover:shadow-blue-500/20`}>
+                  <div className={`${cardStyle} ${opacity} rounded-[48px] p-8 lg:p-10 relative overflow-hidden min-h-[400px] flex flex-col transition-all duration-700 hover:shadow-xl hover:shadow-blue-500/20`}>
                     <div className="relative z-10 flex-1 flex flex-col">
                       {/* Category */}
                       <h3 className={`text-sm font-semibold mb-6 tracking-wider transition-all duration-700 ${
@@ -351,7 +351,7 @@ export default function Testimonials() {
                 key={index}
                 className="w-full flex-shrink-0 px-4"
               >
-                <div className="bg-gradient-to-br from-[#0147FF] to-[#0147FF80] border border-transparent rounded-[32px] p-8 relative overflow-hidden min-h-[400px] flex flex-col hover:shadow-xl hover:shadow-blue-500/20 transition-shadow duration-300">
+                <div className="bg-gradient-to-br from-[#0147FF] to-[#0147FF80] border border-transparent rounded-[48px] p-8 relative overflow-hidden min-h-[400px] flex flex-col hover:shadow-xl hover:shadow-blue-500/20 transition-shadow duration-300">
                   <div className="relative z-10 flex-1 flex flex-col">
                     {/* Category */}
                     <h3 className="text-white/80 text-sm font-semibold mb-6 tracking-wider">

@@ -85,7 +85,7 @@ export default function WhyNovaLabs() {
         {/* 4 cards grid */}
         <div ref={cardsRef} className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Card 1 */}
-          <div className="bg-[#1A1A1A] rounded-[24px] p-8 lg:p-12 relative overflow-hidden min-h-[280px] flex flex-col">
+          <div className="bg-[#1A1A1A] rounded-[48px] p-8 lg:p-12 relative overflow-hidden min-h-[280px] flex flex-col">
             <h3 className="text-white text-2xl lg:text-2xl font-semibold mb-6 tracking-wide">
               SIN COMPLICACIONES TÉCNICAS
             </h3>
@@ -117,7 +117,7 @@ export default function WhyNovaLabs() {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-[#1A1A1A] rounded-[24px] p-8 lg:p-12 relative overflow-hidden min-h-[280px] flex flex-col">
+          <div className="bg-[#1A1A1A] rounded-[48px] p-8 lg:p-12 relative overflow-hidden min-h-[280px] flex flex-col">
             <h3 className="text-white text-2xl lg:text-2xl font-semibold mb-6 tracking-wide">
               RESULTADOS EN 72 HORAS
             </h3>
@@ -149,7 +149,7 @@ export default function WhyNovaLabs() {
           </div>
 
           {/* Card 3 */}
-          <div className="bg-[#1A1A1A] rounded-[24px] p-8 lg:p-12 relative overflow-hidden min-h-[280px] flex flex-col">
+          <div className="bg-[#1A1A1A] rounded-[48px] p-8 lg:p-12 relative overflow-hidden min-h-[280px] flex flex-col">
             <h3 className="text-white text-2xl lg:text-2xl font-semibold mb-6 tracking-wide">
               COSTO PREDECIBLE
             </h3>
@@ -181,7 +181,7 @@ export default function WhyNovaLabs() {
           </div>
 
           {/* Card 4 */}
-          <div className="bg-[#1A1A1A] rounded-[24px] p-8 lg:p-12 relative overflow-hidden min-h-[280px] flex flex-col">
+          <div className="bg-[#1A1A1A] rounded-[48px] p-8 lg:p-12 relative overflow-hidden min-h-[280px] flex flex-col">
             <h3 className="text-white text-2xl lg:text-2xl font-semibold mb-6 tracking-wide">
               SOPORTE 100% MEXICANO
             </h3>

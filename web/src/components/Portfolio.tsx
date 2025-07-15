@@ -18,10 +18,10 @@ export default function Portfolio() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           
           {/* Main Project Card - Left (Large) */}
-          <div className="bg-[#1A1A1A] rounded-[32px] p-8 lg:p-12 relative overflow-hidden border border-white/10 min-h-[500px] flex flex-col group">
+          <div className="bg-[#1A1A1A] rounded-[48px] p-8 lg:p-12 relative overflow-hidden border border-white/10 min-h-[500px] flex flex-col group">
             {/* Background Image */}
             <div className="absolute inset-0 opacity-20">
-              <div className="w-full h-full bg-gradient-to-br from-orange-500/30 to-orange-700/30 rounded-[32px] flex items-center justify-center">
+              <div className="w-full h-full bg-gradient-to-br from-orange-500/30 to-orange-700/30 rounded-[48px] flex items-center justify-center">
                 <span className="text-white/40 text-lg">Portfolio Image 1</span>
               </div>
             </div>
@@ -73,10 +73,10 @@ export default function Portfolio() {
           <div className="flex flex-col gap-6">
             
             {/* Project 2 - Top Right */}
-            <div className="bg-[#1A1A1A] rounded-[32px] p-6 relative overflow-hidden border border-white/10 min-h-[280px] flex flex-col group">
+            <div className="bg-[#1A1A1A] rounded-[48px] p-6 relative overflow-hidden border border-white/10 min-h-[280px] flex flex-col group">
               {/* Background Image */}
               <div className="absolute inset-0 opacity-20">
-                <div className="w-full h-full bg-gradient-to-br from-purple-500/30 to-purple-700/30 rounded-[32px] flex items-center justify-center">
+                <div className="w-full h-full bg-gradient-to-br from-purple-500/30 to-purple-700/30 rounded-[48px] flex items-center justify-center">
                   <span className="text-white/40 text-sm">Portfolio Image 2</span>
                 </div>
               </div>
@@ -124,10 +124,10 @@ export default function Portfolio() {
             </div>
 
             {/* Project 3 - Bottom Right */}
-            <div className="bg-[#1A1A1A] rounded-[32px] p-6 relative overflow-hidden border border-white/10 min-h-[280px] flex flex-col group">
+            <div className="bg-[#1A1A1A] rounded-[48px] p-6 relative overflow-hidden border border-white/10 min-h-[280px] flex flex-col group">
               {/* Background Image */}
               <div className="absolute inset-0 opacity-20">
-                <div className="w-full h-full bg-gradient-to-br from-cyan-500/30 to-cyan-700/30 rounded-[32px] flex items-center justify-center">
+                <div className="w-full h-full bg-gradient-to-br from-cyan-500/30 to-cyan-700/30 rounded-[48px] flex items-center justify-center">
                   <span className="text-white/40 text-sm">Portfolio Image 3</span>
                 </div>
               </div>

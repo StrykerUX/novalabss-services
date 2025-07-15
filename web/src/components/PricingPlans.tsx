@@ -44,7 +44,7 @@ export default function PricingPlans() {
         {/* Plans grid */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-5xl mx-auto">
           {/* Plan Rocket - Popular */}
-          <div className="bg-gradient-to-br from-[#0147FF]/10 to-[#0147FF]/5 rounded-[32px] p-8 lg:p-12 relative overflow-hidden border-2 border-[#0147FF]/30">
+          <div className="bg-gradient-to-br from-[#0147FF]/10 to-[#0147FF]/5 rounded-[48px] p-8 lg:p-12 relative overflow-hidden border-2 border-[#0147FF]/30">
             {/* Popular badge */}
             <div className="absolute top-6 right-6 bg-[#0147FF] text-white px-4 py-2 rounded-full text-sm font-semibold">
               Más popular
@@ -140,7 +140,7 @@ export default function PricingPlans() {
           </div>
 
           {/* Plan Galaxy */}
-          <div className="bg-[#1A1A1A] rounded-[32px] p-8 lg:p-12 relative overflow-hidden border border-white/10">
+          <div className="bg-[#1A1A1A] rounded-[48px] p-8 lg:p-12 relative overflow-hidden border border-white/10">
             <div className="relative z-10">
               <h3 className="text-white text-2xl lg:text-3xl font-bold mb-4 tracking-wide">
                 PLAN GALAXY
