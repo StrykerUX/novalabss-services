@@ -1,11 +1,22 @@
+"use client"
+
+import { useSession, signOut } from "next-auth/react"
+import Link from "next/link"
+
 export default function Navigation() {
+  const { data: session, status } = useSession()
+
+  const handleSignOut = () => {
+    signOut({ callbackUrl: "/" })
+  }
+
   return (
     <nav className="w-full py-4">
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
         <div className="flex justify-between items-center">
-          <div className="font-space-grotesk text-2xl font-bold text-white">
+          <Link href="/" className="font-space-grotesk text-2xl font-bold text-white">
             NovaLabs
-          </div>
+          </Link>
           
           <div className="hidden md:flex items-center space-x-8">
             <div className="flex items-center space-x-6">
@@ -24,12 +35,42 @@ export default function Navigation() {
             </div>
             
             <div className="flex items-center space-x-4">
-              <button className="px-4 py-2 text-white/80 hover:text-white transition-colors">
-                Iniciar Sesión
-              </button>
-              <button className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors font-medium">
-                Comenzar
-              </button>
+              {status === "loading" ? (
+                <div className="animate-pulse bg-gray-700 h-8 w-24 rounded"></div>
+              ) : session ? (
+                <>
+                  <span className="text-white/80 text-sm">
+                    Hola, {session.user?.name?.split(' ')[0]}
+                  </span>
+                  <Link 
+                    href="/dashboard"
+                    className="px-4 py-2 text-white/80 hover:text-white transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                  <button 
+                    onClick={handleSignOut}
+                    className="px-4 py-2 text-white/80 hover:text-white transition-colors"
+                  >
+                    Cerrar Sesión
+                  </button>
+                </>
+              ) : (
+                <>
+                  <Link 
+                    href="/auth/signin"
+                    className="px-4 py-2 text-white/80 hover:text-white transition-colors"
+                  >
+                    Iniciar Sesión
+                  </Link>
+                  <Link 
+                    href="/auth/signup"
+                    className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors font-medium"
+                  >
+                    Comenzar
+                  </Link>
+                </>
+              )}
             </div>
           </div>
           

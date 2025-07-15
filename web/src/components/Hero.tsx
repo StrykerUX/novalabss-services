@@ -30,8 +30,109 @@ export default function Hero() {
   useEffect(() => {
     if (typeof window === 'undefined' || !mounted) return;
 
-    // Parallax effect for rocket
+    // "Professional Fade-Up" - Quick Professional Entrance (2.5s)
+    const tl = gsap.timeline();
+    
+    // Create subtle professional overlay
+    const professionalOverlay = document.createElement('div');
+    professionalOverlay.className = 'professional-overlay fixed inset-0 z-40 pointer-events-none';
+    professionalOverlay.innerHTML = `
+      <div class="professional-glow absolute inset-0 bg-gradient-radial from-blue-500/20 via-blue-600/10 to-transparent opacity-0"></div>
+    `;
+    document.body.appendChild(professionalOverlay);
+
+    // Hide hero elements initially
+    gsap.set([
+      'h1', 'p', '.animated-badge', '.smooth-magnetic-button'
+    ], { opacity: 0, y: 40, scale: 0.98 });
+
+    // Professional sequence (2.5s total)
+    
+    // Phase 1: Subtle blue background illumination (0.3s)
+    tl.to('.professional-glow', {
+      opacity: 1,
+      duration: 0.8,
+      ease: "power2.out"
+    }, 0.3)
+    
+    // Phase 2: Title emerges from below with breathing effect (1s)
+    .fromTo('h1', {
+      opacity: 0,
+      y: 40,
+      scale: 0.98
+    }, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 1.2,
+      ease: "power2.out"
+    }, 1)
+    .to('h1', {
+      scale: 1.02,
+      duration: 0.4,
+      yoyo: true,
+      repeat: 1,
+      ease: "sine.inOut"
+    }, 1.8)
+    
+    // Phase 3: Sequential organization of elements (2s)
+    .fromTo('p', {
+      opacity: 0,
+      y: 25,
+      scale: 0.99
+    }, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.8,
+      ease: "power2.out"
+    }, 2)
+    .fromTo('.animated-badge', {
+      opacity: 0,
+      y: 40,
+      scale: 0.98
+    }, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.8,
+      stagger: 0.1,
+      ease: "power2.out"
+    }, 2.3)
+    .fromTo('.smooth-magnetic-button', {
+      opacity: 0,
+      y: 40,
+      scale: 0.98
+    }, {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      duration: 0.8,
+      ease: "power2.out"
+    }, 2.6)
+    
+    // Remove overlay smoothly
+    .to('.professional-overlay', {
+      opacity: 0,
+      duration: 0.5,
+      ease: "power2.out",
+      onComplete: () => {
+        professionalOverlay.remove();
+      }
+    }, 2.8);
+
+    // Rocket enters with professional confidence
     if (rocketRef.current) {
+      gsap.set(rocketRef.current, { opacity: 0, scale: 0.85, y: 30 });
+      tl.to(rocketRef.current, {
+        opacity: 0.4,
+        scale: 0.95,
+        y: 0,
+        duration: 1,
+        ease: "power2.out"
+      }, 2.2);
+
+      // Parallax effect
       gsap.to(rocketRef.current, {
         y: -50,
         scrollTrigger: {
@@ -43,9 +144,21 @@ export default function Hero() {
       });
     }
 
-    // Floating particles animation - diagonal movement
+    // Particles appear in organized, professional manner
     if (particlesRef.current) {
       const particles = particlesRef.current.children;
+      
+      gsap.set(particles, { opacity: 0, scale: 0.8, y: 20 });
+      tl.to(particles, {
+        opacity: 0.2,
+        scale: 1,
+        y: 0,
+        duration: 0.8,
+        stagger: 0.04,
+        ease: "power2.out"
+      }, 2.5);
+
+      // Professional floating animation
       Array.from(particles).forEach((particle, index) => {
         gsap.to(particle, {
           x: -100,
@@ -55,7 +168,7 @@ export default function Hero() {
           duration: `random(8, 12)`,
           repeat: -1,
           ease: "none",
-          delay: index * 1.5,
+          delay: index * 1.5 + 3.5,
           onComplete: () => {
             gsap.set(particle, { x: 100, y: -80, opacity: 0.2 });
           }
@@ -65,6 +178,8 @@ export default function Hero() {
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      const overlay = document.querySelector('.professional-overlay');
+      if (overlay) overlay.remove();
     };
   }, [mounted]);
   return (
@@ -121,19 +236,19 @@ export default function Hero() {
               
               <div className="flex flex-wrap gap-3">
                 <AnimatedBadge 
-                  className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm font-medium text-white"
+                  className="animated-badge bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-4 py-2 text-sm font-medium text-white"
                   pulseDelay={0}
                 >
                   Plan desde $999 MXN/bimestre
                 </AnimatedBadge>
                 <AnimatedBadge 
-                  className="bg-blue-600/20 backdrop-blur-sm border border-blue-400/30 rounded-full px-4 py-2 text-sm font-medium text-blue-200"
+                  className="animated-badge bg-blue-600/20 backdrop-blur-sm border border-blue-400/30 rounded-full px-4 py-2 text-sm font-medium text-blue-200"
                   pulseDelay={0.5}
                 >
                   Tecnología enterprise
                 </AnimatedBadge>
                 <AnimatedBadge 
-                  className="bg-green-600/20 backdrop-blur-sm border border-green-400/30 rounded-full px-4 py-2 text-sm font-medium text-green-200"
+                  className="animated-badge bg-green-600/20 backdrop-blur-sm border border-green-400/30 rounded-full px-4 py-2 text-sm font-medium text-green-200"
                   pulseDelay={1}
                 >
                   Solo queda vender
@@ -144,7 +259,7 @@ export default function Hero() {
             {/* Button at bottom */}
             <div className="max-w-4xl mb-8">
               <SmoothMagneticButton 
-                className="text-white px-8 py-4 font-space-grotesk font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center space-x-3"
+                className="smooth-magnetic-button text-white px-8 py-4 font-space-grotesk font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center space-x-3"
                 magneticStrength={0.2}
               >
                 <span>Quiero mi sitio web</span>
