@@ -76,7 +76,7 @@ export default function SignUp() {
           {/* Google Sign Up */}
           <button
             onClick={handleGoogleSignUp}
-            className="w-full mb-6 bg-white hover:bg-gray-100 text-black py-3 px-4 rounded-lg transition-colors flex items-center justify-center gap-3"
+            className="w-full mb-6 bg-white hover:bg-gray-100 text-black py-4 px-6 rounded-lg transition-colors flex items-center justify-center gap-3 font-space-grotesk font-semibold text-lg shadow-lg hover:shadow-xl transition-shadow duration-300"
           >
             <svg className="w-5 h-5" viewBox="0 0 24 24">
               <path
@@ -160,7 +160,8 @@ export default function SignUp() {
             <SmoothMagneticButton
               type="submit"
               disabled={loading}
-              className="w-full"
+              className="w-full px-8 py-4 font-space-grotesk font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center"
+              magneticStrength={0.2}
             >
               {loading ? "Creando cuenta..." : "Crear Cuenta"}
             </SmoothMagneticButton>
