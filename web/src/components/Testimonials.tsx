@@ -3,14 +3,45 @@
 import { useState, useEffect, useRef } from "react";
 import { gsap } from "gsap";
 
+interface Particle {
+  id: number;
+  x: number;
+  y: number;
+  size: number;
+  opacity: number;
+  delay: number;
+  duration: number;
+}
+
 export default function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [mounted, setMounted] = useState(false);
+  const [particles, setParticles] = useState<Particle[]>([]);
   const cursorRef = useRef<HTMLDivElement>(null);
   const sectionRef = useRef<HTMLDivElement>(null);
+  const particlesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setMounted(true);
+    
+    // Generate particles for success effect
+    const generateParticles = () => {
+      const newParticles: Particle[] = [];
+      for (let i = 0; i < 12; i++) {
+        newParticles.push({
+          id: i,
+          x: Math.random() * 100,
+          y: Math.random() * 100,
+          size: Math.random() * 3 + 2,
+          opacity: Math.random() * 0.4 + 0.2,
+          delay: Math.random() * 2,
+          duration: Math.random() * 3 + 2
+        });
+      }
+      setParticles(newParticles);
+    };
+    
+    generateParticles();
   }, []);
 
   const testimonials = [
@@ -55,12 +86,76 @@ export default function Testimonials() {
     setCurrentIndex((prevIndex) => 
       prevIndex === testimonials.length - 1 ? 0 : prevIndex + 1
     );
+    
+    // Trigger particle burst on testimonial change
+    if (particlesRef.current) {
+      const particleElements = particlesRef.current.children;
+      
+      // Reset particles
+      gsap.set(particleElements, {
+        opacity: 0,
+        scale: 0.5,
+        x: 0,
+        y: 0
+      });
+      
+      // Animate particles
+      gsap.to(particleElements, {
+        opacity: 0.6,
+        scale: 1,
+        x: () => (Math.random() - 0.5) * 200,
+        y: () => (Math.random() - 0.5) * 200,
+        duration: 0.8,
+        ease: "power2.out",
+        stagger: 0.05,
+        onComplete: () => {
+          gsap.to(particleElements, {
+            opacity: 0,
+            scale: 0.3,
+            duration: 1,
+            ease: "power2.in"
+          });
+        }
+      });
+    }
   };
 
   const prevTestimonial = () => {
     setCurrentIndex((prevIndex) => 
       prevIndex === 0 ? testimonials.length - 1 : prevIndex - 1
     );
+    
+    // Trigger particle burst on testimonial change
+    if (particlesRef.current) {
+      const particleElements = particlesRef.current.children;
+      
+      // Reset particles
+      gsap.set(particleElements, {
+        opacity: 0,
+        scale: 0.5,
+        x: 0,
+        y: 0
+      });
+      
+      // Animate particles
+      gsap.to(particleElements, {
+        opacity: 0.6,
+        scale: 1,
+        x: () => (Math.random() - 0.5) * 200,
+        y: () => (Math.random() - 0.5) * 200,
+        duration: 0.8,
+        ease: "power2.out",
+        stagger: 0.05,
+        onComplete: () => {
+          gsap.to(particleElements, {
+            opacity: 0,
+            scale: 0.3,
+            duration: 1,
+            ease: "power2.in"
+          });
+        }
+      });
+    }
   };
 
   const getVisibleTestimonials = () => {
@@ -132,6 +227,24 @@ export default function Testimonials() {
 
         {/* Testimonials carousel */}
         <div ref={sectionRef} className="relative overflow-hidden">
+          {/* Floating particles for success effect */}
+          {mounted && particles.length > 0 && (
+            <div ref={particlesRef} className="absolute inset-0 pointer-events-none z-10">
+              {particles.map((particle) => (
+                <div
+                  key={particle.id}
+                  className="absolute w-1 h-1 bg-blue-400 rounded-full opacity-0"
+                  style={{
+                    left: `${particle.x}%`,
+                    top: `${particle.y}%`,
+                    width: `${particle.size}px`,
+                    height: `${particle.size}px`,
+                    boxShadow: '0 0 6px rgba(1, 71, 255, 0.6)'
+                  }}
+                />
+              ))}
+            </div>
+          )}
           {/* Custom cursor - only show on mounted */}
           {mounted && (
             <div
@@ -183,7 +296,7 @@ export default function Testimonials() {
                   key={index}
                   className={`w-1/3 flex-shrink-0 px-3`}
                 >
-                  <div className={`${cardStyle} ${opacity} rounded-[32px] p-8 lg:p-10 relative overflow-hidden min-h-[400px] flex flex-col transition-all duration-700`}>
+                  <div className={`${cardStyle} ${opacity} rounded-[32px] p-8 lg:p-10 relative overflow-hidden min-h-[400px] flex flex-col transition-all duration-700 hover:shadow-xl hover:shadow-blue-500/20`}>
                     <div className="relative z-10 flex-1 flex flex-col">
                       {/* Category */}
                       <h3 className={`text-sm font-semibold mb-6 tracking-wider transition-all duration-700 ${
@@ -238,7 +351,7 @@ export default function Testimonials() {
                 key={index}
                 className="w-full flex-shrink-0 px-4"
               >
-                <div className="bg-gradient-to-br from-[#0147FF] to-[#0147FF80] border border-transparent rounded-[32px] p-8 relative overflow-hidden min-h-[400px] flex flex-col">
+                <div className="bg-gradient-to-br from-[#0147FF] to-[#0147FF80] border border-transparent rounded-[32px] p-8 relative overflow-hidden min-h-[400px] flex flex-col hover:shadow-xl hover:shadow-blue-500/20 transition-shadow duration-300">
                   <div className="relative z-10 flex-1 flex flex-col">
                     {/* Category */}
                     <h3 className="text-white/80 text-sm font-semibold mb-6 tracking-wider">
@@ -274,7 +387,40 @@ export default function Testimonials() {
           {Array.from({ length: testimonials.length }, (_, index) => (
             <button
               key={index}
-              onClick={() => setCurrentIndex(index)}
+              onClick={() => {
+                setCurrentIndex(index);
+                // Trigger particle burst on manual navigation
+                if (particlesRef.current) {
+                  const particleElements = particlesRef.current.children;
+                  
+                  // Reset particles
+                  gsap.set(particleElements, {
+                    opacity: 0,
+                    scale: 0.5,
+                    x: 0,
+                    y: 0
+                  });
+                  
+                  // Animate particles
+                  gsap.to(particleElements, {
+                    opacity: 0.6,
+                    scale: 1,
+                    x: () => (Math.random() - 0.5) * 200,
+                    y: () => (Math.random() - 0.5) * 200,
+                    duration: 0.8,
+                    ease: "power2.out",
+                    stagger: 0.05,
+                    onComplete: () => {
+                      gsap.to(particleElements, {
+                        opacity: 0,
+                        scale: 0.3,
+                        duration: 1,
+                        ease: "power2.in"
+                      });
+                    }
+                  });
+                }
+              }}
               className={`w-2 h-2 rounded-full transition-all duration-300 ${
                 index === currentIndex 
                   ? 'bg-[#0147FF] w-8' 

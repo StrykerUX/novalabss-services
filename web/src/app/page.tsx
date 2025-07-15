@@ -15,17 +15,23 @@ import GalaxyFormation from "@/components/GalaxyFormation";
 
 export default function Home() {
   const [showLoader, setShowLoader] = useState(true);
+  const [loaderComplete, setLoaderComplete] = useState(false);
+
+  const handleLoaderComplete = () => {
+    setShowLoader(false);
+    setLoaderComplete(true);
+  };
 
   return (
     <div className="min-h-screen bg-black">
       {showLoader && (
         <GalaxyFormation 
-          onComplete={() => setShowLoader(false)}
+          onComplete={handleLoaderComplete}
           duration={3600}
         />
       )}
       <Navigation />
-      <Hero />
+      <Hero loaderComplete={loaderComplete} />
       <WhyNovaLabs />
       <PricingPlans />
       <TeamAndTools />

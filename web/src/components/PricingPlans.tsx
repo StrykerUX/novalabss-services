@@ -3,6 +3,34 @@
 import SmoothMagneticButton from './SmoothMagneticButton';
 
 export default function PricingPlans() {
+  const handleDirectCheckout = async (plan: 'rocket' | 'galaxy') => {
+    // Crear sesión de Stripe Checkout para hot leads
+    try {
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan: plan,
+          metadata: {
+            source: 'pricing',
+            flow: 'direct'
+          }
+        })
+      })
+      
+      const { url } = await response.json()
+      
+      // Redirigir a Stripe Checkout
+      window.location.href = url
+    } catch (error) {
+      console.error('Error creating checkout session:', error)
+      // Fallback al checkout page si hay error
+      window.location.href = `/checkout/${plan}?source=pricing`
+    }
+  }
+
   return (
     <section className="py-20">
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
@@ -94,10 +122,11 @@ export default function PricingPlans() {
               </p>
 
               <SmoothMagneticButton 
+                onClick={() => handleDirectCheckout('rocket')}
                 className="w-full text-white px-8 py-4 font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center space-x-3"
                 magneticStrength={0.15}
               >
-                <span>Comenzar ahora</span>
+                <span>Comenzar Plan Rocket</span>
                 <svg 
                   className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
                   fill="none" 
@@ -184,10 +213,11 @@ export default function PricingPlans() {
               </p>
 
               <SmoothMagneticButton 
+                onClick={() => handleDirectCheckout('galaxy')}
                 className="w-full text-white px-8 py-4 font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center space-x-3"
                 magneticStrength={0.15}
               >
-                <span>Elegir Galaxy</span>
+                <span>Comenzar Plan Galaxy</span>
                 <svg 
                   className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
                   fill="none" 
