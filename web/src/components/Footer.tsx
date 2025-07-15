@@ -1,6 +1,40 @@
 "use client";
 
+import { useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
+
 export default function Footer() {
+  const socialRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (socialRef.current) {
+      const socialIcons = socialRef.current.children;
+      
+      Array.from(socialIcons).forEach((icon) => {
+        const handleMouseEnter = () => {
+          gsap.to(icon, {
+            scale: 1.2,
+            rotation: 15,
+            duration: 0.3,
+            ease: "back.out(1.7)"
+          });
+        };
+
+        const handleMouseLeave = () => {
+          gsap.to(icon, {
+            scale: 1,
+            rotation: 0,
+            duration: 0.3,
+            ease: "power2.out"
+          });
+        };
+
+        icon.addEventListener('mouseenter', handleMouseEnter);
+        icon.addEventListener('mouseleave', handleMouseLeave);
+      });
+    }
+  }, []);
+
   return (
     <footer className="bg-[#0A0A0A] border-t border-white/5">
       <div className="w-full max-w-[1780px] mx-auto px-[5%] py-16">
@@ -27,11 +61,13 @@ export default function Footer() {
               Planes
             </h4>
             <nav className="space-y-2">
-              <a href="#" className="block text-white/60 hover:text-[#0147FF] text-sm transition-colors duration-300">
+              <a href="#" className="block text-white/60 hover:text-[#0147FF] text-sm transition-colors duration-300 relative group">
                 Plan Rocket
+                <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#0147FF] transition-all duration-300 group-hover:w-full"></span>
               </a>
-              <a href="#" className="block text-white/60 hover:text-[#0147FF] text-sm transition-colors duration-300">
+              <a href="#" className="block text-white/60 hover:text-[#0147FF] text-sm transition-colors duration-300 relative group">
                 Plan Galaxy
+                <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#0147FF] transition-all duration-300 group-hover:w-full"></span>
               </a>
             </nav>
           </div>
@@ -50,7 +86,7 @@ export default function Footer() {
           {/* Right side - Social media */}
           <div className="space-y-3 text-center lg:text-right">
             <p className="text-white/80 text-sm font-medium">Síguenos</p>
-            <div className="flex justify-center lg:justify-end space-x-3">
+            <div ref={socialRef} className="flex justify-center lg:justify-end space-x-3">
               {/* LinkedIn */}
               <a 
                 href="#" 

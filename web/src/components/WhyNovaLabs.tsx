@@ -1,5 +1,7 @@
 "use client";
 
+import FadeUpWords from './FadeUpWords';
+
 export default function WhyNovaLabs() {
   return (
     <section className="py-20">

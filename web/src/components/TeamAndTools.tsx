@@ -1,6 +1,74 @@
 "use client";
 
+import { useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
+
 export default function TeamAndTools() {
+  const gridRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !gridRef.current) return;
+
+    const cards = gridRef.current.children;
+    
+    // Staggered reveal animation
+    gsap.fromTo(cards, 
+      { 
+        opacity: 0, 
+        y: 80,
+        scale: 0.8
+      },
+      {
+        opacity: 1,
+        y: 0,
+        scale: 1,
+        duration: 0.8,
+        ease: "back.out(1.7)",
+        stagger: 0.1,
+        scrollTrigger: {
+          trigger: gridRef.current,
+          start: "top 80%",
+          toggleActions: "play none none reverse"
+        }
+      }
+    );
+
+    // Individual hover effects for each card
+    Array.from(cards).forEach((card) => {
+      const handleMouseEnter = () => {
+        gsap.to(card, {
+          y: -10,
+          scale: 1.02,
+          boxShadow: "0 20px 40px rgba(1, 71, 255, 0.2)",
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      };
+
+      const handleMouseLeave = () => {
+        gsap.to(card, {
+          y: 0,
+          scale: 1,
+          boxShadow: "0 0px 0px rgba(1, 71, 255, 0)",
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      };
+
+      card.addEventListener('mouseenter', handleMouseEnter);
+      card.addEventListener('mouseleave', handleMouseLeave);
+    });
+
+    return () => {
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
+  }, []);
+
   return (
     <section className="py-20">
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
@@ -15,7 +83,7 @@ export default function TeamAndTools() {
         </div>
 
         {/* Grid 2x4 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div ref={gridRef} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           
           {/* Abraham Almazan */}
           <div className="rounded-[32px] relative overflow-hidden border border-white/10 group hover:border-blue-400/30 transition-all duration-300 h-[480px] flex flex-col">

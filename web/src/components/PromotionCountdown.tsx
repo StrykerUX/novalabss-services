@@ -1,6 +1,8 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { gsap } from 'gsap';
+import SmoothMagneticButton from './SmoothMagneticButton';
 
 export default function PromotionCountdown() {
   const [timeLeft, setTimeLeft] = useState({
@@ -9,6 +11,17 @@ export default function PromotionCountdown() {
     minutes: 0,
     seconds: 0
   });
+  const [prevTimeLeft, setPrevTimeLeft] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+  
+  const daysRef = useRef<HTMLDivElement>(null);
+  const hoursRef = useRef<HTMLDivElement>(null);
+  const minutesRef = useRef<HTMLDivElement>(null);
+  const secondsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     // Set target date to 40 days from now
@@ -26,6 +39,7 @@ export default function PromotionCountdown() {
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
+        setPrevTimeLeft(timeLeft);
         setTimeLeft({ days, hours, minutes, seconds });
       }
     };
@@ -35,6 +49,29 @@ export default function PromotionCountdown() {
 
     return () => clearInterval(interval);
   }, []);
+
+  // Animate number changes
+  useEffect(() => {
+    const animateFlip = (ref: React.RefObject<HTMLDivElement>, newValue: number, prevValue: number) => {
+      if (ref.current && newValue !== prevValue) {
+        gsap.fromTo(ref.current, 
+          { rotationX: 0, scale: 1 },
+          { 
+            rotationX: 360, 
+            scale: 1.1,
+            duration: 0.6,
+            ease: "back.out(1.7)",
+            transformOrigin: "center center"
+          }
+        );
+      }
+    };
+
+    animateFlip(daysRef, timeLeft.days, prevTimeLeft.days);
+    animateFlip(hoursRef, timeLeft.hours, prevTimeLeft.hours);
+    animateFlip(minutesRef, timeLeft.minutes, prevTimeLeft.minutes);
+    animateFlip(secondsRef, timeLeft.seconds, prevTimeLeft.seconds);
+  }, [timeLeft, prevTimeLeft]);
 
   return (
     <section className="py-20">
@@ -102,7 +139,7 @@ export default function PromotionCountdown() {
                 {/* Days */}
                 <div className="text-center">
                   <div className="bg-[#2A2A2A] rounded-2xl p-4 lg:p-6 border border-white/10">
-                    <div className="text-3xl lg:text-5xl font-black text-white leading-none">
+                    <div ref={daysRef} className="text-3xl lg:text-5xl font-black text-white leading-none">
                       {timeLeft.days.toString().padStart(2, '0')}
                     </div>
                   </div>
@@ -114,7 +151,7 @@ export default function PromotionCountdown() {
                 {/* Hours */}
                 <div className="text-center">
                   <div className="bg-[#2A2A2A] rounded-2xl p-4 lg:p-6 border border-white/10">
-                    <div className="text-3xl lg:text-5xl font-black text-white leading-none">
+                    <div ref={hoursRef} className="text-3xl lg:text-5xl font-black text-white leading-none">
                       {timeLeft.hours.toString().padStart(2, '0')}
                     </div>
                   </div>
@@ -126,7 +163,7 @@ export default function PromotionCountdown() {
                 {/* Minutes */}
                 <div className="text-center">
                   <div className="bg-[#2A2A2A] rounded-2xl p-4 lg:p-6 border border-white/10">
-                    <div className="text-3xl lg:text-5xl font-black text-white leading-none">
+                    <div ref={minutesRef} className="text-3xl lg:text-5xl font-black text-white leading-none">
                       {timeLeft.minutes.toString().padStart(2, '0')}
                     </div>
                   </div>
@@ -138,7 +175,7 @@ export default function PromotionCountdown() {
                 {/* Seconds */}
                 <div className="text-center">
                   <div className="bg-[#2A2A2A] rounded-2xl p-4 lg:p-6 border border-white/10">
-                    <div className="text-3xl lg:text-5xl font-black text-white leading-none">
+                    <div ref={secondsRef} className="text-3xl lg:text-5xl font-black text-white leading-none">
                       {timeLeft.seconds.toString().padStart(2, '0')}
                     </div>
                   </div>
@@ -150,12 +187,20 @@ export default function PromotionCountdown() {
 
               {/* CTA Button */}
               <div className="pt-8">
-                <button className="w-full lg:w-auto bg-gradient-to-r from-[#0147FF] to-[#0147FF80] text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-[#0147FF] hover:to-[#0147FF] transition-all duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center lg:justify-start space-x-3">
+                <SmoothMagneticButton 
+                  className="w-full lg:w-auto text-white px-8 py-4 font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center lg:justify-start space-x-3"
+                  magneticStrength={0.18}
+                >
                   <span>Reclamar mi descuento</span>
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg 
+                    className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                   </svg>
-                </button>
+                </SmoothMagneticButton>
               </div>
             </div>
 

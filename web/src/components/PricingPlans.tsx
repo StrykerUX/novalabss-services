@@ -1,5 +1,7 @@
 "use client";
 
+import SmoothMagneticButton from './SmoothMagneticButton';
+
 export default function PricingPlans() {
   return (
     <section className="py-20">
@@ -91,9 +93,20 @@ export default function PricingPlans() {
                 * Dominio (.com) incluido en el segundo pago de suscripción
               </p>
 
-              <button className="w-full bg-gradient-to-r from-[#0147FF] to-[#0147FF38] text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-[#0147FF] hover:to-[#0147FF50] transition-all duration-300 shadow-xl shadow-blue-600/30">
-                Comenzar ahora
-              </button>
+              <SmoothMagneticButton 
+                className="w-full text-white px-8 py-4 font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center space-x-3"
+                magneticStrength={0.15}
+              >
+                <span>Comenzar ahora</span>
+                <svg 
+                  className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </SmoothMagneticButton>
             </div>
           </div>
 
@@ -170,9 +183,20 @@ export default function PricingPlans() {
                 * Dominio (.com) incluido en el segundo pago de suscripción
               </p>
 
-              <button className="w-full bg-gradient-to-r from-[#0147FF] to-[#0147FF38] text-white px-8 py-4 rounded-full font-semibold text-lg hover:from-[#0147FF] hover:to-[#0147FF50] transition-all duration-300 shadow-xl shadow-blue-600/30">
-                Elegir Galaxy
-              </button>
+              <SmoothMagneticButton 
+                className="w-full text-white px-8 py-4 font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center space-x-3"
+                magneticStrength={0.15}
+              >
+                <span>Elegir Galaxy</span>
+                <svg 
+                  className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </SmoothMagneticButton>
             </div>
           </div>
         </div>

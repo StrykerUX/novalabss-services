@@ -1,6 +1,9 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { gsap } from 'gsap';
+import AnimatedInput from './AnimatedInput';
+import SmoothMagneticButton from './SmoothMagneticButton';
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -153,70 +156,65 @@ export default function ContactSection() {
                 </div>
 
                 {/* Contact form */}
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-8">
                   {/* Name field */}
-                  <div>
-                    <input
-                      type="text"
-                      name="name"
-                      placeholder="Nombre"
-                      value={formData.name}
-                      onChange={handleInputChange}
-                      className="w-full bg-transparent border-0 border-b border-white/20 focus:border-[#0147FF] px-0 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-0 transition-colors duration-300"
-                      required
-                    />
-                  </div>
+                  <AnimatedInput
+                    type="text"
+                    name="name"
+                    placeholder="Nombre"
+                    value={formData.name}
+                    onChange={handleInputChange}
+                    required
+                  />
 
                   {/* Email field */}
-                  <div>
-                    <input
-                      type="email"
-                      name="email"
-                      placeholder="Email"
-                      value={formData.email}
-                      onChange={handleInputChange}
-                      className="w-full bg-transparent border-0 border-b border-white/20 focus:border-[#0147FF] px-0 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-0 transition-colors duration-300"
-                      required
-                    />
-                  </div>
+                  <AnimatedInput
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
 
                   {/* Subject field */}
-                  <div>
-                    <input
-                      type="text"
-                      name="subject"
-                      placeholder="Asunto"
-                      value={formData.subject}
-                      onChange={handleInputChange}
-                      className="w-full bg-transparent border-0 border-b border-white/20 focus:border-[#0147FF] px-0 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-0 transition-colors duration-300"
-                      required
-                    />
-                  </div>
+                  <AnimatedInput
+                    type="text"
+                    name="subject"
+                    placeholder="Asunto"
+                    value={formData.subject}
+                    onChange={handleInputChange}
+                    required
+                  />
 
                   {/* Message field */}
-                  <div>
-                    <textarea
-                      name="message"
-                      placeholder="Mensaje"
-                      value={formData.message}
-                      onChange={handleInputChange}
-                      rows={4}
-                      className="w-full bg-transparent border-0 border-b border-white/20 focus:border-[#0147FF] px-0 py-3 text-white placeholder-white/50 focus:outline-none focus:ring-0 resize-none transition-colors duration-300"
-                      required
-                    />
-                  </div>
+                  <AnimatedInput
+                    type="text"
+                    name="message"
+                    placeholder="Mensaje"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    rows={4}
+                    required
+                  />
 
                   {/* Submit button */}
                   <div className="pt-4">
-                    <button
-                      type="submit"
-                      className="w-full bg-gradient-to-r from-[#0147FF] to-[#0147FF80] text-white px-8 py-4 rounded-full font-semibold text-base hover:from-[#0147FF] hover:to-[#0147FF] transition-all duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center space-x-3"
+                    <SmoothMagneticButton
+                      className="w-full text-white px-8 py-4 font-semibold text-base hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center space-x-3"
+                      magneticStrength={0.15}
+                      onClick={handleSubmit}
                     >
                       <span>Enviar mensaje</span>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg 
+                        className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
+                        fill="none" 
+                        stroke="currentColor" 
+                        viewBox="0 0 24 24"
+                      >
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                       </svg>
-                    </button>
+                    </SmoothMagneticButton>
                   </div>
                 </form>
               </div>

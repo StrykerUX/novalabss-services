@@ -1,9 +1,17 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { gsap } from "gsap";
 
 export default function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const sectionRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const testimonials = [
     {
@@ -66,6 +74,32 @@ export default function Testimonials() {
 
   const visibleTestimonials = getVisibleTestimonials();
 
+  // Custom cursor effect
+  useEffect(() => {
+    if (!mounted) return;
+    
+    const handleMouseMove = (e: MouseEvent) => {
+      if (cursorRef.current && sectionRef.current) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        gsap.to(cursorRef.current, {
+          x: x - 15,
+          y: y - 15,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+      }
+    };
+
+    const section = sectionRef.current;
+    if (section) {
+      section.addEventListener('mousemove', handleMouseMove);
+      return () => section.removeEventListener('mousemove', handleMouseMove);
+    }
+  }, [mounted]);
+
   return (
     <section className="py-20">
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
@@ -97,7 +131,15 @@ export default function Testimonials() {
         </div>
 
         {/* Testimonials carousel */}
-        <div className="relative overflow-hidden">
+        <div ref={sectionRef} className="relative overflow-hidden">
+          {/* Custom cursor - only show on mounted */}
+          {mounted && (
+            <div
+              ref={cursorRef}
+              className="absolute w-8 h-8 bg-[#0147FF]/30 rounded-full pointer-events-none z-50 mix-blend-difference opacity-0 transition-opacity duration-300"
+              style={{ transform: 'translate(-50%, -50%)' }}
+            />
+          )}
           {/* Desktop version - 3 cards */}
           <div 
             className="hidden lg:flex transition-transform duration-700 ease-out"
