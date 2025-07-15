@@ -229,7 +229,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
   }
 
   return (
-    <div className="p-4 lg:p-8">
+    <div>
       <div className="text-center mb-6">
         <h2 className="text-2xl font-bold text-white mb-3">
           Tu Plan Personalizado

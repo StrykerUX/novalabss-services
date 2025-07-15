@@ -54,7 +54,7 @@ export default function BenefitScreen({ frustration, aspiration, onContinue }: B
   }
 
   return (
-    <div className="p-8 flex flex-col items-center justify-center min-h-[500px]">
+    <div className="flex flex-col items-center justify-center min-h-[400px]">
       
       {/* Título contextual */}
       <div className="text-center mb-8">

@@ -30,7 +30,7 @@ export default function Home() {
           duration={3600}
         />
       )}
-      <Navigation />
+      {!showLoader && <Navigation />}
       <Hero loaderComplete={loaderComplete} />
       <WhyNovaLabs />
       <PricingPlans />

@@ -189,7 +189,7 @@ export default function GalaxyFormation({ onComplete, duration = 4000 }: GalaxyF
   return (
     <div 
       ref={containerRef}
-      className={`fixed inset-0 z-50 bg-black ${isComplete ? 'pointer-events-none' : ''}`}
+      className={`fixed inset-0 z-[9999] bg-black ${isComplete ? 'pointer-events-none' : ''}`}
     >
       {/* Background galaxy effect */}
       <div className="absolute inset-0">

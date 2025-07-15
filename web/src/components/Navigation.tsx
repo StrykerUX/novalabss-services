@@ -27,6 +27,19 @@ export default function Navigation() {
     setIsMenuOpen(!isMenuOpen)
   }
 
+  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
+    e.preventDefault()
+    const targetElement = document.getElementById(targetId)
+    if (targetElement) {
+      targetElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      })
+    }
+    // Close mobile menu if open
+    setIsMenuOpen(false)
+  }
+
   return (
     <nav className={`w-full sticky top-0 z-50 ${isScrolled ? 'py-0' : 'py-4'} transition-all duration-300`}>
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
@@ -47,13 +60,25 @@ export default function Navigation() {
           
           <div className="hidden md:flex items-center space-x-8">
             <div className="flex items-center space-x-6">
-              <a href="#inicio" className="text-white/80 hover:text-white transition-colors">
+              <a 
+                href="#inicio" 
+                onClick={(e) => handleSmoothScroll(e, 'inicio')}
+                className="text-white/80 hover:text-white transition-colors"
+              >
                 Inicio
               </a>
-              <a href="#planes" className="text-white/80 hover:text-white transition-colors">
+              <a 
+                href="#planes" 
+                onClick={(e) => handleSmoothScroll(e, 'planes')}
+                className="text-white/80 hover:text-white transition-colors"
+              >
                 Planes
               </a>
-              <a href="#contacto" className="text-white/80 hover:text-white transition-colors">
+              <a 
+                href="#contacto" 
+                onClick={(e) => handleSmoothScroll(e, 'contacto')}
+                className="text-white/80 hover:text-white transition-colors"
+              >
                 Contacto
               </a>
             </div>
@@ -119,22 +144,22 @@ export default function Navigation() {
             <div className="space-y-4">
               <a 
                 href="#inicio" 
+                onClick={(e) => handleSmoothScroll(e, 'inicio')}
                 className="block text-white/80 hover:text-white transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
               >
                 Inicio
               </a>
               <a 
                 href="#planes" 
+                onClick={(e) => handleSmoothScroll(e, 'planes')}
                 className="block text-white/80 hover:text-white transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
               >
                 Planes
               </a>
               <a 
                 href="#contacto" 
+                onClick={(e) => handleSmoothScroll(e, 'contacto')}
                 className="block text-white/80 hover:text-white transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
               >
                 Contacto
               </a>

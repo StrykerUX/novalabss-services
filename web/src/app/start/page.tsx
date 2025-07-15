@@ -70,7 +70,7 @@ export default function WarmLeadJourney() {
 
   return (
     <div className="min-h-screen bg-black flex items-center justify-center px-4">
-      <div className="w-full max-w-7xl">
+      <div className="w-full max-w-[620px]">
         
         {/* Progress Bar - 5 pasos */}
         <div className="mb-8">
@@ -98,7 +98,7 @@ export default function WarmLeadJourney() {
         </div>
 
         {/* Cards */}
-        <div className="bg-[#1A1A1A] rounded-2xl border border-gray-800 overflow-hidden">
+        <div className="bg-[#1A1A1A] rounded-[48px] border border-gray-800 overflow-hidden p-8 lg:p-12">
           {currentStep === 1 && (
             <FrustrationCard onSelect={handleFrustrationSelect} />
           )}
