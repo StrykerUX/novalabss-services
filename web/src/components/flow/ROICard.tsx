@@ -235,7 +235,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
         
         {/* Solo precio y plan - Ultra clean */}
         <div className="text-center">
-          <h2 className="text-white font-bold text-xl lg:text-3xl mb-4">
+          <h2 className="text-white font-bold text-xl lg:text-3xl mb-4" style={{textWrap: "pretty"}}>
             El plan perfecto: {flowData.plan.toUpperCase()}
           </h2>
           <div className="text-white mb-6 lg:mb-8">
@@ -254,7 +254,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Sitio web profesional optimizado</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Sitio web profesional optimizado</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -262,7 +262,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">SEO para aparecer en Google</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>SEO para aparecer en Google</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -270,7 +270,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Diseño mobile-first responsive</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Diseño mobile-first responsive</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -278,7 +278,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Hosting y dominio incluido</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Hosting y dominio incluido</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -286,7 +286,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Certificado SSL de seguridad</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Certificado SSL de seguridad</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -294,7 +294,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Formularios de contacto</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Formularios de contacto</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -302,7 +302,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Analytics y métricas básicas</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Analytics y métricas básicas</span>
                   </div>
                 </>
               ) : (
@@ -313,7 +313,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Todo lo incluido en Rocket</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Todo lo incluido en Rocket</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -321,7 +321,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Estrategia de marketing personalizada</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Estrategia de marketing personalizada</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -329,7 +329,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Analytics avanzado y reportes</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Analytics avanzado y reportes</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -337,7 +337,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Integración con CRM</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Integración con CRM</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -345,7 +345,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Automatización de marketing</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Automatización de marketing</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -353,7 +353,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Soporte premium prioritario</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Soporte premium prioritario</span>
                   </div>
                   <div className="flex items-center text-left">
                     <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
@@ -361,7 +361,7 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
                         <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                       </svg>
                     </div>
-                    <span className="text-gray-300 text-sm lg:text-base font-medium">Consultoría mensual incluida</span>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium" style={{textWrap: "pretty"}}>Consultoría mensual incluida</span>
                   </div>
                 </>
               )}

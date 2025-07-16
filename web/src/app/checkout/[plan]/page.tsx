@@ -54,6 +54,50 @@ export default function CheckoutPage() {
 
   const currentPlan = planDetails[plan as keyof typeof planDetails]
 
+  const handleProceedToStripe = async () => {
+    try {
+      console.log('🚀 Iniciando checkout desde página de checkout para plan:', plan)
+      
+      const response = await fetch('/api/create-checkout-session', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          plan: plan,
+          metadata: {
+            source: source || 'checkout-page',
+            flow: 'fallback',
+            ...flowData
+          }
+        })
+      })
+      
+      console.log('📡 Response status:', response.status)
+      console.log('📡 Response ok:', response.ok)
+      
+      if (!response.ok) {
+        const errorData = await response.json()
+        console.error('❌ API Error:', errorData)
+        throw new Error(`HTTP error! status: ${response.status} - ${errorData.error}`)
+      }
+      
+      const data = await response.json()
+      console.log('📋 Response data:', data)
+      
+      if (!data.url) {
+        throw new Error('No URL received from API')
+      }
+      
+      console.log('✅ Redirecting to:', data.url)
+      window.location.href = data.url
+      
+    } catch (error) {
+      console.error('❌ Error creating checkout session:', error)
+      alert('Error al procesar el pago. Por favor intenta nuevamente.')
+    }
+  }
+
   if (!currentPlan) {
     return <div>Plan no encontrado</div>
   }
@@ -125,7 +169,10 @@ export default function CheckoutPage() {
                   Aquí se integrará el formulario de pago de Stripe
                 </p>
                 
-                <button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg transition-colors">
+                <button 
+                  onClick={handleProceedToStripe}
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg transition-colors"
+                >
                   Proceder al Pago
                 </button>
               </div>

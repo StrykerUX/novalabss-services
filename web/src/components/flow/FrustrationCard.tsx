@@ -48,7 +48,7 @@ export default function FrustrationCard({ onSelect }: FrustrationCardProps) {
   return (
     <div>
       <div className="text-center mb-6 lg:mb-8">
-        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3">
+        <h2 className="text-lg sm:text-xl lg:text-2xl font-bold text-white mb-3" style={{textWrap: "pretty"}}>
           ¿Cuál es tu mayor problema con tu presencia digital?
         </h2>
       </div>
@@ -69,10 +69,10 @@ export default function FrustrationCard({ onSelect }: FrustrationCardProps) {
                 {frustration.icon}
               </div>
               <div className="flex-1">
-                <h3 className="text-white font-semibold mb-1 lg:mb-2 group-hover:text-blue-300 transition-colors text-sm lg:text-base">
+                <h3 className="text-white font-semibold mb-1 lg:mb-2 group-hover:text-blue-300 transition-colors text-sm lg:text-base" style={{textWrap: "pretty"}}>
                   {frustration.title}
                 </h3>
-                <p className="text-gray-400 text-xs lg:text-sm">
+                <p className="text-gray-400 text-xs lg:text-sm" style={{textWrap: "pretty"}}>
                   {frustration.description}
                 </p>
               </div>

@@ -6,6 +6,8 @@ export default function PricingPlans() {
   const handleDirectCheckout = async (plan: 'rocket' | 'galaxy') => {
     // Crear sesión de Stripe Checkout para hot leads
     try {
+      console.log('🚀 Iniciando checkout para plan:', plan)
+      
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
         headers: {
@@ -20,12 +22,26 @@ export default function PricingPlans() {
         })
       })
       
-      const { url } = await response.json()
+      console.log('📡 Response status:', response.status)
+      console.log('📡 Response ok:', response.ok)
       
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      console.log('📋 Response data:', data)
+      
+      if (!data.url) {
+        throw new Error('No URL received from API')
+      }
+      
+      console.log('✅ Redirecting to:', data.url)
       // Redirigir a Stripe Checkout
-      window.location.href = url
+      window.location.href = data.url
     } catch (error) {
-      console.error('Error creating checkout session:', error)
+      console.error('❌ Error creating checkout session:', error)
+      console.error('❌ Error details:', error)
       // Fallback al checkout page si hay error
       window.location.href = `/checkout/${plan}?source=pricing`
     }

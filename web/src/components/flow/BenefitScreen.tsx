@@ -77,17 +77,17 @@ export default function BenefitScreen({ frustration, aspiration, onContinue }: B
       
       {/* Título contextual */}
       <div className="text-center mb-8 lg:mb-10">
-        <h2 className="text-lg lg:text-xl font-medium text-gray-400 mb-4">
+        <h2 className="text-lg lg:text-xl font-medium text-gray-400 mb-4" style={{textWrap: "pretty"}}>
           Basado en tu situación...
         </h2>
       </div>
 
       {/* Beneficio protagonista */}
       <div className="text-center mb-8 lg:mb-10 flex-1 flex flex-col justify-center">
-        <p className="text-white text-2xl lg:text-3xl font-bold mb-4">
+        <p className="text-white text-2xl lg:text-3xl font-bold mb-4" style={{textWrap: "pretty"}}>
           ✨ {getBenefit()}
         </p>
-        <p className="text-gray-400 text-base lg:text-lg">
+        <p className="text-gray-400 text-base lg:text-lg" style={{textWrap: "pretty"}}>
           Con la solución perfecta para tu negocio
         </p>
       </div>
@@ -108,7 +108,7 @@ export default function BenefitScreen({ frustration, aspiration, onContinue }: B
 
       {/* Barra de progreso */}
       <div className="text-center mt-6 lg:mt-8">
-        <p className="text-gray-500 text-xs lg:text-sm mb-3">
+        <p className="text-gray-500 text-xs lg:text-sm mb-3" style={{textWrap: "pretty"}}>
           💡 Preparando tu caso de éxito...
         </p>
         <div className="w-full max-w-xs mx-auto bg-gray-800 rounded-full h-1.5 overflow-hidden">

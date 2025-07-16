@@ -77,7 +77,7 @@ export default function TestimonialScreen({ frustration, aspiration, onContinue 
       
       {/* Título contextual */}
       <div className="text-center mb-8 lg:mb-10">
-        <h2 className="text-lg lg:text-xl font-medium text-gray-400 mb-4">
+        <h2 className="text-lg lg:text-xl font-medium text-gray-400 mb-4" style={{textWrap: "pretty"}}>
           Otros como tú obtuvieron:
         </h2>
       </div>
@@ -85,7 +85,7 @@ export default function TestimonialScreen({ frustration, aspiration, onContinue 
       {/* Testimonio protagonista */}
       <div className="text-center mb-8 lg:mb-10 flex-1 flex flex-col justify-center">
         <div className="bg-gray-900/50 rounded-[24px] p-8 lg:p-10 max-w-2xl border border-gray-800">
-          <p className="text-white text-lg lg:text-2xl font-medium italic mb-4">
+          <p className="text-white text-lg lg:text-2xl font-medium italic mb-4" style={{textWrap: "pretty"}}>
             {getTestimonial()}
           </p>
           <div className="flex items-center justify-center space-x-2">
@@ -117,7 +117,7 @@ export default function TestimonialScreen({ frustration, aspiration, onContinue 
 
       {/* Barra de progreso */}
       <div className="text-center mt-6 lg:mt-8">
-        <p className="text-gray-500 text-xs lg:text-sm mb-3">
+        <p className="text-gray-500 text-xs lg:text-sm mb-3" style={{textWrap: "pretty"}}>
           🎯 Preparando tu propuesta final...
         </p>
         <div className="w-full max-w-xs mx-auto bg-gray-800 rounded-full h-1.5 overflow-hidden">
