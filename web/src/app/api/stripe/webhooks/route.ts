@@ -42,12 +42,6 @@ export async function POST(request: NextRequest) {
           metadata: session.metadata
         })
         
-        // Aquí puedes actualizar tu base de datos
-        // - Crear usuario si no existe
-        // - Activar suscripción
-        // - Enviar email de bienvenida
-        // - Actualizar estado de pago
-        
         await handleSuccessfulPayment(session)
         break
 
@@ -141,6 +135,8 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
       timestamp: Date.now(),
       expiresAt: Date.now() + (60 * 60 * 1000) // 1 hora
     })
+
+    console.log('🎯 Auto-login token stored for session:', session.id)
 
   } catch (error) {
     console.error('Error processing successful payment:', error)
