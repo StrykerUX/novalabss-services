@@ -8,11 +8,29 @@ export default function Navigation() {
   const { data: session, status } = useSession()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [activeSection, setActiveSection] = useState('inicio')
+  const [scrollOpacity, setScrollOpacity] = useState(0)
 
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY
+      const newOpacity = Math.min(scrollTop / 100, 1)
+      setScrollOpacity(newOpacity)
       setIsScrolled(scrollTop > 50)
+      
+      // Detectar sección activa
+      const sections = ['inicio', 'planes', 'contacto']
+      
+      for (const section of sections) {
+        const element = document.getElementById(section)
+        if (element) {
+          const rect = element.getBoundingClientRect()
+          if (rect.top <= 150 && rect.bottom >= 150) {
+            setActiveSection(section)
+            break
+          }
+        }
+      }
     }
 
     window.addEventListener('scroll', handleScroll)
@@ -43,7 +61,14 @@ export default function Navigation() {
   return (
     <nav className={`w-full sticky top-0 z-50 ${isScrolled ? 'py-0' : 'py-4'} transition-all duration-300`}>
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
-        <div className={`${isScrolled ? 'bg-[#1A1A1A] rounded-b-[48px] max-h-[80px] py-4 pl-6 pr-4 shadow-xl shadow-black/40' : ''} transition-all duration-300`}>
+        <div 
+          className={`transition-all duration-500 ease-out ${isScrolled ? 'py-4 pl-6 pr-4 max-h-[80px] shadow-xl shadow-black/40' : ''}`}
+          style={{
+            backgroundColor: `rgba(26, 26, 26, ${scrollOpacity * 0.95})`,
+            backdropFilter: `blur(${scrollOpacity * 20}px)`,
+            borderRadius: isScrolled ? '0 0 48px 48px' : '0px'
+          }}
+        >
           <div className="flex justify-between items-center">
           <Link href="/" className="flex items-center font-space-grotesk text-2xl font-bold text-white">
             <svg className="w-8 h-8 mr-3" viewBox="0 0 432 432" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -63,23 +88,38 @@ export default function Navigation() {
               <a 
                 href="#inicio" 
                 onClick={(e) => handleSmoothScroll(e, 'inicio')}
-                className="text-white/80 hover:text-white transition-colors"
+                className={`text-white/80 hover:text-white transition-all duration-300 relative group ${
+                  activeSection === 'inicio' ? 'text-blue-400' : ''
+                }`}
               >
                 Inicio
+                <div className={`absolute -bottom-1 left-0 h-0.5 bg-blue-400 rounded-full transition-all duration-300 ${
+                  activeSection === 'inicio' ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></div>
               </a>
               <a 
                 href="#planes" 
                 onClick={(e) => handleSmoothScroll(e, 'planes')}
-                className="text-white/80 hover:text-white transition-colors"
+                className={`text-white/80 hover:text-white transition-all duration-300 relative group ${
+                  activeSection === 'planes' ? 'text-blue-400' : ''
+                }`}
               >
                 Planes
+                <div className={`absolute -bottom-1 left-0 h-0.5 bg-blue-400 rounded-full transition-all duration-300 ${
+                  activeSection === 'planes' ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></div>
               </a>
               <a 
                 href="#contacto" 
                 onClick={(e) => handleSmoothScroll(e, 'contacto')}
-                className="text-white/80 hover:text-white transition-colors"
+                className={`text-white/80 hover:text-white transition-all duration-300 relative group ${
+                  activeSection === 'contacto' ? 'text-blue-400' : ''
+                }`}
               >
                 Contacto
+                <div className={`absolute -bottom-1 left-0 h-0.5 bg-blue-400 rounded-full transition-all duration-300 ${
+                  activeSection === 'contacto' ? 'w-full' : 'w-0 group-hover:w-full'
+                }`}></div>
               </a>
             </div>
             
@@ -140,28 +180,43 @@ export default function Navigation() {
         
         {/* Mobile menu */}
         {isMenuOpen && (
-          <div className="md:hidden mt-4 bg-[#1A1A1A] rounded-2xl p-6 border border-white/10">
+          <div className="md:hidden mt-4 bg-[#1A1A1A] rounded-2xl p-6 border border-white/10 overflow-hidden">
             <div className="space-y-4">
               <a 
                 href="#inicio" 
                 onClick={(e) => handleSmoothScroll(e, 'inicio')}
-                className="block text-white/80 hover:text-white transition-colors py-2"
+                className={`block text-white/80 hover:text-white transition-all duration-300 py-2 transform hover:translate-x-2 relative ${
+                  activeSection === 'inicio' ? 'text-blue-400 translate-x-2' : ''
+                }`}
               >
                 Inicio
+                {activeSection === 'inicio' && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-400 rounded-full"></div>
+                )}
               </a>
               <a 
                 href="#planes" 
                 onClick={(e) => handleSmoothScroll(e, 'planes')}
-                className="block text-white/80 hover:text-white transition-colors py-2"
+                className={`block text-white/80 hover:text-white transition-all duration-300 py-2 transform hover:translate-x-2 relative ${
+                  activeSection === 'planes' ? 'text-blue-400 translate-x-2' : ''
+                }`}
               >
                 Planes
+                {activeSection === 'planes' && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-400 rounded-full"></div>
+                )}
               </a>
               <a 
                 href="#contacto" 
                 onClick={(e) => handleSmoothScroll(e, 'contacto')}
-                className="block text-white/80 hover:text-white transition-colors py-2"
+                className={`block text-white/80 hover:text-white transition-all duration-300 py-2 transform hover:translate-x-2 relative ${
+                  activeSection === 'contacto' ? 'text-blue-400 translate-x-2' : ''
+                }`}
               >
                 Contacto
+                {activeSection === 'contacto' && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-400 rounded-full"></div>
+                )}
               </a>
               
               <div className="border-t border-white/10 pt-4 mt-4">

@@ -1,7 +1,7 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import FrustrationCard from "@/components/flow/FrustrationCard"
 import AspirationCard from "@/components/flow/AspirationCard"
 import BenefitScreen from "@/components/flow/BenefitScreen"
@@ -16,23 +16,61 @@ export default function WarmLeadJourney() {
   const [frustration, setFrustration] = useState<Frustration | null>(null)
   const [aspiration, setAspiration] = useState<Aspiration | null>(null)
   const router = useRouter()
+  const searchParams = useSearchParams()
+
+  // Función para actualizar URL con estado actual
+  const updateURL = (step: number, frustration?: Frustration, aspiration?: Aspiration) => {
+    const params = new URLSearchParams()
+    params.set('step', step.toString())
+    if (frustration) params.set('frustration', frustration)
+    if (aspiration) params.set('aspiration', aspiration)
+    
+    const newURL = `/start?${params.toString()}`
+    router.replace(newURL, { scroll: false })
+  }
+
+  // Cargar estado desde URL al montar el componente
+  useEffect(() => {
+    const step = searchParams.get('step')
+    const frustrationParam = searchParams.get('frustration') as Frustration
+    const aspirationParam = searchParams.get('aspiration') as Aspiration
+
+    if (step) {
+      const stepNumber = parseInt(step)
+      if (stepNumber >= 1 && stepNumber <= 5) {
+        setCurrentStep(stepNumber)
+      }
+    }
+
+    if (frustrationParam && ['pocos_encuentran', 'no_confianza', 'pierdo_competencia', 'no_tiempo'].includes(frustrationParam)) {
+      setFrustration(frustrationParam)
+    }
+
+    if (aspirationParam && ['2-3_clientes', '5-10_clientes', '10-20_clientes', '20_plus_clientes'].includes(aspirationParam)) {
+      setAspiration(aspirationParam)
+    }
+  }, [searchParams])
 
   const handleFrustrationSelect = (selected: Frustration) => {
     setFrustration(selected)
     setCurrentStep(2)
+    updateURL(2, selected, aspiration || undefined)
   }
 
   const handleAspirationSelect = (selected: Aspiration) => {
     setAspiration(selected)
     setCurrentStep(3) // Paso beneficio
+    updateURL(3, frustration || undefined, selected)
   }
 
   const handleBenefitContinue = () => {
     setCurrentStep(4) // Paso testimonio
+    updateURL(4, frustration || undefined, aspiration || undefined)
   }
 
   const handleTestimonialContinue = () => {
     setCurrentStep(5) // Paso final
+    updateURL(5, frustration || undefined, aspiration || undefined)
   }
 
   const handleProceedToCheckout = async (plan: "rocket" | "galaxy") => {
@@ -69,78 +107,94 @@ export default function WarmLeadJourney() {
   }
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4">
-      <div className="w-full max-w-[620px]">
+    <div className="min-h-screen bg-black flex justify-center px-4 py-8">
+      <div className="w-full max-w-[480px] sm:max-w-[540px] lg:max-w-[620px]">
         
-        {/* Progress Bar - 5 pasos */}
-        <div className="mb-8">
-          <div className="flex items-center justify-center space-x-4 mb-4">
+        {/* Progress Bar - Responsive */}
+        <div className="mb-6 lg:mb-8">
+          <div className="flex items-center justify-center space-x-1 sm:space-x-2 mb-4">
             {[1, 2, 3, 4, 5].map((step) => (
               <div key={step} className="flex items-center">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold ${
-                  step <= currentStep 
-                    ? 'bg-blue-600 text-white' 
-                    : 'bg-gray-700 text-gray-400'
+                {/* Número del paso responsive */}
+                <div className={`relative w-7 h-7 sm:w-8 sm:h-8 lg:w-10 lg:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-semibold transition-all duration-500 ease-out ${
+                  step < currentStep 
+                    ? 'bg-gradient-to-b from-blue-500 to-black text-white shadow-lg shadow-blue-500/30 scale-105' 
+                    : step === currentStep
+                    ? 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white shadow-lg shadow-blue-500/40 scale-110 animate-pulse'
+                    : 'bg-gray-700/50 text-gray-400 border border-gray-600'
                 }`}>
-                  {step}
+                  {/* Checkmark para pasos completados */}
+                  {step < currentStep ? (
+                    <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                  ) : (
+                    <span>{step}</span>
+                  )}
+                  
+                  {/* Ring animado para el paso actual */}
+                  {step === currentStep && (
+                    <div className="absolute inset-0 rounded-full border-2 border-blue-400 animate-ping opacity-75"></div>
+                  )}
                 </div>
+                
+                {/* Línea conectora responsive */}
                 {step < 5 && (
-                  <div className={`w-16 h-0.5 ml-4 ${
-                    step < currentStep ? 'bg-blue-600' : 'bg-gray-700'
-                  }`} />
+                  <div className="relative w-6 sm:w-8 lg:w-12 h-0.5 ml-2 mr-2 lg:ml-3 lg:mr-3 bg-gray-700 rounded-full overflow-hidden">
+                    <div className={`absolute inset-0 bg-gradient-to-r from-blue-500 to-cyan-500 rounded-full transition-all duration-700 ease-out ${
+                      step < currentStep ? 'w-full' : 'w-0'
+                    }`} />
+                  </div>
                 )}
               </div>
             ))}
           </div>
-          <div className="text-center text-gray-400 text-sm">
-            Paso {currentStep} de 5 - Personalizar tu experiencia
+          
+          {/* Texto del paso responsive */}
+          <div className="text-center transition-all duration-300 ease-out">
+            <p className="text-gray-400 text-xs sm:text-sm">
+              Paso {currentStep} de 5
+            </p>
           </div>
         </div>
 
-        {/* Cards */}
-        <div className="bg-[#1A1A1A] rounded-[48px] border border-gray-800 overflow-hidden p-8 lg:p-12">
-          {currentStep === 1 && (
-            <FrustrationCard onSelect={handleFrustrationSelect} />
-          )}
-          
-          {currentStep === 2 && (
-            <AspirationCard onSelect={handleAspirationSelect} />
-          )}
-          
-          {currentStep === 3 && frustration && aspiration && (
-            <BenefitScreen 
-              frustration={frustration}
-              aspiration={aspiration}
-              onContinue={handleBenefitContinue}
-            />
-          )}
-          
-          {currentStep === 4 && frustration && aspiration && (
-            <TestimonialScreen 
-              frustration={frustration}
-              aspiration={aspiration}
-              onContinue={handleTestimonialContinue}
-            />
-          )}
-          
-          {currentStep === 5 && frustration && aspiration && (
-            <ROICard 
-              frustration={frustration}
-              aspiration={aspiration}
-              onProceedToCheckout={handleProceedToCheckout}
-            />
-          )}
+        {/* Cards - Padding optimizado */}
+        <div className="bg-[#1A1A1A] rounded-[24px] lg:rounded-[48px] border border-gray-800 overflow-hidden">
+          <div className="min-h-[520px] p-6 lg:p-8 flex flex-col">
+            {currentStep === 1 && (
+              <FrustrationCard onSelect={handleFrustrationSelect} />
+            )}
+            
+            {currentStep === 2 && (
+              <AspirationCard onSelect={handleAspirationSelect} />
+            )}
+            
+            {currentStep === 3 && frustration && aspiration && (
+              <BenefitScreen 
+                frustration={frustration}
+                aspiration={aspiration}
+                onContinue={handleBenefitContinue}
+              />
+            )}
+            
+            {currentStep === 4 && frustration && aspiration && (
+              <TestimonialScreen 
+                frustration={frustration}
+                aspiration={aspiration}
+                onContinue={handleTestimonialContinue}
+              />
+            )}
+            
+            {currentStep === 5 && frustration && aspiration && (
+              <ROICard 
+                frustration={frustration}
+                aspiration={aspiration}
+                onProceedToCheckout={handleProceedToCheckout}
+              />
+            )}
+          </div>
         </div>
 
-        {/* Skip Option */}
-        <div className="text-center mt-6">
-          <button 
-            onClick={() => router.push('/checkout/rocket?source=skip')}
-            className="text-gray-400 hover:text-white transition-colors text-sm"
-          >
-            Saltar y pagar directo →
-          </button>
-        </div>
       </div>
     </div>
   )

@@ -229,68 +229,155 @@ export default function ROICard({ frustration, aspiration, onProceedToCheckout }
   }
 
   return (
-    <div>
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-white mb-3">
-          Tu Plan Personalizado
-        </h2>
-        <p className="text-gray-400 text-sm">
-          Recomendado específicamente para tu situación
-        </p>
-      </div>
-
-      {/* Layout Móvil Ultra-Minimalista */}
-      <div className="lg:hidden">
+    <div className="flex flex-col items-center justify-center h-full">
+      {/* Layout Unificado - Responsive */}
+      <div className="text-center flex-1 flex flex-col justify-center">
         
         {/* Solo precio y plan - Ultra clean */}
-        <div className="text-center mb-8">
-          <h3 className="text-white font-bold text-2xl mb-4">
-            Plan {flowData.plan.toUpperCase()}
-          </h3>
-          <div className="text-white mb-6">
-            <span className="text-4xl font-black">{flowData.planPrice}</span>
-            <span className="text-gray-400 text-sm ml-2">MXN/bimestre</span>
+        <div className="text-center">
+          <h2 className="text-white font-bold text-xl lg:text-3xl mb-4">
+            El plan perfecto: {flowData.plan.toUpperCase()}
+          </h2>
+          <div className="text-white mb-6 lg:mb-8">
+            <span className="text-3xl lg:text-5xl font-black">{flowData.planPrice}</span>
+            <span className="text-gray-400 text-sm lg:text-lg ml-2">MXN/bimestre</span>
+          </div>
+          
+          {/* Lista completa de beneficios */}
+          <div className="bg-gray-900/30 border border-gray-800/50 rounded-[24px] p-6 lg:p-8 mb-6 lg:mb-8 max-w-md mx-auto">
+            <div className="space-y-3 lg:space-y-4">
+              {flowData.plan === 'rocket' ? (
+                <>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Sitio web profesional optimizado</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">SEO para aparecer en Google</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Diseño mobile-first responsive</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Hosting y dominio incluido</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Certificado SSL de seguridad</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Formularios de contacto</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Analytics y métricas básicas</span>
+                  </div>
+                </>
+              ) : (
+                <>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Todo lo incluido en Rocket</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Estrategia de marketing personalizada</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Analytics avanzado y reportes</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Integración con CRM</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Automatización de marketing</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Soporte premium prioritario</span>
+                  </div>
+                  <div className="flex items-center text-left">
+                    <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full bg-gradient-to-r from-blue-500 to-cyan-400 flex items-center justify-center flex-shrink-0 mr-3 lg:mr-4">
+                      <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-300 text-sm lg:text-base font-medium">Consultoría mensual incluida</span>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Solo botón de pago - Hierarchy clara */}
-        <div className="text-center">
+        <div className="flex justify-center">
           <SmoothMagneticButton
             onClick={() => onProceedToCheckout(flowData.plan)}
-            className="w-full px-8 py-5 font-space-grotesk font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center mb-4"
+            className="px-8 lg:px-12 py-4 lg:py-5 font-space-grotesk font-semibold text-base lg:text-xl hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center"
             magneticStrength={0.2}
           >
             <span>Pagar ahora</span>
-            <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </SmoothMagneticButton>
-        </div>
-      </div>
-
-      {/* Layout Desktop - Solo plan y botón */}
-      <div className="hidden lg:flex lg:flex-col lg:items-center lg:justify-center lg:min-h-[400px]">
-        
-        {/* Solo precio y plan - Ultra clean */}
-        <div className="text-center mb-8">
-          <h3 className="text-white font-bold text-3xl mb-4">
-            Plan {flowData.plan.toUpperCase()}
-          </h3>
-          <div className="text-white mb-6">
-            <span className="text-5xl font-black">{flowData.planPrice}</span>
-            <span className="text-gray-400 text-lg ml-2">MXN/bimestre</span>
-          </div>
-        </div>
-
-        {/* Solo botón de pago - Hierarchy clara */}
-        <div className="text-center">
-          <SmoothMagneticButton
-            onClick={() => onProceedToCheckout(flowData.plan)}
-            className="px-12 py-5 font-space-grotesk font-semibold text-xl hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center"
-            magneticStrength={0.2}
-          >
-            <span>Pagar ahora</span>
-            <svg className="w-6 h-6 ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5 lg:w-6 lg:h-6 ml-2 lg:ml-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </SmoothMagneticButton>
