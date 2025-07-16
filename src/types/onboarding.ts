@@ -76,6 +76,14 @@ export interface OnboardingData {
   lastUpdated: string
 }
 
+export interface MicroStep {
+  id: number
+  title: string
+  subtitle: string
+  category: 'business' | 'objectives' | 'content' | 'design' | 'technical' | 'review'
+  required: boolean
+}
+
 export interface OnboardingState extends OnboardingData {
   setStep: (step: number) => void
   updateBusinessInfo: (data: Partial<BusinessInfo>) => void
