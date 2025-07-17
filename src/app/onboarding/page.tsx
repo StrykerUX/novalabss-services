@@ -77,6 +77,8 @@ export default function OnboardingPage() {
       markStepCompleted(currentStep)
       setStep(currentStep + 1)
     } else {
+      // Marcar el último paso como completado antes de salir
+      markStepCompleted(currentStep)
       router.push('/dashboard')
     }
   }
