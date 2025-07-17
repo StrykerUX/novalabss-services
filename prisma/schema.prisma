@@ -47,14 +47,48 @@ model User {
   email         String    @unique
   emailVerified DateTime?
   image         String?
+  password      String?   // Para autenticación con credenciales
   accounts      Account[]
   sessions      Session[]
   
   // NovaLabs specific fields
+  role          Role      @default(USER)
   phone         String?
   company       String?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  projects      Project[]
+  
+  // Campos para auto-login temporal
+  autoLoginToken       String?
+  autoLoginTokenExpiry DateTime?
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+model Project {
+  id            String    @id @default(cuid())
+  name          String
+  status        ProjectStatus @default(EN_DESARROLLO)
+  progress      Int       @default(0)
+  currentPhase  String?
+  estimatedDelivery String?
+  plan          String    @default("Rocket")
+  userId        String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum ProjectStatus {
+  EN_DESARROLLO
+  EN_REVISION
+  EN_ACTUALIZACION
+  EN_MANTENIMIENTO
+  COMPLETADO
 }
 
 model VerificationToken {

@@ -118,15 +118,35 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
 
     console.log('✅ Auto-login token generated for:', session.customer_details?.email)
     
-    // TODO: Aquí irían las operaciones de base de datos:
-    // 1. Buscar o crear usuario
-    // 2. Crear registro de suscripción
-    // 3. Activar servicios del plan
-    // 4. Enviar email de confirmación con token
-    // 5. Crear proyecto inicial del sitio web
+    // Guardar token en la base de datos
+    const { PrismaClient } = await import('@prisma/client')
+    const prisma = new PrismaClient()
+    
+    try {
+      const expiryDate = new Date(Date.now() + (60 * 60 * 1000)) // 1 hora
+      
+      // Crear o actualizar usuario con token
+      await prisma.user.upsert({
+        where: { email: session.customer_details?.email || '' },
+        update: {
+          autoLoginToken: autoLoginToken,
+          autoLoginTokenExpiry: expiryDate
+        },
+        create: {
+          email: session.customer_details?.email || '',
+          name: session.customer_details?.name || session.customer_details?.email?.split('@')[0] || 'Usuario',
+          autoLoginToken: autoLoginToken,
+          autoLoginTokenExpiry: expiryDate,
+          role: 'USER'
+        }
+      })
+      
+      console.log('🎯 Auto-login token stored in DB for session:', session.id)
+    } finally {
+      await prisma.$disconnect()
+    }
 
-    // Por ahora, solo almacenamos el token temporalmente
-    // En producción, esto se guardaría en Redis o base de datos
+    // También mantener en memoria para compatibilidad
     global.autoLoginTokens = global.autoLoginTokens || new Map()
     global.autoLoginTokens.set(session.id, {
       token: autoLoginToken,
@@ -135,8 +155,6 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
       timestamp: Date.now(),
       expiresAt: Date.now() + (60 * 60 * 1000) // 1 hora
     })
-
-    console.log('🎯 Auto-login token stored for session:', session.id)
 
   } catch (error) {
     console.error('Error processing successful payment:', error)

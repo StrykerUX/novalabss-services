@@ -1,8 +1,9 @@
 "use client"
 
-import { useSession, signOut } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
+import SmoothMagneticButton from "./SmoothMagneticButton"
 
 export default function Navigation() {
   const { data: session, status } = useSession()
@@ -37,9 +38,6 @@ export default function Navigation() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  const handleSignOut = () => {
-    signOut({ callbackUrl: "/" })
-  }
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
@@ -123,6 +121,9 @@ export default function Navigation() {
               </a>
             </div>
             
+            {/* Divisor visual */}
+            <div className="hidden md:block w-px h-6 bg-white/20"></div>
+            
             <div className="flex items-center space-x-4">
               {status === "loading" ? (
                 <div className="animate-pulse bg-gray-700 h-8 w-24 rounded"></div>
@@ -131,18 +132,14 @@ export default function Navigation() {
                   <span className="text-white/80 text-sm">
                     Hola, {session.user?.name?.split(' ')[0]}
                   </span>
-                  <Link 
-                    href="/dashboard"
-                    className="px-4 py-2 text-white/80 hover:text-white transition-colors"
+                  <SmoothMagneticButton 
+                    className="text-white px-4 py-2 font-space-grotesk font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/40 transition-shadow duration-300 shadow-md shadow-blue-600/30"
+                    magneticStrength={0.15}
                   >
-                    Dashboard
-                  </Link>
-                  <button 
-                    onClick={handleSignOut}
-                    className="px-4 py-2 text-white/80 hover:text-white transition-colors"
-                  >
-                    Cerrar Sesión
-                  </button>
+                    <Link href="/dashboard">
+                      Dashboard
+                    </Link>
+                  </SmoothMagneticButton>
                 </>
               ) : (
                 <>
@@ -227,22 +224,18 @@ export default function Navigation() {
                     <span className="block text-white/80 text-sm mb-3">
                       Hola, {session.user?.name?.split(' ')[0]}
                     </span>
-                    <Link 
-                      href="/dashboard"
-                      className="block px-4 py-2 text-white/80 hover:text-white transition-colors mb-2"
-                      onClick={() => setIsMenuOpen(false)}
+                    <SmoothMagneticButton 
+                      className="w-full text-white px-4 py-2 font-space-grotesk font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/40 transition-shadow duration-300 shadow-md shadow-blue-600/30"
+                      magneticStrength={0.15}
                     >
-                      Dashboard
-                    </Link>
-                    <button 
-                      onClick={() => {
-                        handleSignOut();
-                        setIsMenuOpen(false);
-                      }}
-                      className="block px-4 py-2 text-white/80 hover:text-white transition-colors"
-                    >
-                      Cerrar Sesión
-                    </button>
+                      <Link 
+                        href="/dashboard"
+                        className="block w-full text-left"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        Dashboard
+                      </Link>
+                    </SmoothMagneticButton>
                   </>
                 ) : (
                   <>

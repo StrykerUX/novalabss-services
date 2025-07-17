@@ -1,16 +1,38 @@
 import { withAuth } from "next-auth/middleware"
+import { NextResponse } from "next/server"
 
 export default withAuth(
   function middleware(req) {
-    // Middleware adicional aquí si es necesario
+    const { pathname } = req.nextUrl
+    const token = req.nextauth.token
+
+    // Rutas admin requieren rol ADMIN
+    if (pathname.startsWith("/admin")) {
+      if (!token || token.role !== "ADMIN") {
+        return NextResponse.redirect(new URL("/dashboard", req.url))
+      }
+    }
+
+    // Usuarios admin no deberían acceder al dashboard normal
+    if (pathname.startsWith("/dashboard") && token?.role === "ADMIN") {
+      return NextResponse.redirect(new URL("/admin", req.url))
+    }
   },
   {
     callbacks: {
       authorized: ({ token, req }) => {
-        // Rutas que requieren autenticación
-        if (req.nextUrl.pathname.startsWith("/dashboard")) {
+        const { pathname } = req.nextUrl
+        
+        // Rutas admin requieren autenticación y rol ADMIN
+        if (pathname.startsWith("/admin")) {
+          return !!token && token.role === "ADMIN"
+        }
+        
+        // Rutas dashboard requieren autenticación
+        if (pathname.startsWith("/dashboard")) {
           return !!token
         }
+        
         return true
       },
     },
@@ -20,8 +42,6 @@ export default withAuth(
 export const config = {
   matcher: [
     "/dashboard/:path*",
-    "/profile/:path*",
-    "/projects/:path*",
-    "/billing/:path*"
+    "/admin/:path*"
   ]
 }

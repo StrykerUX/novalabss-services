@@ -6,7 +6,7 @@ export async function GET(request: NextRequest) {
     const sessionId = searchParams.get('sessionId')
     
     if (!sessionId) {
-      return NextResponse.json({ error: 'Session ID required' }, { status: 400 })
+      return NextResponse.json({ success: false, error: 'Session ID required' }, { status: 400 })
     }
     
     console.log('🔍 Looking for auto-login token for session:', sessionId)
@@ -17,39 +17,32 @@ export async function GET(request: NextRequest) {
     
     if (!tokenData) {
       console.log('❌ No token found for session:', sessionId)
-      return NextResponse.json({ error: 'No token found' }, { status: 404 })
+      return NextResponse.json({ success: false, error: 'No token found' }, { status: 404 })
     }
     
     // Verificar que no ha expirado
     if (Date.now() > tokenData.expiresAt) {
       console.log('❌ Token expired for session:', sessionId)
       tokens.delete(sessionId)
-      return NextResponse.json({ error: 'Token expired' }, { status: 401 })
+      return NextResponse.json({ success: false, error: 'Token expired' }, { status: 401 })
     }
     
     console.log('✅ Auto-login token found for:', tokenData.email)
-    
-    // Decodificar token para obtener datos del usuario
-    const userData = JSON.parse(Buffer.from(tokenData.token, 'base64').toString())
     
     return NextResponse.json({
       success: true,
       token: tokenData.token,
       user: {
-        email: userData.email,
-        name: userData.name,
-        plan: userData.plan,
-        source: userData.source,
-        frustration: userData.frustration,
-        aspiration: userData.aspiration,
-        sessionId: userData.sessionId
+        email: tokenData.email,
+        name: tokenData.email?.split('@')[0] || 'Usuario',
+        plan: tokenData.plan || 'rocket'
       }
     })
     
   } catch (error) {
     console.error('❌ Error getting login token:', error)
     return NextResponse.json(
-      { error: 'Failed to get login token' },
+      { success: false, error: 'Failed to get login token' },
       { status: 500 }
     )
   }
