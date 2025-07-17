@@ -2,55 +2,105 @@
 
 import AdminLayout from "@/components/AdminLayout";
 import SmoothMagneticButton from "@/components/SmoothMagneticButton";
+import { useAdminUsers } from "@/hooks/useAdminUsers";
+import { useState } from "react";
 
 export default function AdminUsersPage() {
-  // Datos simulados - después se conectará con la API real
-  const users = [
-    { 
-      id: 1, 
-      name: "Juan Pérez", 
-      email: "juan@empresa.com", 
-      role: "USER",
-      plan: "Rocket", 
-      status: "Activo", 
-      joinDate: "2024-01-15",
-      lastLogin: "2024-01-16",
-      projects: 1
-    },
-    { 
-      id: 2, 
-      name: "María González", 
-      email: "maria@startup.com", 
-      role: "USER",
-      plan: "Rocket", 
-      status: "Activo", 
-      joinDate: "2024-01-14",
-      lastLogin: "2024-01-16",
-      projects: 2
-    },
-    { 
-      id: 3, 
-      name: "Carlos Ruiz", 
-      email: "carlos@negocio.com", 
-      role: "USER",
-      plan: "Rocket", 
-      status: "Pendiente", 
-      joinDate: "2024-01-13",
-      lastLogin: "2024-01-15",
-      projects: 0
-    },
-    { 
-      id: 4, 
-      name: "Ana Torres", 
-      email: "ana@empresa.com", 
-      role: "USER",
-      plan: "Rocket", 
-      status: "Suspendido", 
-      joinDate: "2024-01-12",
-      lastLogin: "2024-01-13",
-      projects: 1
-    },
-  ];
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [roleFilter, setRoleFilter] = useState("all");
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [newUser, setNewUser] = useState({ name: "", email: "", role: "USER" });
+
+  const { data, loading, error, refetch, createUser, setFilters } = useAdminUsers({
+    page: currentPage,
+    limit: 10,
+    search: searchTerm,
+    status: statusFilter,
+    role: roleFilter
+  });
+
+  const handleSearch = (term: string) => {
+    setSearchTerm(term);
+    setCurrentPage(1);
+    setFilters({ page: 1, search: term, status: statusFilter, role: roleFilter });
+  };
+
+  const handleStatusFilter = (status: string) => {
+    setStatusFilter(status);
+    setCurrentPage(1);
+    setFilters({ page: 1, search: searchTerm, status, role: roleFilter });
+  };
+
+  const handleRoleFilter = (role: string) => {
+    setRoleFilter(role);
+    setCurrentPage(1);
+    setFilters({ page: 1, search: searchTerm, status: statusFilter, role });
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setFilters({ page, search: searchTerm, status: statusFilter, role: roleFilter });
+  };
+
+  const handleCreateUser = async () => {
+    if (!newUser.name || !newUser.email) {
+      alert("Por favor llena todos los campos");
+      return;
+    }
+
+    const success = await createUser(newUser);
+    if (success) {
+      setShowCreateModal(false);
+      setNewUser({ name: "", email: "", role: "USER" });
+    }
+  };
+
+  if (loading) {
+    return (
+      <AdminLayout 
+        title="Gestión de Usuarios"
+        subtitle="Cargando usuarios..."
+      >
+        <div className="flex items-center justify-center h-64">
+          <div className="text-white">🔄 Cargando usuarios...</div>
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <AdminLayout 
+        title="Gestión de Usuarios"
+        subtitle="Error al cargar usuarios"
+      >
+        <div className="bg-red-500/20 border border-red-500/30 rounded-[24px] p-6 mb-6">
+          <p className="text-red-400 mb-4">❌ Error: {error}</p>
+          <SmoothMagneticButton 
+            onClick={refetch}
+            className="px-4 py-2 text-white bg-red-600/20 border border-red-500/30 hover:bg-red-600/30"
+          >
+            🔄 Reintentar
+          </SmoothMagneticButton>
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  if (!data) {
+    return (
+      <AdminLayout 
+        title="Gestión de Usuarios"
+        subtitle="Sin datos disponibles"
+      >
+        <div className="text-white/60">No hay datos disponibles</div>
+      </AdminLayout>
+    );
+  }
+
+  const { users, stats } = data;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -68,25 +118,71 @@ export default function AdminUsersPage() {
   return (
     <AdminLayout 
       title="Gestión de Usuarios"
-      subtitle="Administra todos los usuarios de la plataforma"
+      subtitle={`${stats.total} usuarios registrados`}
     >
+      {/* Search and Filters */}
+      <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10 mb-6">
+        <div className="flex flex-col md:flex-row gap-4 mb-4">
+          {/* Search */}
+          <div className="flex-1">
+            <input
+              type="text"
+              placeholder="Buscar por nombre o email..."
+              value={searchTerm}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          
+          {/* Status Filter */}
+          <select
+            value={statusFilter}
+            onChange={(e) => handleStatusFilter(e.target.value)}
+            className="px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="all">Todos los estados</option>
+            <option value="Activo">Activos</option>
+            <option value="Pendiente">Pendientes</option>
+            <option value="Suspendido">Suspendidos</option>
+          </select>
+          
+          {/* Role Filter */}
+          <select
+            value={roleFilter}
+            onChange={(e) => handleRoleFilter(e.target.value)}
+            className="px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          >
+            <option value="all">Todos los roles</option>
+            <option value="USER">Usuarios</option>
+            <option value="ADMIN">Administradores</option>
+          </select>
+          
+          {/* Refresh Button */}
+          <SmoothMagneticButton 
+            onClick={refetch}
+            className="px-4 py-2 text-white bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30"
+          >
+            🔄
+          </SmoothMagneticButton>
+        </div>
+      </div>
       {/* Stats Summary */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
         <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
           <h3 className="text-white/80 text-sm font-medium mb-2">Total Usuarios</h3>
-          <p className="text-3xl font-bold text-white">{users.length}</p>
+          <p className="text-3xl font-bold text-white">{stats.total}</p>
         </div>
         <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
           <h3 className="text-white/80 text-sm font-medium mb-2">Activos</h3>
-          <p className="text-3xl font-bold text-green-400">{users.filter(u => u.status === 'Activo').length}</p>
+          <p className="text-3xl font-bold text-green-400">{stats.active}</p>
         </div>
         <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
           <h3 className="text-white/80 text-sm font-medium mb-2">Pendientes</h3>
-          <p className="text-3xl font-bold text-yellow-400">{users.filter(u => u.status === 'Pendiente').length}</p>
+          <p className="text-3xl font-bold text-yellow-400">{stats.pending}</p>
         </div>
         <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
           <h3 className="text-white/80 text-sm font-medium mb-2">Suspendidos</h3>
-          <p className="text-3xl font-bold text-red-400">{users.filter(u => u.status === 'Suspendido').length}</p>
+          <p className="text-3xl font-bold text-red-400">{stats.suspended}</p>
         </div>
       </div>
 
@@ -94,7 +190,10 @@ export default function AdminUsersPage() {
       <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
         <div className="flex items-center justify-between mb-6">
           <h3 className="text-white font-bold text-lg">Lista de Usuarios</h3>
-          <SmoothMagneticButton className="px-4 py-2 text-sm text-white font-medium bg-red-600/20 border border-red-500/30 hover:bg-red-600/30 transition-colors">
+          <SmoothMagneticButton 
+            onClick={() => setShowCreateModal(true)}
+            className="px-4 py-2 text-sm text-white font-medium bg-red-600/20 border border-red-500/30 hover:bg-red-600/30 transition-colors"
+          >
             Agregar Usuario
           </SmoothMagneticButton>
         </div>
@@ -125,6 +224,12 @@ export default function AdminUsersPage() {
                       <div>
                         <p className="text-white font-medium">{user.name}</p>
                         <p className="text-white/60 text-sm">{user.email}</p>
+                        {user.role === 'ADMIN' && (
+                          <span className="text-red-400 text-xs">👑 Admin</span>
+                        )}
+                        <p className="text-white/40 text-xs">
+                          Suscripción: {user.subscriptionStatus || 'Sin suscripción'}
+                        </p>
                       </div>
                     </div>
                   </td>
@@ -166,7 +271,95 @@ export default function AdminUsersPage() {
             </tbody>
           </table>
         </div>
+        
+        {/* Pagination */}
+        {stats.totalPages > 1 && (
+          <div className="flex justify-between items-center mt-6">
+            <div className="text-white/60 text-sm">
+              Página {stats.currentPage} de {stats.totalPages} - {stats.total} usuarios total
+            </div>
+            <div className="flex space-x-2">
+              {stats.hasPrev && (
+                <SmoothMagneticButton 
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  className="px-3 py-1 text-white bg-white/10 border border-white/20 hover:bg-white/20"
+                >
+                  ← Anterior
+                </SmoothMagneticButton>
+              )}
+              
+              {stats.hasNext && (
+                <SmoothMagneticButton 
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  className="px-3 py-1 text-white bg-white/10 border border-white/20 hover:bg-white/20"
+                >
+                  Siguiente →
+                </SmoothMagneticButton>
+              )}
+            </div>
+          </div>
+        )}
       </div>
+
+      {/* Create User Modal */}
+      {showCreateModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10 w-full max-w-md">
+            <h3 className="text-white font-bold text-lg mb-4">Crear Nuevo Usuario</h3>
+            
+            <div className="space-y-4">
+              <div>
+                <label className="text-white/80 text-sm block mb-2">Nombre completo</label>
+                <input
+                  type="text"
+                  value={newUser.name}
+                  onChange={(e) => setNewUser(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Ej: Juan Pérez"
+                />
+              </div>
+              
+              <div>
+                <label className="text-white/80 text-sm block mb-2">Email</label>
+                <input
+                  type="email"
+                  value={newUser.email}
+                  onChange={(e) => setNewUser(prev => ({ ...prev, email: e.target.value }))}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Ej: juan@empresa.com"
+                />
+              </div>
+              
+              <div>
+                <label className="text-white/80 text-sm block mb-2">Rol</label>
+                <select
+                  value={newUser.role}
+                  onChange={(e) => setNewUser(prev => ({ ...prev, role: e.target.value }))}
+                  className="w-full px-4 py-2 bg-white/5 border border-white/20 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="USER">Usuario</option>
+                  <option value="ADMIN">Administrador</option>
+                </select>
+              </div>
+            </div>
+            
+            <div className="flex space-x-3 mt-6">
+              <SmoothMagneticButton 
+                onClick={() => setShowCreateModal(false)}
+                className="flex-1 px-4 py-2 text-white bg-white/10 border border-white/20 hover:bg-white/20"
+              >
+                Cancelar
+              </SmoothMagneticButton>
+              <SmoothMagneticButton 
+                onClick={handleCreateUser}
+                className="flex-1 px-4 py-2 text-white bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30"
+              >
+                Crear Usuario
+              </SmoothMagneticButton>
+            </div>
+          </div>
+        </div>
+      )}
     </AdminLayout>
   );
 }

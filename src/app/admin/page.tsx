@@ -3,27 +3,55 @@
 import AdminLayout from "@/components/AdminLayout";
 import SmoothMagneticButton from "@/components/SmoothMagneticButton";
 import Link from "next/link";
+import { useAdminStats } from "@/hooks/useAdminStats";
 
 export default function AdminDashboard() {
-  // Datos simulados - después se conectará con la API real
-  const stats = {
-    totalUsers: 12,
-    activeProjects: 8,
-    monthlyRevenue: 23976,
-    pendingPayments: 2
-  };
+  const { data, loading, error, refetch } = useAdminStats();
 
-  const recentUsers = [
-    { id: 1, name: "Juan Pérez", email: "juan@empresa.com", plan: "Rocket", status: "Activo", joinDate: "2024-01-15" },
-    { id: 2, name: "María González", email: "maria@startup.com", plan: "Rocket", status: "Activo", joinDate: "2024-01-14" },
-    { id: 3, name: "Carlos Ruiz", email: "carlos@negocio.com", plan: "Rocket", status: "Pendiente", joinDate: "2024-01-13" },
-  ];
+  if (loading) {
+    return (
+      <AdminLayout 
+        title="Dashboard Administrativo"
+        subtitle="Cargando datos..."
+      >
+        <div className="flex items-center justify-center h-64">
+          <div className="text-white">🔄 Cargando estadísticas...</div>
+        </div>
+      </AdminLayout>
+    );
+  }
 
-  const recentProjects = [
-    { id: 1, name: "Landing Page - Empresa ABC", client: "Juan Pérez", status: "EN_DESARROLLO", progress: 75 },
-    { id: 2, name: "E-commerce - Startup XYZ", client: "María González", status: "EN_REVISION", progress: 90 },
-    { id: 3, name: "Portfolio - Negocio 123", client: "Carlos Ruiz", status: "EN_DESARROLLO", progress: 45 },
-  ];
+  if (error) {
+    return (
+      <AdminLayout 
+        title="Dashboard Administrativo"
+        subtitle="Error al cargar datos"
+      >
+        <div className="bg-red-500/20 border border-red-500/30 rounded-[24px] p-6 mb-6">
+          <p className="text-red-400 mb-4">❌ Error: {error}</p>
+          <SmoothMagneticButton 
+            onClick={refetch}
+            className="px-4 py-2 text-white bg-red-600/20 border border-red-500/30 hover:bg-red-600/30"
+          >
+            🔄 Reintentar
+          </SmoothMagneticButton>
+        </div>
+      </AdminLayout>
+    );
+  }
+
+  if (!data) {
+    return (
+      <AdminLayout 
+        title="Dashboard Administrativo"
+        subtitle="Sin datos disponibles"
+      >
+        <div className="text-white/60">No hay datos disponibles</div>
+      </AdminLayout>
+    );
+  }
+
+  const { stats, recentUsers, recentProjects } = data;
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -41,8 +69,17 @@ export default function AdminDashboard() {
   return (
     <AdminLayout 
       title="Dashboard Administrativo"
-      subtitle="Visión general de la plataforma NovaLabs"
+      subtitle="Visión general de la plataforma NovaLabs - Datos en tiempo real"
     >
+      {/* Refresh Button */}
+      <div className="flex justify-end mb-6">
+        <SmoothMagneticButton 
+          onClick={refetch}
+          className="px-4 py-2 text-white bg-blue-600/20 border border-blue-500/30 hover:bg-blue-600/30 transition-colors"
+        >
+          🔄 Actualizar Datos
+        </SmoothMagneticButton>
+      </div>
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
@@ -52,7 +89,7 @@ export default function AdminDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
               </svg>
             </div>
-            <span className="text-blue-400 text-sm font-medium">+12%</span>
+            <span className="text-blue-400 text-sm font-medium">+{stats.userGrowthPercentage}%</span>
           </div>
           <h3 className="text-white font-semibold text-lg">Usuarios Totales</h3>
           <p className="text-3xl font-bold text-white mt-2">{stats.totalUsers}</p>
@@ -65,7 +102,7 @@ export default function AdminDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
               </svg>
             </div>
-            <span className="text-green-400 text-sm font-medium">+8%</span>
+            <span className="text-green-400 text-sm font-medium">Activos</span>
           </div>
           <h3 className="text-white font-semibold text-lg">Proyectos Activos</h3>
           <p className="text-3xl font-bold text-white mt-2">{stats.activeProjects}</p>
@@ -78,7 +115,7 @@ export default function AdminDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
               </svg>
             </div>
-            <span className="text-yellow-400 text-sm font-medium">+25%</span>
+            <span className="text-yellow-400 text-sm font-medium">{stats.activeSubscriptions} subs</span>
           </div>
           <h3 className="text-white font-semibold text-lg">Ingresos Mensuales</h3>
           <p className="text-3xl font-bold text-white mt-2">${stats.monthlyRevenue.toLocaleString()} MXN</p>
@@ -91,7 +128,7 @@ export default function AdminDashboard() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <span className="text-red-400 text-sm font-medium">-2</span>
+            <span className="text-red-400 text-sm font-medium">Crítico</span>
           </div>
           <h3 className="text-white font-semibold text-lg">Pagos Pendientes</h3>
           <p className="text-3xl font-bold text-white mt-2">{stats.pendingPayments}</p>
@@ -122,15 +159,21 @@ export default function AdminDashboard() {
                   <div>
                     <p className="text-white font-medium">{user.name}</p>
                     <p className="text-white/60 text-sm">{user.email}</p>
+                    {user.role === 'ADMIN' && (
+                      <span className="text-red-400 text-xs">👑 Admin</span>
+                    )}
                   </div>
                 </div>
                 <div className="text-right">
                   <span className={`px-2 py-1 rounded-full text-xs font-medium ${
-                    user.status === 'Activo' ? 'bg-green-500/20 text-green-400' : 'bg-yellow-500/20 text-yellow-400'
+                    user.status === 'Activo' ? 'bg-green-500/20 text-green-400' : 
+                    user.status === 'Suspendido' ? 'bg-red-500/20 text-red-400' :
+                    'bg-yellow-500/20 text-yellow-400'
                   }`}>
                     {user.status}
                   </span>
                   <p className="text-white/60 text-xs mt-1">{user.joinDate}</p>
+                  <p className="text-white/40 text-xs">{user.projects} proyectos</p>
                 </div>
               </div>
             ))}
@@ -158,6 +201,7 @@ export default function AdminDashboard() {
                   </span>
                 </div>
                 <p className="text-white/60 text-sm mb-3">Cliente: {project.client}</p>
+                <p className="text-white/40 text-xs mb-3">Actualizado: {project.updatedAt}</p>
                 <div className="flex items-center justify-between">
                   <div className="flex-1 mr-4">
                     <div className="flex justify-between text-sm text-white/80 mb-1">

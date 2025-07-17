@@ -7,18 +7,57 @@ import SmoothMagneticButton from "@/components/SmoothMagneticButton"
 import OnboardingRecoveryBanner from "@/components/dashboard/OnboardingRecoveryBanner"
 import OnboardingDebug from "@/components/OnboardingDebug"
 import SubscriptionDebug from "@/components/SubscriptionDebug"
+import ProjectNotifications from "@/components/ProjectNotifications"
 import { useOnboardingState } from "@/hooks/useOnboardingState"
 import { useOnboardingProgress } from "@/hooks/useOnboardingProgress"
 import { useSubscription } from "@/hooks/useSubscription"
+import { useUserProjects } from "@/hooks/useUserProjects"
 
 export default function Dashboard() {
   const { data: session } = useSession()
   const onboardingData = useOnboardingState()
   const { isComplete } = useOnboardingProgress()
   const subscriptionData = useSubscription()
+  const { projects, loading: projectsLoading } = useUserProjects()
 
-  // Datos del proyecto basados en onboarding completado
+  // Datos del proyecto basados en proyectos reales o onboarding
   const getProjectData = () => {
+    // Si tenemos proyectos reales, usar el más reciente
+    if (projects && projects.length > 0 && !projectsLoading) {
+      const latestProject = projects[0] // El hook los ordena por fecha descendente
+      
+      // Datos reales del proyecto
+      const stripePlan = subscriptionData.plan?.name || latestProject.plan
+      const stripeCredits = subscriptionData.plan?.credits || (latestProject.plan === 'Galaxy' ? 5 : 2)
+      const businessName = onboardingData.businessInfo?.name || latestProject.name.split(' - ')[1] || "Tu Empresa"
+      
+      // Fechas y tiempo desde Stripe
+      const daysElapsed = subscriptionData.daysElapsed || 0
+      const isActiveSubscription = subscriptionData.isActive
+      
+      return {
+        businessName,
+        status: isActiveSubscription ? latestProject.status.replace('_', ' ') : "ESPERANDO ACTIVACIÓN",
+        progress: latestProject.progress,
+        currentPhase: latestProject.currentPhase || "Sin fase definida",
+        estimatedDelivery: latestProject.estimatedDelivery || "Por definir",
+        daysCurrent: daysElapsed,
+        daysTotal: latestProject.plan === 'Galaxy' ? 5 : 3,
+        plan: stripePlan,
+        credits: { available: stripeCredits, total: stripeCredits },
+        lastUpdate: `Actualizado ${new Date(latestProject.updatedAt).toLocaleDateString()}`,
+        pages: onboardingData.contentArchitecture?.pages || [],
+        features: onboardingData.contentArchitecture?.features || [],
+        industry: onboardingData.businessInfo?.industry || "",
+        primaryGoal: onboardingData.objectives?.primaryGoal || "",
+        domainName: onboardingData.technicalSetup?.domain?.name,
+        subscriptionActive: isActiveSubscription,
+        subscriptionStatus: subscriptionData.status,
+        projectId: latestProject.id,
+        hasRealProject: true
+      }
+    }
+    
     // Si el onboarding no está completo, mostrar datos por defecto
     if (!isComplete) {
       return {
@@ -35,7 +74,8 @@ export default function Dashboard() {
         pages: [],
         features: [],
         industry: "",
-        primaryGoal: ""
+        primaryGoal: "",
+        hasRealProject: false
       }
     }
 
@@ -118,7 +158,14 @@ export default function Dashboard() {
                 </svg>
               </div>
               <div>
-                <h2 className="text-2xl font-bold text-white font-space-grotesk">🚀 {projectData.businessName.toUpperCase()} - Plan {projectData.plan}</h2>
+                <div className="flex items-center space-x-3">
+                  <h2 className="text-2xl font-bold text-white font-space-grotesk">🚀 {projectData.businessName.toUpperCase()} - Plan {projectData.plan}</h2>
+                  {projectData.hasRealProject && (
+                    <span className="px-2 py-1 bg-green-500/20 text-green-400 text-xs rounded-full border border-green-500/30">
+                      ✅ Proyecto Real
+                    </span>
+                  )}
+                </div>
                 <p className="text-[#0147FF] font-semibold text-lg">{projectData.status} {projectData.daysCurrent > 0 ? `(Día ${projectData.daysCurrent} de ${projectData.daysTotal})` : ''}</p>
               </div>
             </div>
@@ -327,9 +374,69 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* MÚLTIPLES PROYECTOS - Si el usuario tiene más de uno */}
+      {projects && projects.length > 1 && (
+        <div className="bg-[#1A1A1A] rounded-[48px] p-8 border border-white/10 mb-8">
+          <h3 className="text-xl font-bold text-white font-space-grotesk mb-6">📋 Todos tus Proyectos</h3>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {projects.map((project, index) => (
+              <div key={project.id} className="bg-white/5 rounded-[24px] p-6 border border-white/10">
+                <div className="flex items-center justify-between mb-4">
+                  <div>
+                    <h4 className="text-white font-semibold text-lg">{project.name}</h4>
+                    <p className="text-white/60 text-sm">{project.currentPhase || 'Sin fase definida'}</p>
+                  </div>
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${
+                    project.status === 'COMPLETADO' ? 'bg-green-500/20 text-green-400 border border-green-500/30' :
+                    project.status === 'EN_DESARROLLO' ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30' :
+                    project.status === 'EN_REVISION' ? 'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30' :
+                    project.status === 'EN_MANTENIMIENTO' ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+                    'bg-gray-500/20 text-gray-400 border border-gray-500/30'
+                  }`}>
+                    {project.status.replace('_', ' ')}
+                  </span>
+                </div>
+                
+                <div className="mb-4">
+                  <div className="flex justify-between text-sm text-white/80 mb-2">
+                    <span>Progreso</span>
+                    <span>{project.progress}%</span>
+                  </div>
+                  <div className="w-full bg-white/10 rounded-full h-2">
+                    <div 
+                      className="bg-gradient-to-r from-[#0147FF] to-[#0147FF80] h-2 rounded-full transition-all duration-500"
+                      style={{ width: `${project.progress}%` }}
+                    ></div>
+                  </div>
+                </div>
+                
+                <div className="flex justify-between items-center text-sm">
+                  <div>
+                    <span className="text-white/60">Plan:</span>
+                    <span className="text-white ml-2">{project.plan}</span>
+                  </div>
+                  <div>
+                    <span className="text-white/60">Entrega:</span>
+                    <span className="text-white ml-2">{project.estimatedDelivery || 'Por definir'}</span>
+                  </div>
+                </div>
+                
+                <div className="mt-4 text-xs text-white/40">
+                  Actualizado: {new Date(project.updatedAt).toLocaleDateString()}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Debug components - solo en desarrollo */}
       <OnboardingDebug />
       <SubscriptionDebug />
+
+      {/* Notificaciones de proyectos nuevos */}
+      <ProjectNotifications />
 
     </DashboardLayout>
   )
