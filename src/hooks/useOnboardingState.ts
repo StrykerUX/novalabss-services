@@ -35,6 +35,7 @@ export const useOnboardingState = create<OnboardingState>((set, get) => ({
         lastUpdated: new Date().toISOString()
       }
       saveToLocalStorage(newState)
+      saveToDatabase(newState)
       return newState
     })
   },
@@ -47,6 +48,7 @@ export const useOnboardingState = create<OnboardingState>((set, get) => ({
         lastUpdated: new Date().toISOString()
       }
       saveToLocalStorage(newState)
+      saveToDatabase(newState)
       return newState
     })
   },
@@ -59,6 +61,7 @@ export const useOnboardingState = create<OnboardingState>((set, get) => ({
         lastUpdated: new Date().toISOString()
       }
       saveToLocalStorage(newState)
+      saveToDatabase(newState)
       return newState
     })
   },
@@ -71,6 +74,7 @@ export const useOnboardingState = create<OnboardingState>((set, get) => ({
         lastUpdated: new Date().toISOString()
       }
       saveToLocalStorage(newState)
+      saveToDatabase(newState)
       return newState
     })
   },
@@ -83,6 +87,7 @@ export const useOnboardingState = create<OnboardingState>((set, get) => ({
         lastUpdated: new Date().toISOString()
       }
       saveToLocalStorage(newState)
+      saveToDatabase(newState)
       return newState
     })
   },
@@ -95,6 +100,7 @@ export const useOnboardingState = create<OnboardingState>((set, get) => ({
         lastUpdated: new Date().toISOString()
       }
       saveToLocalStorage(newState)
+      saveToDatabase(newState)
       return newState
     })
   },
@@ -111,6 +117,7 @@ export const useOnboardingState = create<OnboardingState>((set, get) => ({
         lastUpdated: new Date().toISOString()
       }
       saveToLocalStorage(newState)
+      saveToDatabase(newState)
       return newState
     })
   },
@@ -166,6 +173,31 @@ function loadFromLocalStorage(): OnboardingData | null {
     console.error('Error loading onboarding state:', error)
   }
   return null
+}
+
+async function saveToDatabase(state: OnboardingData) {
+  try {
+    if (typeof window !== 'undefined') {
+      await fetch('/api/onboarding/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          businessInfo: state.businessInfo,
+          objectives: state.objectives,
+          contentArchitecture: state.contentArchitecture,
+          brandDesign: state.brandDesign,
+          technicalSetup: state.technicalSetup,
+          projectPlanning: state.projectPlanning,
+          completedSteps: state.completedSteps,
+          isComplete: false
+        })
+      })
+    }
+  } catch (error) {
+    console.error('Error saving onboarding to database:', error)
+  }
 }
 
 // Hook para auto-save cada 30 segundos

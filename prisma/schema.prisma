@@ -58,6 +58,7 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   projects      Project[]
+  onboardingResponse OnboardingResponse?
   
   // Campos para auto-login temporal
   autoLoginToken       String?
@@ -79,6 +80,7 @@ model Project {
   plan          String    @default("Rocket")
   userId        String
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  onboardingResponse OnboardingResponse?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 }
@@ -89,6 +91,38 @@ enum ProjectStatus {
   EN_ACTUALIZACION
   EN_MANTENIMIENTO
   COMPLETADO
+}
+
+model OnboardingResponse {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  projectId   String   @unique
+  
+  // Respuestas organizadas por categorías
+  businessInfo      String?  // JSON con información del negocio
+  objectives        String?  // JSON con objetivos y audiencia
+  contentArchitecture String? // JSON con páginas y contenido
+  brandDesign       String?  // JSON con diseño y colores
+  technicalSetup    String?  // JSON con dominio y hosting
+  projectPlanning   String?  // JSON con timeline y entregables
+  
+  // Metadatos
+  completedSteps    String?  // JSON array de pasos completados
+  completionStatus  OnboardingStatus @default(PENDING)
+  submittedAt       DateTime?
+  
+  // Relaciones
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project  Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum OnboardingStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
 }
 
 model VerificationToken {
