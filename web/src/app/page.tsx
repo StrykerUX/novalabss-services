@@ -30,16 +30,20 @@ export default function Home() {
           duration={3600}
         />
       )}
-      {!showLoader && <Navigation />}
-      <Hero loaderComplete={loaderComplete} />
-      <WhyNovaLabs />
-      <PricingPlans />
-      <TeamAndTools />
-      <Portfolio />
-      <Testimonials />
-      <PromotionCountdown />
-      <ContactSection />
-      <Footer />
+      {!showLoader && (
+        <>
+          <Navigation />
+          <Hero loaderComplete={loaderComplete} />
+          <WhyNovaLabs />
+          <PricingPlans />
+          <TeamAndTools />
+          <Portfolio />
+          <Testimonials />
+          <PromotionCountdown />
+          <ContactSection />
+          <Footer />
+        </>
+      )}
     </div>
   );
 }

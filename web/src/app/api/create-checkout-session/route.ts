@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
+import { STRIPE_PRODUCTS, getProductConfig, RegionType } from '@/lib/stripe-products'
 
 // Debug environment variables
 console.log('🔧 Environment check:')
@@ -20,36 +21,33 @@ export async function POST(request: NextRequest) {
   
   try {
     console.log('📋 Step 1: Parsing request body...')
-    const { plan, metadata } = await request.json()
-    console.log('📋 Request data:', { plan, metadata })
+    const { plan, region, metadata } = await request.json()
+    console.log('📋 Request data:', { plan, region, metadata })
     
-    // Configuración con Product IDs reales
-    const planConfig = {
-      rocket: { 
-        productId: 'prod_SgkgdpKFJDM2ox',
-        price: 99900, // $999.00 en centavos
-        name: 'Plan Rocket',
-        description: 'Sitio web profesional optimizado'
-      },
-      galaxy: { 
-        productId: 'prod_Sgkk0fGoUzKtOk',
-        price: 179900, // $1,799.00 en centavos
-        name: 'Plan Galaxy',
-        description: 'Plan completo con marketing personalizado'
-      }
-    }
-    
-    const selectedPlan = planConfig[plan as keyof typeof planConfig]
-    
-    if (!selectedPlan) {
+    // Validar plan
+    if (!STRIPE_PRODUCTS[plan as keyof typeof STRIPE_PRODUCTS]) {
       console.error('❌ Plan inválido:', plan)
       return NextResponse.json({ error: 'Plan inválido' }, { status: 400 })
     }
 
+    // Determinar región (default a international si no se especifica)
+    const userRegion = (region as RegionType) || 'international'
+    
+    // Validar que la región sea válida
+    const validRegions: RegionType[] = ['mexico', 'latam', 'usa', 'international']
+    if (!validRegions.includes(userRegion)) {
+      console.error('❌ Región inválida:', userRegion)
+      return NextResponse.json({ error: 'Región inválida' }, { status: 400 })
+    }
+
+    const regionConfig = getProductConfig(plan as 'rocket' | 'galaxy', userRegion)
+
     console.log('📋 Step 2: Plan configurado:', {
       plan,
-      productId: selectedPlan.productId,
-      price: selectedPlan.price
+      region: userRegion,
+      productId: regionConfig.productId,
+      price: regionConfig.price,
+      currency: regionConfig.currency
     })
 
     console.log('📋 Step 3: Probando conexión a Stripe...')
@@ -74,7 +72,7 @@ export async function POST(request: NextRequest) {
     try {
       // Buscar precio existente
       const prices = await stripe.prices.list({
-        product: selectedPlan.productId,
+        product: regionConfig.productId,
         active: true,
         type: 'recurring',
         limit: 10
@@ -91,7 +89,8 @@ export async function POST(request: NextRequest) {
       const bimonthlyPrice = prices.data.find(price => 
         price.recurring?.interval === 'month' && 
         price.recurring?.interval_count === 2 &&
-        price.unit_amount === selectedPlan.price
+        price.unit_amount === regionConfig.price &&
+        price.currency === regionConfig.currency
       )
 
       if (bimonthlyPrice) {
@@ -101,13 +100,13 @@ export async function POST(request: NextRequest) {
         // Crear nuevo precio bimestral
         console.log('🔨 Creando nuevo precio bimestral...')
         const newPrice = await stripe.prices.create({
-          currency: 'mxn',
-          unit_amount: selectedPlan.price,
+          currency: regionConfig.currency,
+          unit_amount: regionConfig.price,
           recurring: {
             interval: 'month',
             interval_count: 2,
           },
-          product: selectedPlan.productId,
+          product: regionConfig.productId,
         })
         priceId = newPrice.id
         console.log('✅ Precio bimestral creado:', priceId)
@@ -134,10 +133,13 @@ export async function POST(request: NextRequest) {
       ],
       metadata: {
         plan,
+        region: userRegion,
+        selectedRegion: metadata?.selectedRegion || userRegion,
+        detectedRegion: metadata?.detectedRegion || '',
+        ipCountry: metadata?.ipCountry || '',
         source: metadata?.source || 'unknown',
-        frustration: metadata?.frustration || '',
-        aspiration: metadata?.aspiration || '',
-        recommendedPlan: metadata?.recommendedPlan || plan,
+        flow: metadata?.flow || 'direct',
+        timestamp: new Date().toISOString()
       },
       success_url: `${process.env.NEXTAUTH_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXTAUTH_URL}/cancel`,

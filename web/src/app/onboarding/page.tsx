@@ -1,138 +1,220 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import SmoothMagneticButton from "@/components/SmoothMagneticButton"
+import { useOnboardingState } from "@/hooks/useOnboardingState"
+import MicroStepProgress from "@/components/onboarding/MicroStepProgress"
+import MicroStepWrapper from "@/components/onboarding/MicroStepWrapper"
+import Step0Location from "@/components/onboarding/microsteps/Step0Location"
+import Step1BusinessName from "@/components/onboarding/microsteps/Step1BusinessName"
+import Step2Industry from "@/components/onboarding/microsteps/Step2Industry"
+import Step3Location from "@/components/onboarding/microsteps/Step3Location"
+import Step4Experience from "@/components/onboarding/microsteps/Step4Experience"
+import Step5Objective from "@/components/onboarding/microsteps/Step5Objective"
+import Step6Audience from "@/components/onboarding/microsteps/Step6Audience"
+import Step7Interests from "@/components/onboarding/microsteps/Step7Interests"
+import Step8Competitors from "@/components/onboarding/microsteps/Step8Competitors"
+import Step9Pages from "@/components/onboarding/microsteps/Step9Pages"
+import Step10Features from "@/components/onboarding/microsteps/Step10Features"
+import Step11Content from "@/components/onboarding/microsteps/Step11Content"
+import Step12Colors from "@/components/onboarding/microsteps/Step12Colors"
+import Step13Style from "@/components/onboarding/microsteps/Step13Style"
+import Step14Logo from "@/components/onboarding/microsteps/Step14Logo"
+import Step15Domain from "@/components/onboarding/microsteps/Step15Domain"
+import Step16Review from "@/components/onboarding/microsteps/Step16Review"
+import { MicroStep } from "@/types/onboarding"
 
 export default function OnboardingPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const [currentStep, setCurrentStep] = useState(1)
+  const { 
+    step: currentStep, 
+    setStep, 
+    completedSteps, 
+    markStepCompleted,
+    loadFromStorage,
+    businessInfo,
+    objectives,
+    contentArchitecture,
+    brandDesign,
+    technicalSetup
+  } = useOnboardingState()
 
-  const steps = [
-    { id: 1, title: "Información básica", description: "Cuéntanos sobre tu negocio" },
-    { id: 2, title: "Contenido del sitio", description: "Qué información incluir" },
-    { id: 3, title: "Diseño y estilo", description: "Cómo se verá tu sitio" },
-    { id: 4, title: "Dominio y hosting", description: "Tu dirección web" },
-    { id: 5, title: "Revisión final", description: "Confirma todos los detalles" }
+  const microSteps: MicroStep[] = [
+    // Ubicación y Pricing
+    { id: 0, title: "Ubicación", subtitle: "¿Dónde está tu negocio?", category: 'location', required: true },
+    
+    // Información del Negocio
+    { id: 1, title: "Nombre y Tipo", subtitle: "¿Cómo se llama tu negocio?", category: 'business', required: true },
+    { id: 2, title: "Industria", subtitle: "¿En qué sector trabajas?", category: 'business', required: true },
+    { id: 3, title: "Ubicación Local", subtitle: "¿Dónde opera tu negocio?", category: 'business', required: true },
+    { id: 4, title: "Experiencia", subtitle: "¿Cuánto tiempo llevas operando?", category: 'business', required: true },
+    
+    // Objetivos y Audiencia (por ahora placeholder)
+    { id: 5, title: "Objetivo Principal", subtitle: "¿Cuál es tu meta principal?", category: 'objectives', required: true },
+    { id: 6, title: "Audiencia", subtitle: "¿A quién te diriges?", category: 'objectives', required: true },
+    { id: 7, title: "Intereses", subtitle: "¿Qué le interesa a tu audiencia?", category: 'objectives', required: false },
+    { id: 8, title: "Competidores", subtitle: "¿Quiénes son tus competidores?", category: 'objectives', required: false },
+    
+    // Placeholders para el resto
+    { id: 9, title: "Páginas", subtitle: "¿Qué páginas necesitas?", category: 'content', required: true },
+    { id: 10, title: "Funcionalidades", subtitle: "¿Qué características específicas?", category: 'content', required: true },
+    { id: 11, title: "Contenido", subtitle: "¿Tienes textos e imágenes?", category: 'content', required: false },
+    { id: 12, title: "Colores", subtitle: "¿Qué colores prefieres?", category: 'design', required: true },
+    { id: 13, title: "Estilo", subtitle: "¿Qué estilo visual te gusta?", category: 'design', required: true },
+    { id: 14, title: "Logo", subtitle: "¿Tienes logo o necesitas uno?", category: 'design', required: false },
+    { id: 15, title: "Dominio", subtitle: "¿Necesitas un dominio?", category: 'technical', required: true },
+    { id: 16, title: "Revisión", subtitle: "Confirmemos todos los detalles", category: 'review', required: true }
   ]
 
-  const currentStepData = steps.find(step => step.id === currentStep)
+  const totalSteps = microSteps.length
+
+  useEffect(() => {
+    // Solo cargar del storage en el cliente
+    if (typeof window !== 'undefined') {
+      loadFromStorage()
+    }
+  }, [loadFromStorage])
+
+  const handleNext = () => {
+    if (currentStep < totalSteps) {
+      markStepCompleted(currentStep)
+      setStep(currentStep + 1)
+    } else {
+      // Marcar el último paso como completado antes de salir
+      markStepCompleted(currentStep)
+      router.push('/dashboard')
+    }
+  }
+
+  const handlePrevious = () => {
+    if (currentStep > 0) {
+      setStep(currentStep - 1)
+    } else {
+      router.push('/dashboard')
+    }
+  }
+
+  const canGoNext = () => {
+    switch (currentStep) {
+      case 0:
+        return businessInfo.businessRegion && businessInfo.businessCountry
+      case 1:
+        return businessInfo.name && businessInfo.size
+      case 2:
+        return businessInfo.industry
+      case 3:
+        return businessInfo.location
+      case 4:
+        return businessInfo.yearsOperating !== undefined
+      case 5:
+        return objectives.primaryGoal
+      case 6:
+        return objectives.targetAudience?.ageRange && objectives.targetAudience?.location
+      case 7:
+        return true // Intereses son opcionales
+      case 8:
+        return true // Competidores son opcionales
+      case 9:
+        return contentArchitecture.pages && contentArchitecture.pages.length > 0
+      case 10:
+        return contentArchitecture.features && contentArchitecture.features.length > 0
+      case 11:
+        return true // Contenido existente es opcional
+      case 12:
+        return brandDesign.colors && brandDesign.colors.length > 0
+      case 13:
+        return brandDesign.style
+      case 14:
+        return brandDesign.logoStatus
+      case 15:
+        return technicalSetup.domain?.name
+      case 16:
+        return true // Revisión siempre disponible
+      default:
+        return true // Placeholders por ahora
+    }
+  }
+
+  const renderStepContent = () => {
+    switch (currentStep) {
+      case 0:
+        return <Step0Location />
+      case 1:
+        return <Step1BusinessName />
+      case 2:
+        return <Step2Industry />
+      case 3:
+        return <Step3Location />
+      case 4:
+        return <Step4Experience />
+      case 5:
+        return <Step5Objective />
+      case 6:
+        return <Step6Audience />
+      case 7:
+        return <Step7Interests />
+      case 8:
+        return <Step8Competitors />
+      case 9:
+        return <Step9Pages />
+      case 10:
+        return <Step10Features />
+      case 11:
+        return <Step11Content />
+      case 12:
+        return <Step12Colors />
+      case 13:
+        return <Step13Style />
+      case 14:
+        return <Step14Logo />
+      case 15:
+        return <Step15Domain />
+      case 16:
+        return <Step16Review />
+      default:
+        return <div className="text-center text-gray-400">Paso {currentStep} en desarrollo...</div>
+    }
+  }
+
+  const currentMicroStep = microSteps.find(step => step.id === currentStep)
 
   return (
     <div className="min-h-screen bg-black">
       <div className="container mx-auto px-4 py-8">
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-3xl mx-auto">
           
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
-              ¡Comencemos tu sitio web! 🚀
+            <h1 className="text-2xl font-bold text-white mb-2" style={{textWrap: "pretty"}}>
+              Creemos tu sitio web perfecto
             </h1>
-            <p className="text-gray-400">
-              Te guiaremos paso a paso para crear tu sitio perfecto
+            <p className="text-gray-400" style={{textWrap: "pretty"}}>
+              Solo unos pasos simples para comenzar
             </p>
           </div>
 
-          {/* Progress Bar */}
-          <div className="mb-8">
-            <div className="flex items-center justify-center space-x-2 mb-4">
-              {steps.map((step) => (
-                <div key={step.id} className="flex items-center">
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-semibold transition-all duration-300 ${
-                    step.id < currentStep 
-                      ? 'bg-green-500 text-white' 
-                      : step.id === currentStep
-                      ? 'bg-blue-500 text-white'
-                      : 'bg-gray-700 text-gray-400'
-                  }`}>
-                    {step.id < currentStep ? '✓' : step.id}
-                  </div>
-                  {step.id < steps.length && (
-                    <div className={`w-8 h-0.5 mx-2 ${
-                      step.id < currentStep ? 'bg-green-500' : 'bg-gray-700'
-                    }`} />
-                  )}
-                </div>
-              ))}
-            </div>
-            <div className="text-center">
-              <p className="text-gray-400 text-sm">
-                Paso {currentStep} de {steps.length}: {currentStepData?.title}
-              </p>
-            </div>
-          </div>
+          {/* Micro Progress Bar */}
+          <MicroStepProgress
+            currentStep={currentStep}
+            totalSteps={totalSteps}
+            completedSteps={completedSteps}
+            microSteps={microSteps}
+          />
 
           {/* Content Area */}
           <div className="bg-[#1A1A1A] rounded-2xl p-8 border border-gray-800">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-semibold text-white mb-4">
-                {currentStepData?.title}
-              </h2>
-              <p className="text-gray-400">
-                {currentStepData?.description}
-              </p>
-            </div>
-
-            {/* Step Content */}
-            <div className="min-h-[400px] flex items-center justify-center">
-              <div className="text-center">
-                <div className="text-6xl mb-4">🚧</div>
-                <h3 className="text-xl text-white mb-2">
-                  Paso {currentStep} en construcción
-                </h3>
-                <p className="text-gray-400 mb-6">
-                  Aquí irá el contenido específico para: {currentStepData?.title}
-                </p>
-                
-                {/* Placeholder form */}
-                <div className="max-w-md mx-auto space-y-4">
-                  <div className="bg-gray-900/50 rounded-lg p-4">
-                    <p className="text-gray-500 text-sm">
-                      Formulario para {currentStepData?.title.toLowerCase()}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Navigation */}
-            <div className="flex justify-between items-center mt-8">
-              <button
-                onClick={() => currentStep > 1 && setCurrentStep(currentStep - 1)}
-                disabled={currentStep === 1}
-                className="px-6 py-3 bg-gray-800 text-white rounded-lg font-semibold hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                Anterior
-              </button>
-
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => router.push('/dashboard')}
-                  className="px-6 py-3 border border-gray-600 text-gray-300 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
-                >
-                  Saltar por ahora
-                </button>
-
-                {currentStep < steps.length ? (
-                  <SmoothMagneticButton
-                    onClick={() => setCurrentStep(currentStep + 1)}
-                    className="px-6 py-3 font-space-grotesk font-semibold hover:shadow-lg hover:shadow-blue-500/40 transition-shadow duration-300"
-                    magneticStrength={0.1}
-                  >
-                    Siguiente
-                  </SmoothMagneticButton>
-                ) : (
-                  <SmoothMagneticButton
-                    onClick={() => router.push('/dashboard')}
-                    className="px-6 py-3 font-space-grotesk font-semibold hover:shadow-lg hover:shadow-blue-500/40 transition-shadow duration-300"
-                    magneticStrength={0.1}
-                  >
-                    Finalizar
-                  </SmoothMagneticButton>
-                )}
-              </div>
-            </div>
+            <MicroStepWrapper
+              isActive={true}
+              onNext={handleNext}
+              onPrevious={handlePrevious}
+              canGoNext={canGoNext()}
+              canGoPrevious={currentStep > 0}
+              isFirst={currentStep === 0}
+              isLast={currentStep === totalSteps}
+            >
+              {renderStepContent()}
+            </MicroStepWrapper>
           </div>
 
         </div>

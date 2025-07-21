@@ -1,0 +1,28 @@
+User-agent: *
+Allow: /
+Allow: /auth/signin
+Allow: /auth/signup
+Allow: /start
+Allow: /success
+Allow: /cancel
+
+# Bloquear páginas privadas
+Disallow: /dashboard
+Disallow: /admin
+Disallow: /api/
+Disallow: /checkout/
+
+# Bloquear archivos del sistema
+Disallow: /_next/
+Disallow: /favicon.ico
+Disallow: /site.webmanifest
+
+# Permitir archivos importantes
+Allow: /favicon.svg
+Allow: /sitemap.xml
+
+# Sitemap
+Sitemap: https://novalabs.com/sitemap.xml
+
+# Crawl delay para ser amigable con los servidores
+Crawl-delay: 1

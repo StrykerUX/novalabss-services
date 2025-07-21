@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { headers } from 'next/headers'
+import { PrismaClient } from '@prisma/client'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-04-30.basil',
 })
 
+const prisma = new PrismaClient()
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 
 export async function POST(request: NextRequest) {
@@ -65,6 +67,7 @@ export async function POST(request: NextRequest) {
       case 'customer.subscription.updated':
         const updatedSubscription = event.data.object as Stripe.Subscription
         console.log('🔄 Subscription updated:', updatedSubscription.id)
+        await handleSubscriptionUpdate(updatedSubscription)
         break
 
       case 'customer.subscription.deleted':
@@ -76,6 +79,7 @@ export async function POST(request: NextRequest) {
       case 'invoice.payment_succeeded':
         const invoice = event.data.object as Stripe.Invoice
         console.log('📄 Invoice paid:', invoice.id)
+        await handlePaymentSucceeded(invoice)
         break
 
       case 'invoice.payment_failed':
@@ -111,32 +115,90 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
       customerName: session.customer_details?.name,
     })
 
-    // Generar token de auto-login
+    if (!session.customer_details?.email) {
+      console.error('No customer email found in session')
+      return
+    }
+
+    // 1. Buscar o crear usuario
+    let user = await prisma.user.findUnique({
+      where: { email: session.customer_details.email }
+    })
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          email: session.customer_details.email,
+          name: session.customer_details.name || session.customer_details.email.split('@')[0],
+          role: 'USER'
+        }
+      })
+      console.log('✅ Created new user:', user.id)
+    }
+
+    // 2. Determinar plan
+    const planName = session.metadata?.plan === 'galaxy' ? 'Plan Galaxy' : 'Plan Rocket'
+    const planType = session.metadata?.plan === 'galaxy' ? 'Galaxy' : 'Rocket'
+
+    // 3. Verificar si ya existe un proyecto para este usuario y plan
+    const existingProject = await prisma.project.findFirst({
+      where: {
+        userId: user.id,
+        plan: planType
+      }
+    })
+
+    if (!existingProject) {
+      // 4. Crear proyecto inicial del sitio web
+      const projectName = `${planName} - ${user.name || user.email.split('@')[0]}`
+      
+      const newProject = await prisma.project.create({
+        data: {
+          name: projectName,
+          userId: user.id,
+          status: 'EN_DESARROLLO',
+          progress: 0,
+          currentPhase: 'Configuración inicial - Pago confirmado',
+          estimatedDelivery: planType === 'Galaxy' ? '5 días' : '3 días',
+          plan: planType
+        }
+      })
+
+      console.log('🚀 Created new project:', newProject.id, 'for user:', user.email)
+    } else {
+      console.log('📝 Project already exists for user:', user.email)
+    }
+
+    // 5. Generar token de auto-login
     const autoLoginToken = generateAutoLoginToken({
       sessionId: session.id,
-      email: session.customer_details?.email || '',
-      name: session.customer_details?.name || '',
+      email: session.customer_details.email,
+      name: session.customer_details.name || '',
       plan: session.metadata?.plan || 'rocket',
       source: session.metadata?.source || 'unknown',
       frustration: session.metadata?.frustration || '',
       aspiration: session.metadata?.aspiration || '',
     })
 
-    console.log('✅ Auto-login token generated for:', session.customer_details?.email)
+    console.log('✅ Auto-login token generated for:', session.customer_details.email)
     
-    // TODO: Aquí irían las operaciones de base de datos:
-    // 1. Buscar o crear usuario
-    // 2. Crear registro de suscripción
-    // 3. Activar servicios del plan
-    // 4. Enviar email de confirmación con token
-    // 5. Crear proyecto inicial del sitio web
-
-    // Por ahora, solo almacenamos el token temporalmente
-    // En producción, esto se guardaría en Redis o base de datos
+    // 6. Almacenar token en base de datos y temporalmente en memoria
+    const tokenExpiry = new Date(Date.now() + (60 * 60 * 1000)) // 1 hora
+    
+    // Actualizar usuario con token en BD
+    await prisma.user.update({
+      where: { email: session.customer_details.email },
+      data: {
+        autoLoginToken: autoLoginToken,
+        autoLoginTokenExpiry: tokenExpiry
+      }
+    })
+    
+    // También mantener en memoria como fallback
     global.autoLoginTokens = global.autoLoginTokens || new Map()
     global.autoLoginTokens.set(session.id, {
       token: autoLoginToken,
-      email: session.customer_details?.email,
+      email: session.customer_details.email,
       plan: session.metadata?.plan,
       timestamp: Date.now(),
       expiresAt: Date.now() + (60 * 60 * 1000) // 1 hora
@@ -144,6 +206,7 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
 
   } catch (error) {
     console.error('Error processing successful payment:', error)
+    throw error
   }
 }
 
@@ -169,13 +232,87 @@ async function handleNewSubscription(subscription: Stripe.Subscription) {
   try {
     console.log('Processing new subscription:', subscription.id)
     
-    // TODO: Actualizar estado de suscripción en BD
-    // - Activar servicios del plan
-    // - Configurar próximas fechas de facturación
-    // - Notificar al equipo de desarrollo
+    // Obtener customer
+    const customer = await stripe.customers.retrieve(subscription.customer as string)
+    
+    if (customer.deleted || !customer.email) {
+      console.log('Customer deleted or missing email')
+      return
+    }
+
+    // Buscar o crear usuario
+    let user = await prisma.user.findUnique({
+      where: { email: customer.email }
+    })
+
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          email: customer.email,
+          name: customer.name || customer.email.split('@')[0],
+          role: 'USER'
+        }
+      })
+      console.log('✅ Created user from subscription:', user.id)
+    }
+
+    // Solo crear proyecto si la suscripción está activa o en trial
+    if (subscription.status === 'active' || subscription.status === 'trialing') {
+      // Obtener producto para determinar el plan
+      const product = await stripe.products.retrieve(
+        subscription.items.data[0].price.product as string
+      )
+
+      // Mapear producto a plan
+      const planMapping = {
+        'prod_SgkgdpKFJDM2ox': { name: 'Plan Rocket', type: 'Rocket' },
+        'prod_Sgkk0fGoUzKtOk': { name: 'Plan Galaxy', type: 'Galaxy' }
+      } as const
+
+      const planData = planMapping[product.id as keyof typeof planMapping] || { name: 'Plan Rocket', type: 'Rocket' }
+
+      // Verificar si ya existe proyecto
+      const existingProject = await prisma.project.findFirst({
+        where: {
+          userId: user.id,
+          plan: planData.type
+        }
+      })
+
+      if (!existingProject) {
+        const projectName = `${planData.name} - ${user.name || user.email.split('@')[0]}`
+        
+        const newProject = await prisma.project.create({
+          data: {
+            name: projectName,
+            userId: user.id,
+            status: 'EN_DESARROLLO',
+            progress: 0,
+            currentPhase: 'Configuración inicial - Suscripción activada',
+            estimatedDelivery: planData.type === 'Galaxy' ? '5 días' : '3 días',
+            plan: planData.type
+          }
+        })
+
+        console.log('🚀 Created project from subscription:', newProject.id, 'for user:', user.email)
+      } else {
+        // Actualizar proyecto existente si estaba pausado
+        if (existingProject.status === 'EN_MANTENIMIENTO') {
+          await prisma.project.update({
+            where: { id: existingProject.id },
+            data: {
+              status: 'EN_DESARROLLO',
+              currentPhase: 'Suscripción reactivada'
+            }
+          })
+          console.log('🔄 Reactivated project:', existingProject.id)
+        }
+      }
+    }
     
   } catch (error) {
     console.error('Error processing new subscription:', error)
+    throw error
   }
 }
 
@@ -183,13 +320,195 @@ async function handleCancelledSubscription(subscription: Stripe.Subscription) {
   try {
     console.log('Processing cancelled subscription:', subscription.id)
     
-    // TODO: Desactivar servicios
-    // - Pausar desarrollo del sitio
-    // - Enviar email de cancelación
-    // - Actualizar estado en BD
+    // Obtener customer
+    const customer = await stripe.customers.retrieve(subscription.customer as string)
+    
+    if (customer.deleted || !customer.email) {
+      return
+    }
+
+    // Buscar usuario
+    const user = await prisma.user.findUnique({
+      where: { email: customer.email }
+    })
+
+    if (!user) {
+      return
+    }
+
+    // Pausar todos los proyectos activos del usuario
+    const updatedProjects = await prisma.project.updateMany({
+      where: { 
+        userId: user.id,
+        status: {
+          in: ['EN_DESARROLLO', 'EN_REVISION', 'EN_ACTUALIZACION']
+        }
+      },
+      data: { 
+        status: 'EN_MANTENIMIENTO',
+        currentPhase: 'Suscripción cancelada - Proyecto pausado'
+      }
+    })
+
+    console.log(`⏸️ Paused ${updatedProjects.count} projects for cancelled subscription`)
     
   } catch (error) {
     console.error('Error processing cancelled subscription:', error)
+    throw error
+  }
+}
+
+async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
+  try {
+    console.log('Processing subscription update:', subscription.id)
+    
+    // Obtener customer
+    const customer = await stripe.customers.retrieve(subscription.customer as string)
+    
+    if (customer.deleted || !customer.email) {
+      console.log('Customer deleted or missing email')
+      return
+    }
+
+    // Buscar usuario
+    const user = await prisma.user.findUnique({
+      where: { email: customer.email },
+      include: { subscription: true }
+    })
+
+    if (!user) {
+      console.log('User not found for email:', customer.email)
+      return
+    }
+
+    // Obtener información del precio
+    const priceId = subscription.items.data[0]?.price.id
+    const amount = subscription.items.data[0]?.price.unit_amount || 0
+    const currency = subscription.items.data[0]?.price.currency || 'usd'
+    const interval = subscription.items.data[0]?.price.recurring?.interval || 'month'
+
+    // Mapear estados de Stripe a nuestros estados
+    const statusMap: { [key: string]: string } = {
+      'active': 'ACTIVE',
+      'past_due': 'PAST_DUE',
+      'unpaid': 'UNPAID',
+      'canceled': 'CANCELED',
+      'incomplete': 'INCOMPLETE',
+      'trialing': 'TRIALING'
+    }
+
+    const status = statusMap[subscription.status] || 'INCOMPLETE'
+
+    // Calcular próximo pago
+    const nextPaymentDate = subscription.current_period_end 
+      ? new Date(subscription.current_period_end * 1000)
+      : null
+
+    // Actualizar o crear suscripción
+    await prisma.subscription.upsert({
+      where: { userId: user.id },
+      update: {
+        stripeSubscriptionId: subscription.id,
+        stripePriceId: priceId,
+        status: status as any,
+        amount,
+        currency,
+        interval,
+        currentPeriodStart: new Date(subscription.current_period_start * 1000),
+        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+        nextPaymentDate,
+        cancelAt: subscription.cancel_at ? new Date(subscription.cancel_at * 1000) : null,
+        canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
+        endedAt: subscription.ended_at ? new Date(subscription.ended_at * 1000) : null,
+        updatedAt: new Date()
+      },
+      create: {
+        userId: user.id,
+        stripeCustomerId: customer.id,
+        stripeSubscriptionId: subscription.id,
+        stripePriceId: priceId,
+        plan: 'Rocket', // Por defecto, ajustar según lógica de negocio
+        status: status as any,
+        amount,
+        currency,
+        interval,
+        startDate: new Date(subscription.created * 1000),
+        currentPeriodStart: new Date(subscription.current_period_start * 1000),
+        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
+        nextPaymentDate,
+        cancelAt: subscription.cancel_at ? new Date(subscription.cancel_at * 1000) : null,
+        canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
+        endedAt: subscription.ended_at ? new Date(subscription.ended_at * 1000) : null
+      }
+    })
+
+    console.log('✅ Subscription updated for user:', user.id)
+    
+  } catch (error) {
+    console.error('Error processing subscription update:', error)
+    throw error
+  }
+}
+
+async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
+  try {
+    console.log('Processing successful payment:', invoice.id)
+    
+    if (!invoice.customer) {
+      return
+    }
+
+    // Obtener customer
+    const customer = await stripe.customers.retrieve(invoice.customer as string)
+    
+    if (customer.deleted || !customer.email) {
+      return
+    }
+
+    // Buscar usuario
+    const user = await prisma.user.findUnique({
+      where: { email: customer.email },
+      include: { subscription: true }
+    })
+
+    if (!user || !user.subscription) {
+      console.log('User or subscription not found for customer:', customer.id)
+      return
+    }
+
+    // Crear registro de pago exitoso
+    await prisma.payment.create({
+      data: {
+        userId: user.id,
+        subscriptionId: user.subscription.id,
+        stripePaymentIntentId: invoice.payment_intent as string,
+        stripeInvoiceId: invoice.id,
+        amount: invoice.amount_paid,
+        currency: invoice.currency,
+        status: 'SUCCEEDED',
+        description: invoice.description || 'Pago de suscripción',
+        paidAt: new Date(),
+        receiptUrl: invoice.receipt_number ? `https://pay.stripe.com/receipts/${invoice.receipt_number}` : null,
+        invoiceUrl: invoice.hosted_invoice_url
+      }
+    })
+
+    // Actualizar información de último pago en la suscripción
+    await prisma.subscription.update({
+      where: { id: user.subscription.id },
+      data: {
+        lastPaymentDate: new Date(),
+        lastPaymentAmount: invoice.amount_paid,
+        paymentFailureCount: 0, // Resetear contador de fallos
+        updatedAt: new Date()
+      }
+    })
+
+    console.log('✅ Payment succeeded for user:', user.id, 'amount:', invoice.amount_paid)
+    
+  } catch (error) {
+    console.error('Error processing payment succeeded:', error)
+    throw error
   }
 }
 
@@ -197,12 +516,73 @@ async function handleFailedPayment(invoice: Stripe.Invoice) {
   try {
     console.log('Processing failed payment:', invoice.id)
     
-    // TODO: Manejar fallo de pago
-    // - Notificar al cliente
-    // - Intentar cobro alternativo
-    // - Suspender servicios si es necesario
+    if (!invoice.customer) {
+      return
+    }
+
+    // Obtener customer
+    const customer = await stripe.customers.retrieve(invoice.customer as string)
+    
+    if (customer.deleted || !customer.email) {
+      return
+    }
+
+    // Buscar usuario
+    const user = await prisma.user.findUnique({
+      where: { email: customer.email },
+      include: { subscription: true }
+    })
+
+    if (!user) {
+      return
+    }
+
+    // Si existe suscripción, crear registro de pago fallido
+    if (user.subscription) {
+      await prisma.payment.create({
+        data: {
+          userId: user.id,
+          subscriptionId: user.subscription.id,
+          stripePaymentIntentId: invoice.payment_intent as string,
+          stripeInvoiceId: invoice.id,
+          amount: invoice.amount_due,
+          currency: invoice.currency,
+          status: 'FAILED',
+          description: invoice.description || 'Pago de suscripción',
+          failedAt: new Date(),
+          failureReason: 'Payment failed'
+        }
+      })
+
+      // Incrementar contador de fallos
+      await prisma.subscription.update({
+        where: { id: user.subscription.id },
+        data: {
+          paymentFailureCount: {
+            increment: 1
+          },
+          updatedAt: new Date()
+        }
+      })
+    }
+
+    // Marcar proyectos como con problemas de pago
+    const updatedProjects = await prisma.project.updateMany({
+      where: { 
+        userId: user.id,
+        status: {
+          in: ['EN_DESARROLLO', 'EN_REVISION', 'EN_ACTUALIZACION']
+        }
+      },
+      data: { 
+        currentPhase: 'Problema de pago - Contacte soporte'
+      }
+    })
+
+    console.log(`⚠️ Updated ${updatedProjects.count} projects for failed payment`)
     
   } catch (error) {
     console.error('Error processing failed payment:', error)
+    throw error
   }
 }

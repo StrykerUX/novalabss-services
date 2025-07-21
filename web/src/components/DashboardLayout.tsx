@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import DashboardSidebar from "./DashboardSidebar";
 
 interface DashboardLayoutProps {
@@ -18,6 +19,7 @@ export default function DashboardLayout({
   subtitle 
 }: DashboardLayoutProps) {
   const { data: session, status } = useSession();
+  const router = useRouter();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -25,8 +27,15 @@ export default function DashboardLayout({
     
     if (!session) {
       redirect("/auth/signin");
+      return;
     }
-  }, [session, status]);
+
+    // Si el usuario es ADMIN, redirigir al dashboard admin
+    if (session.user.role === "ADMIN") {
+      router.push("/admin");
+      return;
+    }
+  }, [session, status, router]);
 
   if (status === "loading") {
     return (
@@ -39,13 +48,13 @@ export default function DashboardLayout({
     );
   }
 
-  if (!session) {
+  if (!session || session.user.role === "ADMIN") {
     return null;
   }
 
   return (
     <div className="h-screen bg-black flex overflow-hidden">
-      {/* Sidebar */}
+      {/* Sidebar - Solo para usuarios USER */}
       <DashboardSidebar 
         isOpen={sidebarOpen} 
         onClose={() => setSidebarOpen(false)} 
