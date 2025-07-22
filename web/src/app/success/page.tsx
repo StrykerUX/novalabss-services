@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 import SmoothMagneticButton from "@/components/SmoothMagneticButton"
 import { useOnboardingState } from "@/hooks/useOnboardingState"
 
-export default function SuccessPage() {
+function SuccessPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const sessionId = searchParams.get('session_id')
@@ -339,5 +339,17 @@ export default function SuccessPage() {
 
       </div>
     </div>
+  )
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white text-lg">Cargando...</div>
+      </div>
+    }>
+      <SuccessPageContent />
+    </Suspense>
   )
 }

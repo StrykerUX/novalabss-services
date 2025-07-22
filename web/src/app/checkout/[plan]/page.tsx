@@ -1,11 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useParams, useSearchParams } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
-export default function CheckoutPage() {
+function CheckoutPageContent() {
   const params = useParams()
   const searchParams = useSearchParams()
   const { data: session } = useSession()
@@ -199,5 +199,17 @@ export default function CheckoutPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+export default function CheckoutPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white text-lg">Cargando...</div>
+      </div>
+    }>
+      <CheckoutPageContent />
+    </Suspense>
   )
 }

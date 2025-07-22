@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import FrustrationCard from "@/components/flow/FrustrationCard"
 import AspirationCard from "@/components/flow/AspirationCard"
@@ -11,7 +11,8 @@ import ROICard from "@/components/flow/ROICard"
 export type Frustration = "pocos_encuentran" | "no_confianza" | "pierdo_competencia" | "no_tiempo"
 export type Aspiration = "2-3_clientes" | "5-10_clientes" | "10-20_clientes" | "20_plus_clientes"
 
-export default function WarmLeadJourney() {
+// Componente interno que usa useSearchParams
+function WarmLeadJourneyContent() {
   const [currentStep, setCurrentStep] = useState(1)
   const [frustration, setFrustration] = useState<Frustration | null>(null)
   const [aspiration, setAspiration] = useState<Aspiration | null>(null)
@@ -214,5 +215,18 @@ export default function WarmLeadJourney() {
 
       </div>
     </div>
+  )
+}
+
+// Componente principal con Suspense
+export default function WarmLeadJourney() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white text-lg">Cargando...</div>
+      </div>
+    }>
+      <WarmLeadJourneyContent />
+    </Suspense>
   )
 }
