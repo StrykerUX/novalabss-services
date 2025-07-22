@@ -21,31 +21,31 @@ export type RegionType = 'mexico' | 'latam' | 'usa' | 'international'
 export const STRIPE_PRODUCTS: Record<'rocket' | 'galaxy', StripeProductConfig> = {
   rocket: {
     mexico: {
-      productId: 'prod_SgkgdpKFJDM2ox', // Producto para México en MXN
+      productId: process.env.STRIPE_ROCKET_PRODUCT_ID || 'prod_SivqhJc31UvLUv', // Producto para México en MXN
       priceId: undefined,
       price: 99900, // $999.00 MXN
       currency: 'mxn'
     },
     latam: {
-      productId: 'prod_SgkgdpKFJDM2ox', // Producto LATAM en USD
+      productId: process.env.STRIPE_ROCKET_PRODUCT_ID || 'prod_SivqhJc31UvLUv', // Producto LATAM en USD
       priceId: undefined,
       price: 5500, // $55.00 USD
       currency: 'usd'
     },
     usa: {
-      productId: 'prod_SgkgdpKFJDM2ox', // Producto USA en USD
+      productId: process.env.STRIPE_ROCKET_PRODUCT_ID || 'prod_SivqhJc31UvLUv', // Producto USA en USD
       priceId: undefined,
       price: 9900, // $99.00 USD
       currency: 'usd'
     },
     canada: {
-      productId: 'prod_SgkgdpKFJDM2ox', // Producto Canadá en USD
+      productId: process.env.STRIPE_ROCKET_PRODUCT_ID || 'prod_SivqhJc31UvLUv', // Producto Canadá en USD
       priceId: undefined,
       price: 9900, // $99.00 USD
       currency: 'usd'
     },
     international: {
-      productId: 'prod_SgkgdpKFJDM2ox', // Producto Internacional en USD
+      productId: process.env.STRIPE_ROCKET_PRODUCT_ID || 'prod_SivqhJc31UvLUv', // Producto Internacional en USD
       priceId: undefined,
       price: 9900, // $99.00 USD
       currency: 'usd'
@@ -55,31 +55,31 @@ export const STRIPE_PRODUCTS: Record<'rocket' | 'galaxy', StripeProductConfig> =
   },
   galaxy: {
     mexico: {
-      productId: 'prod_Sgkk0fGoUzKtOk', // Producto para México en MXN
+      productId: process.env.STRIPE_GALAXY_PRODUCT_ID || 'prod_Sivwz5FIJNAVkT', // Producto para México en MXN
       priceId: undefined,
       price: 179900, // $1,799.00 MXN
       currency: 'mxn'
     },
     latam: {
-      productId: 'prod_Sgkk0fGoUzKtOk', // Producto LATAM en USD
+      productId: process.env.STRIPE_GALAXY_PRODUCT_ID || 'prod_Sivwz5FIJNAVkT', // Producto LATAM en USD
       priceId: undefined,
       price: 9900, // $99.00 USD
       currency: 'usd'
     },
     usa: {
-      productId: 'prod_Sgkk0fGoUzKtOk', // Producto USA en USD
+      productId: process.env.STRIPE_GALAXY_PRODUCT_ID || 'prod_Sivwz5FIJNAVkT', // Producto USA en USD
       priceId: undefined,
       price: 17700, // $177.00 USD
       currency: 'usd'
     },
     canada: {
-      productId: 'prod_Sgkk0fGoUzKtOk', // Producto Canadá en USD
+      productId: process.env.STRIPE_GALAXY_PRODUCT_ID || 'prod_Sivwz5FIJNAVkT', // Producto Canadá en USD
       priceId: undefined,
       price: 17700, // $177.00 USD
       currency: 'usd'
     },
     international: {
-      productId: 'prod_Sgkk0fGoUzKtOk', // Producto Internacional en USD
+      productId: process.env.STRIPE_GALAXY_PRODUCT_ID || 'prod_Sivwz5FIJNAVkT', // Producto Internacional en USD
       priceId: undefined,
       price: 17700, // $177.00 USD
       currency: 'usd'
