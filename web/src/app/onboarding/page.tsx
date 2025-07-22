@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useOnboardingState } from "@/hooks/useOnboardingState"
 import MicroStepProgress from "@/components/onboarding/MicroStepProgress"
@@ -24,7 +24,8 @@ import Step15Domain from "@/components/onboarding/microsteps/Step15Domain"
 import Step16Review from "@/components/onboarding/microsteps/Step16Review"
 import { MicroStep } from "@/types/onboarding"
 
-export default function OnboardingPage() {
+// Componente interno que usa useSearchParams
+function OnboardingContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { 
@@ -220,5 +221,18 @@ export default function OnboardingPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+// Componente principal con Suspense
+export default function OnboardingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white text-lg">Cargando...</div>
+      </div>
+    }>
+      <OnboardingContent />
+    </Suspense>
   )
 }

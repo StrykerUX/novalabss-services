@@ -10,9 +10,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: true,
   },
   // Optimizaciones para producción
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client'],
-  },
+  serverExternalPackages: ['@prisma/client'],
 };
 
 export default nextConfig;
