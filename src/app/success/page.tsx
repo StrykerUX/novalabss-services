@@ -19,7 +19,7 @@ function SuccessPageContent() {
   const [passwordLoading, setPasswordLoading] = useState(false)
   const [passwordError, setPasswordError] = useState('')
   const [error, setError] = useState('')
-  const { reset } = useOptimizedOnboarding()
+  const { resetOnboarding } = useOptimizedOnboarding()
 
   useEffect(() => {
     async function handleAutoLogin() {
@@ -150,7 +150,7 @@ function SuccessPageContent() {
         if (signInResult?.ok) {
           console.log('✅ Auto-login exitoso')
           // Reset onboarding y redirect
-          reset()
+          resetOnboarding()
           router.push('/onboarding')
         } else {
           console.error('❌ Auto-login falló:', signInResult?.error)
@@ -313,7 +313,7 @@ function SuccessPageContent() {
           <div className="mb-8">
             <SmoothMagneticButton
               onClick={() => {
-                reset()
+                resetOnboarding()
                 router.push('/onboarding')
               }}
               className="w-full px-8 py-6 font-space-grotesk font-bold text-xl hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300"

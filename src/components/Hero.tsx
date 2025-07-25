@@ -267,22 +267,29 @@ export default function Hero({ loaderComplete = false }: HeroProps) {
             
             {/* Button at bottom */}
             <div className="hero-button max-w-4xl mt-16 lg:mt-0 mb-4 lg:mb-8 opacity-0">
-              <a href="/start">
-                <SmoothMagneticButton 
-                  className="smooth-magnetic-button text-white px-8 py-4 font-space-grotesk font-semibold text-base lg:text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center space-x-3"
-                  magneticStrength={0.2}
+              <SmoothMagneticButton 
+                onClick={() => {
+                  const planesSection = document.getElementById('planes');
+                  if (planesSection) {
+                    planesSection.scrollIntoView({ 
+                      behavior: 'smooth',
+                      block: 'start'
+                    });
+                  }
+                }}
+                className="smooth-magnetic-button text-white px-8 py-4 font-space-grotesk font-semibold text-base lg:text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center space-x-3"
+                magneticStrength={0.2}
+              >
+                <span>Quiero mi sitio web</span>
+                <svg 
+                  className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
                 >
-                  <span>Quiero mi sitio web</span>
-                  <svg 
-                    className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </SmoothMagneticButton>
-              </a>
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </SmoothMagneticButton>
             </div>
           </div>
         </div>
