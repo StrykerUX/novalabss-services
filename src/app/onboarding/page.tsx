@@ -1,10 +1,11 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useOnboardingState } from "@/hooks/useOnboardingState"
 import MicroStepProgress from "@/components/onboarding/MicroStepProgress"
 import MicroStepWrapper from "@/components/onboarding/MicroStepWrapper"
+import Step0Location from "@/components/onboarding/microsteps/Step0Location"
 import Step1BusinessName from "@/components/onboarding/microsteps/Step1BusinessName"
 import Step2Industry from "@/components/onboarding/microsteps/Step2Industry"
 import Step3Location from "@/components/onboarding/microsteps/Step3Location"
@@ -23,7 +24,8 @@ import Step15Domain from "@/components/onboarding/microsteps/Step15Domain"
 import Step16Review from "@/components/onboarding/microsteps/Step16Review"
 import { MicroStep } from "@/types/onboarding"
 
-export default function OnboardingPage() {
+// Componente interno que usa useSearchParams
+function OnboardingContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { 
@@ -40,10 +42,13 @@ export default function OnboardingPage() {
   } = useOnboardingState()
 
   const microSteps: MicroStep[] = [
+    // Ubicación y Pricing
+    { id: 0, title: "Ubicación", subtitle: "¿Dónde está tu negocio?", category: 'location', required: true },
+    
     // Información del Negocio
     { id: 1, title: "Nombre y Tipo", subtitle: "¿Cómo se llama tu negocio?", category: 'business', required: true },
     { id: 2, title: "Industria", subtitle: "¿En qué sector trabajas?", category: 'business', required: true },
-    { id: 3, title: "Ubicación", subtitle: "¿Dónde opera tu negocio?", category: 'business', required: true },
+    { id: 3, title: "Ubicación Local", subtitle: "¿Dónde opera tu negocio?", category: 'business', required: true },
     { id: 4, title: "Experiencia", subtitle: "¿Cuánto tiempo llevas operando?", category: 'business', required: true },
     
     // Objetivos y Audiencia (por ahora placeholder)
@@ -84,7 +89,7 @@ export default function OnboardingPage() {
   }
 
   const handlePrevious = () => {
-    if (currentStep > 1) {
+    if (currentStep > 0) {
       setStep(currentStep - 1)
     } else {
       router.push('/dashboard')
@@ -93,6 +98,8 @@ export default function OnboardingPage() {
 
   const canGoNext = () => {
     switch (currentStep) {
+      case 0:
+        return businessInfo.businessRegion && businessInfo.businessCountry
       case 1:
         return businessInfo.name && businessInfo.size
       case 2:
@@ -132,6 +139,8 @@ export default function OnboardingPage() {
 
   const renderStepContent = () => {
     switch (currentStep) {
+      case 0:
+        return <Step0Location />
       case 1:
         return <Step1BusinessName />
       case 2:
@@ -201,8 +210,8 @@ export default function OnboardingPage() {
               onNext={handleNext}
               onPrevious={handlePrevious}
               canGoNext={canGoNext()}
-              canGoPrevious={currentStep > 1}
-              isFirst={currentStep === 1}
+              canGoPrevious={currentStep > 0}
+              isFirst={currentStep === 0}
               isLast={currentStep === totalSteps}
             >
               {renderStepContent()}
@@ -212,5 +221,18 @@ export default function OnboardingPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+// Componente principal con Suspense
+export default function OnboardingPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white text-lg">Cargando...</div>
+      </div>
+    }>
+      <OnboardingContent />
+    </Suspense>
   )
 }

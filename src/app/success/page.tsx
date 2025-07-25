@@ -1,12 +1,12 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 import SmoothMagneticButton from "@/components/SmoothMagneticButton"
 import { useOnboardingState } from "@/hooks/useOnboardingState"
 
-export default function SuccessPage() {
+function SuccessPageContent() {
   const searchParams = useSearchParams()
   const router = useRouter()
   const sessionId = searchParams.get('session_id')
@@ -31,28 +31,64 @@ export default function SuccessPage() {
       try {
         console.log('🔍 Attempting auto-login for session:', sessionId)
         
-        // Intentar obtener token de auto-login
-        const response = await fetch(`/api/auth/get-login-token?sessionId=${sessionId}`)
+        // Intentar obtener token de auto-login con reintentos
+        let attempts = 0
+        const maxAttempts = 3
+        let success = false
         
-        if (!response.ok) {
-          console.log('❌ No auto-login token available')
-          setLoading(false)
-          return
-        }
-        
-        const data = await response.json()
-        
-        if (data.success) {
-          console.log('✅ Auto-login token obtained:', data.user.email)
-          setUser(data.user)
-          setAutoLoginToken(data.token)
-          setShowPasswordSetup(true)
-        } else {
-          console.log('❌ Auto-login failed:', data.error)
+        while (attempts < maxAttempts && !success) {
+          attempts++
+          console.log(`🔄 Auto-login attempt ${attempts}/${maxAttempts}`)
+          
+          try {
+            const response = await fetch(`/api/auth/get-login-token?sessionId=${sessionId}`)
+            
+            if (!response.ok) {
+              const errorData = await response.json().catch(() => ({}))
+              console.log(`❌ Auto-login attempt ${attempts} failed:`, response.status, errorData.error)
+              
+              if (attempts < maxAttempts) {
+                // Esperar antes del siguiente intento (exponential backoff)
+                await new Promise(resolve => setTimeout(resolve, attempts * 1000))
+                continue
+              } else {
+                console.log('❌ All auto-login attempts failed')
+                setError('No se pudo completar el auto-login. Por favor, inicia sesión manualmente.')
+                setLoading(false)
+                return
+              }
+            }
+            
+            const data = await response.json()
+            
+            if (data.success) {
+              console.log('✅ Auto-login token obtained:', data.user.email)
+              setUser(data.user)
+              setAutoLoginToken(data.token)
+              setShowPasswordSetup(true)
+              success = true
+            } else {
+              console.log(`❌ Auto-login attempt ${attempts} failed:`, data.error)
+              if (attempts < maxAttempts) {
+                await new Promise(resolve => setTimeout(resolve, attempts * 1000))
+              } else {
+                setError(`Error de autenticación: ${data.error}`)
+              }
+            }
+            
+          } catch (fetchError) {
+            console.error(`❌ Auto-login attempt ${attempts} network error:`, fetchError)
+            if (attempts < maxAttempts) {
+              await new Promise(resolve => setTimeout(resolve, attempts * 1000))
+            } else {
+              setError('Error de conexión. Por favor, verifica tu internet e intenta de nuevo.')
+            }
+          }
         }
         
       } catch (error) {
-        console.error('❌ Auto-login error:', error)
+        console.error('❌ Auto-login critical error:', error)
+        setError('Error inesperado durante el auto-login.')
       } finally {
         setLoading(false)
       }
@@ -303,5 +339,17 @@ export default function SuccessPage() {
 
       </div>
     </div>
+  )
+}
+
+export default function SuccessPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white text-lg">Cargando...</div>
+      </div>
+    }>
+      <SuccessPageContent />
+    </Suspense>
   )
 }

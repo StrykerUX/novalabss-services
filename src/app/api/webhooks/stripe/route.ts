@@ -180,7 +180,19 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
 
     console.log('✅ Auto-login token generated for:', session.customer_details.email)
     
-    // 6. Almacenar token temporalmente
+    // 6. Almacenar token en base de datos y temporalmente en memoria
+    const tokenExpiry = new Date(Date.now() + (60 * 60 * 1000)) // 1 hora
+    
+    // Actualizar usuario con token en BD
+    await prisma.user.update({
+      where: { email: session.customer_details.email },
+      data: {
+        autoLoginToken: autoLoginToken,
+        autoLoginTokenExpiry: tokenExpiry
+      }
+    })
+    
+    // También mantener en memoria como fallback
     global.autoLoginTokens = global.autoLoginTokens || new Map()
     global.autoLoginTokens.set(session.id, {
       token: autoLoginToken,

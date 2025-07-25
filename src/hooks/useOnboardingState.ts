@@ -5,7 +5,7 @@ import React from 'react'
 const STORAGE_KEY = 'novalabs-onboarding-state'
 
 const defaultState: OnboardingData = {
-  step: 1,
+  step: 0,
   businessInfo: {},
   objectives: {},
   contentArchitecture: {},

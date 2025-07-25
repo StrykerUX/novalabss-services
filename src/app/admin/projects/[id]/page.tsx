@@ -294,7 +294,7 @@ export default function ProjectDetailPage() {
           <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
             <h3 className="text-white font-bold text-lg mb-4">Información del Cliente</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <div>
                 <h4 className="text-white/80 font-semibold mb-3">Datos de Contacto</h4>
                 <div className="space-y-2">
@@ -318,6 +318,32 @@ export default function ProjectDetailPage() {
                       <p className="text-white font-medium">{project.user.company}</p>
                     </div>
                   )}
+                </div>
+              </div>
+              
+              <div>
+                <h4 className="text-white/80 font-semibold mb-3">Región y Pricing</h4>
+                <div className="space-y-2">
+                  {onboarding.data?.businessInfo?.businessRegion && (
+                    <div>
+                      <span className="text-white/60 text-sm">Región del negocio:</span>
+                      <p className="text-white font-medium">
+                        {onboarding.data.businessInfo.businessRegion === 'latam' ? '🌎 Latinoamérica' : '🌍 Internacional'}
+                      </p>
+                    </div>
+                  )}
+                  {onboarding.data?.businessInfo?.businessCountry && (
+                    <div>
+                      <span className="text-white/60 text-sm">País:</span>
+                      <p className="text-white font-medium">{onboarding.data.businessInfo.businessCountry}</p>
+                    </div>
+                  )}
+                  <div>
+                    <span className="text-white/60 text-sm">Tier de pricing:</span>
+                    <p className={`font-medium ${onboarding.data?.businessInfo?.businessRegion === 'latam' ? 'text-green-400' : 'text-blue-400'}`}>
+                      {onboarding.data?.businessInfo?.businessRegion === 'latam' ? '💰 LATAM' : '💎 Internacional'}
+                    </p>
+                  </div>
                 </div>
               </div>
               
@@ -476,6 +502,9 @@ function OnboardingTab({
             fields={[
               { key: 'name', label: 'Nombre del negocio' },
               { key: 'industry', label: 'Industria' },
+              { key: 'customIndustry', label: 'Industria personalizada' },
+              { key: 'businessRegion', label: 'Región del negocio' },
+              { key: 'businessCountry', label: 'País del negocio' },
               { key: 'size', label: 'Tamaño' },
               { key: 'location', label: 'Ubicación' },
               { key: 'yearsOperating', label: 'Años operando' }
