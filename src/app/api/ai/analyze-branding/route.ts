@@ -1,9 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-})
+// Initialize OpenAI client lazily to avoid build-time errors
+let openai: OpenAI | null = null
+
+function getOpenAIClient() {
+  if (!openai) {
+    if (!process.env.OPENAI_API_KEY) {
+      throw new Error('OpenAI API key not configured')
+    }
+    openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY
+    })
+  }
+  return openai
+}
 
 const BRANDING_EXPERT_PROMPT = `
 Eres un experto en branding y diseño web con 15 años de experiencia ayudando a empresas a definir su identidad visual. 
@@ -42,7 +53,7 @@ export async function POST(request: NextRequest) {
 
     console.log('🤖 Starting AI branding analysis...')
 
-    const completion = await openai.chat.completions.create({
+    const completion = await getOpenAIClient().chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         {
@@ -146,7 +157,7 @@ export async function POST(request: NextRequest) {
 export async function GET() {
   try {
     // Test simple para verificar conectividad
-    const testCompletion = await openai.chat.completions.create({
+    const testCompletion = await getOpenAIClient().chat.completions.create({
       model: "gpt-4o-mini",
       messages: [
         { role: "user", content: "Test connection. Respond with 'OK'." }
