@@ -1,4 +1,6 @@
 // Configuración de productos de Stripe para diferentes regiones
+import { FEATURES } from '@/config/features'
+
 export interface RegionConfig {
   productId: string
   priceId?: string
@@ -172,6 +174,12 @@ export const COUNTRY_TO_REGION_MAP: Record<string, RegionType> = {
 
 // Helper para auto-detectar región por IP
 export function detectRegionFromCountry(countryCode?: string): RegionType {
+  // Si no hay pricing internacional habilitado, siempre retornar México
+  if (!FEATURES.INTERNATIONAL_PRICING) {
+    return 'mexico'
+  }
+  
+  // Lógica original para cuando esté habilitado
   if (!countryCode) return 'international'
   return COUNTRY_TO_REGION_MAP[countryCode] || 'international'
 }

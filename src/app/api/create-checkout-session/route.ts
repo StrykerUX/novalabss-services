@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 import { STRIPE_PRODUCTS, getProductConfig, RegionType } from '@/lib/stripe-products'
+import { FEATURES } from '@/config/features'
 
 // Debug environment variables
 console.log('🔧 Environment check:')
@@ -30,14 +31,21 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Plan inválido' }, { status: 400 })
     }
 
-    // Determinar región (default a international si no se especifica)
-    const userRegion = (region as RegionType) || 'international'
+    // Determinar región según feature flag
+    let userRegion: RegionType
     
-    // Validar que la región sea válida
-    const validRegions: RegionType[] = ['mexico', 'latam', 'usa', 'international']
-    if (!validRegions.includes(userRegion)) {
-      console.error('❌ Región inválida:', userRegion)
-      return NextResponse.json({ error: 'Región inválida' }, { status: 400 })
+    if (!FEATURES.INTERNATIONAL_PRICING) {
+      // Solo México disponible
+      userRegion = 'mexico'
+      console.log('🇲🇽 International pricing disabled, using Mexico region')
+    } else {
+      // Lógica original para múltiples regiones
+      userRegion = (region as RegionType) || 'international'
+      const validRegions: RegionType[] = ['mexico', 'latam', 'usa', 'international']
+      if (!validRegions.includes(userRegion)) {
+        console.error('❌ Región inválida:', userRegion)
+        return NextResponse.json({ error: 'Región inválida' }, { status: 400 })
+      }
     }
 
     const regionConfig = getProductConfig(plan as 'rocket' | 'galaxy', userRegion)

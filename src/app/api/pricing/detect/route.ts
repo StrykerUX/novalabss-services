@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { RegionType, detectRegionFromCountry, getRegionInfo, REGIONS } from '@/lib/stripe-products'
+import { FEATURES } from '@/config/features'
 
 interface RegionValidation {
   userSelection?: RegionType
@@ -85,31 +86,42 @@ function validateRegionSelection(
 
 export async function GET(request: NextRequest) {
   try {
-    // Obtener IP del usuario
+    // Si no hay pricing internacional, retornar México directamente
+    if (!FEATURES.INTERNATIONAL_PRICING) {
+      const mexicoInfo = getRegionInfo('mexico')
+      return NextResponse.json({
+        success: true,
+        detectedRegion: 'mexico',
+        regionInfo: mexicoInfo,
+        validation: {
+          detectedRegion: 'mexico',
+          suspiciousFlags: [],
+          timestamp: new Date().toISOString()
+        },
+        metadata: {
+          ipCountry: 'MX',
+          featureEnabled: false
+        }
+      })
+    }
+
+    // Lógica original para cuando esté habilitado
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 
                request.headers.get('x-real-ip') || 
                request.ip ||
                '127.0.0.1'
     
-    // Obtener otros headers útiles
     const acceptLanguage = request.headers.get('accept-language')
     const userAgent = request.headers.get('user-agent')
     
-    // Obtener parámetros de query
     const { searchParams } = new URL(request.url)
     const userSelection = searchParams.get('region') as RegionType | null
     
-    // Detectar país por IP
     const geoData = await getCountryFromIP(ip)
     const ipCountry = geoData?.country
     
-    // Detectar región basada en IP
     const detectedRegion = detectRegionFromCountry(ipCountry)
-    
-    // Obtener información de la región detectada
     const regionInfo = getRegionInfo(detectedRegion)
-    
-    // Validar selección si existe
     const validation = validateRegionSelection(userSelection || undefined, ipCountry, detectedRegion)
     
     // Log para analytics (solo si hay flags sospechosos)

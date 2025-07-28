@@ -3,11 +3,17 @@
 import { useState, useEffect } from 'react';
 import SmoothMagneticButton from './SmoothMagneticButton';
 import { REGIONS, RegionType, detectRegionFromCountry, getRegionInfo } from '@/lib/stripe-products';
+import { FEATURES } from '@/config/features';
 
 export default function PricingPlans() {
+  // Filtrar regiones según feature flag
+  const availableRegions = FEATURES.INTERNATIONAL_PRICING 
+    ? REGIONS 
+    : REGIONS.filter(region => region.id === 'mexico')
+  
   const [detectedRegion, setDetectedRegion] = useState<RegionType | null>(null)
   const [ipCountry, setIpCountry] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(!FEATURES.INTERNATIONAL_PRICING) // No loading si solo México
   
   // Modal de confirmación
   const [showRegionModal, setShowRegionModal] = useState(false)
@@ -17,7 +23,16 @@ export default function PricingPlans() {
 
   // Auto-detectar región por IP al cargar
   useEffect(() => {
-    const detectRegion = async () => {
+    const initializeRegion = async () => {
+      if (!FEATURES.INTERNATIONAL_PRICING) {
+        // Si no hay pricing internacional, usar solo México
+        setDetectedRegion('mexico')
+        setSelectedRegion('mexico')
+        setLoading(false)
+        return
+      }
+
+      // Lógica original de detección para cuando esté habilitado
       try {
         const response = await fetch('/api/pricing/detect')
         if (response.ok) {
@@ -27,9 +42,8 @@ export default function PricingPlans() {
           
           setIpCountry(country)
           setDetectedRegion(detected)
-          setSelectedRegion(detected) // Pre-seleccionar región detectada
+          setSelectedRegion(detected)
         } else {
-          // Fallback a internacional si la detección falla
           setDetectedRegion('international')
           setSelectedRegion('international')
         }
@@ -42,12 +56,19 @@ export default function PricingPlans() {
       }
     }
 
-    detectRegion()
+    initializeRegion()
   }, [])
 
   const handlePlanClick = (plan: 'rocket' | 'galaxy') => {
     setSelectedPlan(plan)
-    setShowRegionModal(true)
+    
+    // Si solo hay una región disponible (México), ir directo al checkout
+    if (!FEATURES.INTERNATIONAL_PRICING || availableRegions.length === 1) {
+      setSelectedRegion('mexico')
+      handleContinueToCheckout(plan, 'mexico')
+    } else {
+      setShowRegionModal(true)
+    }
   }
 
   const handleRegionSelect = (regionId: RegionType) => {
@@ -61,11 +82,14 @@ export default function PricingPlans() {
     }
   }
 
-  const handleContinueToCheckout = async () => {
-    if (!selectedPlan || !selectedRegion) return
+  const handleContinueToCheckout = async (plan?: 'rocket' | 'galaxy', region?: RegionType) => {
+    const checkoutPlan = plan || selectedPlan
+    const checkoutRegion = region || selectedRegion
+    
+    if (!checkoutPlan || !checkoutRegion) return
 
     try {
-      console.log('🚀 Iniciando checkout para plan:', selectedPlan, 'región:', selectedRegion)
+      console.log('🚀 Iniciando checkout para plan:', checkoutPlan, 'región:', checkoutRegion)
       
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
@@ -73,12 +97,12 @@ export default function PricingPlans() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          plan: selectedPlan,
-          region: selectedRegion,
+          plan: checkoutPlan,
+          region: checkoutRegion,
           metadata: {
             source: 'pricing',
             flow: 'direct',
-            selectedRegion: selectedRegion,
+            selectedRegion: checkoutRegion,
             detectedRegion: detectedRegion,
             ipCountry: ipCountry
           }
@@ -139,7 +163,10 @@ export default function PricingPlans() {
             <p className="text-white/60 text-sm">🌐 Detectando precios para tu región...</p>
           ) : (
             <p className="text-white/60 text-sm">
-              Precios para {getRegionInfo(detectedRegion!)?.label || 'tu región'}
+              {FEATURES.INTERNATIONAL_PRICING 
+                ? `Precios para ${getRegionInfo(detectedRegion!)?.label || 'tu región'}`
+                : 'Precios en pesos mexicanos'
+              }
             </p>
           )}
         </div>
@@ -362,7 +389,7 @@ export default function PricingPlans() {
               <h4 className="text-white font-semibold mb-4">¿Tu negocio está ubicado en:</h4>
               
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                {REGIONS.map((region) => (
+                {availableRegions.map((region) => (
                   <button
                     key={region.id}
                     onClick={() => handleRegionSelect(region.id)}
