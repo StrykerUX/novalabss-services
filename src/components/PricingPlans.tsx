@@ -6,53 +6,17 @@ import { REGIONS, RegionType, detectRegionFromCountry, getRegionInfo } from '@/l
 import { FEATURES } from '@/config/features';
 
 export default function PricingPlans() {
-  // 🔥 FORCE: Solo México - Sin feature flag dependency para evitar cache issues
-  const availableRegions = REGIONS.filter(region => region.id === 'mexico')
-  
-  const [detectedRegion, setDetectedRegion] = useState<RegionType | null>(null)
-  const [ipCountry, setIpCountry] = useState<string | null>(null)
-  const [loading, setLoading] = useState(false) // 🔥 FORCE: No loading para México
-  
-  // Modal de confirmación
-  const [showRegionModal, setShowRegionModal] = useState(false)
-  const [selectedPlan, setSelectedPlan] = useState<'rocket' | 'galaxy' | null>(null)
-  const [selectedRegion, setSelectedRegion] = useState<RegionType | null>(null)
-  const [showDiscrepancyMessage, setShowDiscrepancyMessage] = useState(false)
-
-  // 🔥 FORCE: Siempre México - Sin detección IP para evitar cache issues
-  useEffect(() => {
-    setDetectedRegion('mexico')
-    setSelectedRegion('mexico')
-    setLoading(false)
-  }, [])
+  // 🔥 FORCE: Variables mínimas - Solo checkout directo México
+  const [loading] = useState(false)
 
   const handlePlanClick = (plan: 'rocket' | 'galaxy') => {
-    setSelectedPlan(plan)
-    
-    // 🔥 FORCE: Siempre ir directo al checkout con México - Sin modal
-    setSelectedRegion('mexico')
+    // 🔥 FORCE: Checkout directo sin modal - Solo México
     handleContinueToCheckout(plan, 'mexico')
   }
 
-  const handleRegionSelect = (regionId: RegionType) => {
-    setSelectedRegion(regionId)
-    
-    // Verificar discrepancia IP vs selección
-    if (detectedRegion && regionId !== detectedRegion) {
-      setShowDiscrepancyMessage(true)
-    } else {
-      setShowDiscrepancyMessage(false)
-    }
-  }
-
-  const handleContinueToCheckout = async (plan?: 'rocket' | 'galaxy', region?: RegionType) => {
-    const checkoutPlan = plan || selectedPlan
-    const checkoutRegion = region || selectedRegion
-    
-    if (!checkoutPlan || !checkoutRegion) return
-
+  const handleContinueToCheckout = async (plan: 'rocket' | 'galaxy', region: RegionType) => {
     try {
-      console.log('🚀 Iniciando checkout para plan:', checkoutPlan, 'región:', checkoutRegion)
+      console.log('🚀 Iniciando checkout para plan:', plan, 'región:', region)
       
       const response = await fetch('/api/create-checkout-session', {
         method: 'POST',
@@ -60,14 +24,13 @@ export default function PricingPlans() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          plan: checkoutPlan,
-          region: checkoutRegion,
+          plan: plan,
+          region: region,
           metadata: {
             source: 'pricing',
             flow: 'direct',
-            selectedRegion: checkoutRegion,
-            detectedRegion: detectedRegion,
-            ipCountry: ipCountry
+            selectedRegion: region,
+            detectedRegion: 'mexico'
           }
         })
       })
@@ -87,32 +50,12 @@ export default function PricingPlans() {
     } catch (error) {
       console.error('❌ Error creating checkout session:', error)
       // Fallback al checkout page si hay error
-      window.location.href = `/checkout/${selectedPlan}?source=pricing&region=${selectedRegion}`
+      window.location.href = `/checkout/${plan}?source=pricing&region=${region}`
     }
   }
 
-  const getCurrentPrices = () => {
-    if (!detectedRegion) return { rocket: '...', galaxy: '...', currency: 'USD' }
-    const regionInfo = getRegionInfo(detectedRegion)
-    return {
-      rocket: regionInfo?.prices.rocket || 99,
-      galaxy: regionInfo?.prices.galaxy || 177,
-      currency: regionInfo?.currency || 'USD'
-    }
-  }
-
-  const getSelectedPrices = () => {
-    if (!selectedRegion) return { rocket: '...', galaxy: '...', currency: 'USD' }
-    const regionInfo = getRegionInfo(selectedRegion)
-    return {
-      rocket: regionInfo?.prices.rocket || 99,
-      galaxy: regionInfo?.prices.galaxy || 177,
-      currency: regionInfo?.currency || 'USD'
-    }
-  }
-
-  const prices = getCurrentPrices()
-  const selectedPrices = getSelectedPrices()
+  // 🔥 FORCE: Precios fijos de México - Sin funciones complejas
+  const prices = { rocket: 999, galaxy: 1799, currency: 'MXN' }
 
   return (
     <section id="planes" className="py-20">
@@ -335,94 +278,7 @@ export default function PricingPlans() {
           </div>
         </div>
 
-        {/* Modal de confirmación de región */}
-        {showRegionModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-            <div className="bg-[#1A1A1A] rounded-[24px] p-8 max-w-2xl w-full border border-white/10 max-h-[90vh] overflow-y-auto">
-              <h3 className="text-white font-bold text-xl mb-2">
-                📍 Confirma tu región antes de continuar
-              </h3>
-              <p className="text-white/60 text-sm mb-6">
-                Seleccionaste: <strong>Plan {selectedPlan === 'rocket' ? 'Rocket' : 'Galaxy'}</strong>
-              </p>
-              
-              <h4 className="text-white font-semibold mb-4">¿Tu negocio está ubicado en:</h4>
-              
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6">
-                {availableRegions.map((region) => (
-                  <button
-                    key={region.id}
-                    onClick={() => handleRegionSelect(region.id)}
-                    className={`p-4 rounded-xl border-2 transition-all text-center ${
-                      selectedRegion === region.id
-                        ? 'border-blue-500 bg-blue-500/10'
-                        : 'border-gray-700 hover:border-gray-600'
-                    }`}
-                  >
-                    <div className="text-lg mb-2">{region.label.split(' ')[0]}</div>
-                    <div className="text-sm font-medium text-white">
-                      {region.label.substring(region.label.indexOf(' ') + 1)}
-                    </div>
-                  </button>
-                ))}
-              </div>
-
-              {showDiscrepancyMessage && selectedRegion && detectedRegion && (
-                <div className="mb-6 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
-                  <div className="flex items-start space-x-3">
-                    <span className="text-blue-400 text-lg">✨</span>
-                    <div>
-                      <h4 className="text-blue-300 font-semibold text-sm mb-2">
-                        ¡Perfecto! Actualizamos tu región
-                      </h4>
-                      <p className="text-blue-200/80 text-sm">
-                        Seleccionaste <strong>{getRegionInfo(selectedRegion)?.label}</strong> para tu negocio.
-                        Los precios se han ajustado automáticamente para ofrecerte la mejor propuesta.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {selectedRegion && (
-                <div className="mb-6 p-4 bg-gray-800/50 rounded-xl">
-                  <div className="text-center">
-                    <div className="text-sm text-white/60 mb-1">Precio final:</div>
-                    <div className="text-2xl font-bold text-white">
-                      ${selectedPlan === 'rocket' ? selectedPrices.rocket : selectedPrices.galaxy} {selectedPrices.currency}
-                      <span className="text-sm text-white/60 ml-2">bimestral</span>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <p className="text-xs text-white/50 text-center mb-6">
-                💡 Ofrecemos precios adaptados a cada región para hacer nuestros servicios más accesibles
-              </p>
-
-              <div className="flex space-x-4">
-                <button
-                  onClick={() => setShowRegionModal(false)}
-                  className="flex-1 px-6 py-3 border border-gray-600 text-white rounded-xl hover:bg-gray-800 transition-colors"
-                >
-                  Cancelar
-                </button>
-                <SmoothMagneticButton
-                  onClick={handleContinueToCheckout}
-                  disabled={!selectedRegion}
-                  className={`flex-1 px-6 py-3 font-semibold rounded-xl transition-all ${
-                    selectedRegion
-                      ? 'text-white shadow-xl shadow-blue-600/30'
-                      : 'text-white/50 cursor-not-allowed'
-                  }`}
-                  magneticStrength={0.1}
-                >
-                  Continuar al pago
-                </SmoothMagneticButton>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* 🔥 MODAL COMPLETAMENTE ELIMINADO - Solo checkout directo a México */}
       </div>
     </section>
   );
