@@ -4,6 +4,8 @@
  * Estas flags permiten habilitar/deshabilitar funcionalidades sin
  * necesidad de eliminar código, facilitando el deployment gradual
  * y rollbacks rápidos.
+ * 
+ * 🔥 FORCE REBUILD - Deploy timestamp: 2025-07-29
  */
 
 export const FEATURES = {
