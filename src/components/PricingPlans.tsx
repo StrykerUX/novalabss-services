@@ -62,8 +62,8 @@ export default function PricingPlans() {
   const handlePlanClick = (plan: 'rocket' | 'galaxy') => {
     setSelectedPlan(plan)
     
-    // Si solo hay una región disponible (México), ir directo al checkout
-    if (!FEATURES.INTERNATIONAL_PRICING || availableRegions.length === 1) {
+    // Si pricing internacional está deshabilitado, ir directo al checkout con México
+    if (!FEATURES.INTERNATIONAL_PRICING) {
       setSelectedRegion('mexico')
       handleContinueToCheckout(plan, 'mexico')
     } else {
