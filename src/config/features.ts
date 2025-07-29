@@ -16,8 +16,10 @@ export const FEATURES = {
    * true = México, LATAM, USA, Internacional disponibles
    * 
    * @default false - Solo México mientras preparamos expansión internacional
+   * 
+   * 🔧 CACHE BUSTER: v2025-07-29-14:30 - FORCE FALSE
    */
-  INTERNATIONAL_PRICING: false,
+  INTERNATIONAL_PRICING: false as const,
 
   /**
    * Futuras features que pueden necesitar control:
