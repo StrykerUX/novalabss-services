@@ -6,14 +6,12 @@ import { REGIONS, RegionType, detectRegionFromCountry, getRegionInfo } from '@/l
 import { FEATURES } from '@/config/features';
 
 export default function PricingPlans() {
-  // Filtrar regiones según feature flag
-  const availableRegions = FEATURES.INTERNATIONAL_PRICING 
-    ? REGIONS 
-    : REGIONS.filter(region => region.id === 'mexico')
+  // 🔥 FORCE: Solo México - Sin feature flag dependency para evitar cache issues
+  const availableRegions = REGIONS.filter(region => region.id === 'mexico')
   
   const [detectedRegion, setDetectedRegion] = useState<RegionType | null>(null)
   const [ipCountry, setIpCountry] = useState<string | null>(null)
-  const [loading, setLoading] = useState(!FEATURES.INTERNATIONAL_PRICING) // No loading si solo México
+  const [loading, setLoading] = useState(false) // 🔥 FORCE: No loading para México
   
   // Modal de confirmación
   const [showRegionModal, setShowRegionModal] = useState(false)
@@ -21,54 +19,19 @@ export default function PricingPlans() {
   const [selectedRegion, setSelectedRegion] = useState<RegionType | null>(null)
   const [showDiscrepancyMessage, setShowDiscrepancyMessage] = useState(false)
 
-  // Auto-detectar región por IP al cargar
+  // 🔥 FORCE: Siempre México - Sin detección IP para evitar cache issues
   useEffect(() => {
-    const initializeRegion = async () => {
-      if (!FEATURES.INTERNATIONAL_PRICING) {
-        // Si no hay pricing internacional, usar solo México
-        setDetectedRegion('mexico')
-        setSelectedRegion('mexico')
-        setLoading(false)
-        return
-      }
-
-      // Lógica original de detección para cuando esté habilitado
-      try {
-        const response = await fetch('/api/pricing/detect')
-        if (response.ok) {
-          const data = await response.json()
-          const country = data.metadata?.ipCountry
-          const detected = detectRegionFromCountry(country)
-          
-          setIpCountry(country)
-          setDetectedRegion(detected)
-          setSelectedRegion(detected)
-        } else {
-          setDetectedRegion('international')
-          setSelectedRegion('international')
-        }
-      } catch (error) {
-        console.error('Error detecting region:', error)
-        setDetectedRegion('international')
-        setSelectedRegion('international')
-      } finally {
-        setLoading(false)
-      }
-    }
-
-    initializeRegion()
+    setDetectedRegion('mexico')
+    setSelectedRegion('mexico')
+    setLoading(false)
   }, [])
 
   const handlePlanClick = (plan: 'rocket' | 'galaxy') => {
     setSelectedPlan(plan)
     
-    // Si pricing internacional está deshabilitado, ir directo al checkout con México
-    if (!FEATURES.INTERNATIONAL_PRICING) {
-      setSelectedRegion('mexico')
-      handleContinueToCheckout(plan, 'mexico')
-    } else {
-      setShowRegionModal(true)
-    }
+    // 🔥 FORCE: Siempre ir directo al checkout con México - Sin modal
+    setSelectedRegion('mexico')
+    handleContinueToCheckout(plan, 'mexico')
   }
 
   const handleRegionSelect = (regionId: RegionType) => {
@@ -163,10 +126,7 @@ export default function PricingPlans() {
             <p className="text-white/60 text-sm">🌐 Detectando precios para tu región...</p>
           ) : (
             <p className="text-white/60 text-sm">
-              {FEATURES.INTERNATIONAL_PRICING 
-                ? `Precios para ${getRegionInfo(detectedRegion!)?.label || 'tu región'}`
-                : 'Precios en pesos mexicanos'
-              }
+              Precios en pesos mexicanos
             </p>
           )}
         </div>
