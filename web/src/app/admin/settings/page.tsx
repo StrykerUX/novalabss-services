@@ -16,17 +16,11 @@ export default function AdminSettingsPage() {
   console.log("Admin Settings - Session:", session);
   console.log("Admin Settings - Role:", session?.user?.role);
 
-  // Lista actual de administradores autorizados desde variables de entorno
-  const getAuthorizedAdmins = () => {
-    if (typeof window !== 'undefined') {
-      // En el cliente, no tenemos acceso a las env vars del servidor
-      return ["Admin configurado desde variables de entorno"];
-    }
-    const adminEmailsString = process.env.ADMIN_EMAILS || "";
-    return adminEmailsString.split(',').map(email => email.trim()).filter(Boolean);
-  };
-
-  const authorizedAdmins = getAuthorizedAdmins();
+  // Lista actual de administradores autorizados
+  const authorizedAdmins = [
+    "abraham.stryker117@gmail.com",
+    "admin@novalabs.com"
+  ];
 
   const handleCreateAdmin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -101,7 +95,7 @@ export default function AdminSettingsPage() {
               <div>
                 <p className="text-blue-200 text-sm font-medium">Credenciales de acceso</p>
                 <p className="text-blue-300/80 text-xs mt-1">
-                  Contraseña configurada desde variables de entorno
+                  Contraseña temporal: <code className="bg-blue-900/50 px-2 py-0.5 rounded">NovaLabs2024!</code>
                 </p>
                 <p className="text-blue-300/60 text-xs mt-1">
                   Cambiar después del primer uso por seguridad

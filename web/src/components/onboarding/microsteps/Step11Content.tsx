@@ -23,6 +23,13 @@ const contentOptions = [
     icon: '🎬',
     desc: 'Material audiovisual promocional',
     color: 'from-green-500 to-emerald-500'
+  },
+  {
+    key: 'hasTexts',
+    title: 'Textos',
+    icon: '📝',
+    desc: 'Descripciones, biografías, contenido escrito',
+    color: 'from-orange-500 to-red-500'
   }
 ]
 
@@ -102,7 +109,7 @@ export default function Step11Content() {
       >
         <h4 className="text-sm font-medium text-gray-300 flex items-center space-x-2">
           <span>🎯</span>
-          <span>Material disponible</span>
+          <span>Material multimedia</span>
         </h4>
         
         <div className="grid grid-cols-2 gap-3">

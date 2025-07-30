@@ -501,8 +501,6 @@ function OnboardingTab({
             data={data.businessInfo}
             fields={[
               { key: 'name', label: 'Nombre del negocio' },
-              { key: 'description', label: 'Descripción general' },
-              { key: 'characteristics', label: 'Características y productos' },
               { key: 'industry', label: 'Industria' },
               { key: 'customIndustry', label: 'Industria personalizada' },
               { key: 'businessRegion', label: 'Región del negocio' },
@@ -522,10 +520,9 @@ function OnboardingTab({
             fields={[
               { key: 'primaryGoal', label: 'Meta principal' },
               { key: 'competitors', label: 'Competidores', isArray: true },
-              { key: 'targetAudience.ageRange', label: 'Rango de edad objetivo', isArray: true },
+              { key: 'targetAudience.ageRange', label: 'Rango de edad objetivo' },
               { key: 'targetAudience.location', label: 'Ubicación objetivo' },
-              { key: 'targetAudience.interests', label: 'Intereses objetivo', isArray: true },
-              { key: 'targetAudience.customInterests', label: 'Intereses personalizados', isArray: true }
+              { key: 'targetAudience.interests', label: 'Intereses objetivo', isArray: true }
             ]}
           />
         )}
@@ -537,7 +534,6 @@ function OnboardingTab({
             data={data.contentArchitecture}
             fields={[
               { key: 'pages', label: 'Páginas necesarias', isArray: true },
-              { key: 'sections', label: 'Secciones necesarias', isArray: true },
               { key: 'features', label: 'Funcionalidades', isArray: true },
               { key: 'existingContent', label: 'Contenido existente', isBoolean: true },
               { key: 'needsCopywriting', label: 'Necesita copywriting', isBoolean: true }
@@ -551,7 +547,7 @@ function OnboardingTab({
             title="🎨 Diseño y Marca"
             data={data.brandDesign}
             fields={[
-              { key: 'colors', label: 'Colores preferidos', isArray: true, isColors: true },
+              { key: 'colors', label: 'Colores preferidos', isArray: true },
               { key: 'style', label: 'Estilo' },
               { key: 'references', label: 'Referencias', isArray: true },
               { key: 'logoStatus', label: 'Estado del logo' }
@@ -601,7 +597,7 @@ function OnboardingSection({
 }: { 
   title: string; 
   data: any; 
-  fields: Array<{ key: string; label: string; isArray?: boolean; isBoolean?: boolean; isColors?: boolean }> 
+  fields: Array<{ key: string; label: string; isArray?: boolean; isBoolean?: boolean }> 
 }) {
   const getValue = (obj: any, path: string) => {
     return path.split('.').reduce((current, key) => current?.[key], obj)
@@ -620,29 +616,11 @@ function OnboardingSection({
           return (
             <div key={field.key} className="space-y-1">
               <span className="text-white/60 text-sm">{field.label}:</span>
-              {field.isColors && Array.isArray(value) ? (
-                <div className="flex items-center space-x-2">
-                  <div className="flex space-x-1">
-                    {value.map((color, index) => (
-                      <div
-                        key={index}
-                        className="w-6 h-6 rounded-full border border-gray-600 shadow-sm"
-                        style={{ backgroundColor: color }}
-                        title={color}
-                      />
-                    ))}
-                  </div>
-                  <p className="text-white font-medium text-sm">
-                    {value.join(', ')}
-                  </p>
-                </div>
-              ) : (
-                <p className="text-white font-medium">
-                  {field.isBoolean ? (value ? 'Sí' : 'No') :
-                   field.isArray ? (Array.isArray(value) ? value.join(', ') : value) :
-                   value}
-                </p>
-              )}
+              <p className="text-white font-medium">
+                {field.isBoolean ? (value ? 'Sí' : 'No') :
+                 field.isArray ? (Array.isArray(value) ? value.join(', ') : value) :
+                 value}
+              </p>
             </div>
           )
         })}

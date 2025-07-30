@@ -34,49 +34,11 @@ export default function Step1BusinessName() {
         />
       </motion.div>
 
-      {/* Descripción general del negocio */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.15 }}
-        className="space-y-3"
-      >
-        <label className="block text-sm font-medium text-gray-300">
-          ¿Cómo describirías tu negocio?
-        </label>
-        <textarea
-          value={businessInfo.description || ''}
-          onChange={(e) => updateBusinessInfo({ description: e.target.value })}
-          placeholder="Ej: Somos una consultoría que ayuda a empresas a mejorar sus procesos..."
-          rows={3}
-          className="w-full px-4 py-4 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
-        />
-      </motion.div>
-
-      {/* Características y productos */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="space-y-3"
-      >
-        <label className="block text-sm font-medium text-gray-300">
-          ¿Qué características y productos/servicios ofreces?
-        </label>
-        <textarea
-          value={businessInfo.characteristics || ''}
-          onChange={(e) => updateBusinessInfo({ characteristics: e.target.value })}
-          placeholder="Ej: Consultoría personalizada, auditorías, formación, soporte 24/7..."
-          rows={3}
-          className="w-full px-4 py-4 bg-gray-900 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
-        />
-      </motion.div>
-
       {/* Tamaño del negocio */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.25 }}
+        transition={{ delay: 0.2 }}
         className="space-y-3"
       >
         <label className="block text-sm font-medium text-gray-300">
@@ -112,7 +74,7 @@ export default function Step1BusinessName() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.35 }}
+          transition={{ delay: 0.3 }}
           className="mt-6 p-4 bg-gradient-to-br from-blue-500/5 to-purple-500/5 border border-blue-500/20 rounded-xl text-center"
         >
           <div className="text-lg font-semibold text-white mb-1">

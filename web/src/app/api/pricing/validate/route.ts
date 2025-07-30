@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { PrismaClient } from '@prisma/client'
+import { FEATURES } from '@/config/features'
 
 const prisma = new PrismaClient()
 
@@ -40,10 +41,34 @@ export async function POST(request: NextRequest) {
 
     const body = await request.json()
     const { 
-      userRegion, // 'latam' | 'international'
+      userRegion, // 'latam' | 'international' | 'mexico'
       selectedPlan, // 'rocket' | 'galaxy'
       priceAttempted // precio que el usuario está intentando pagar
     } = body
+
+    // Si no hay pricing internacional, solo validar México
+    if (!FEATURES.INTERNATIONAL_PRICING) {
+      const mexicoPrices = {
+        rocket: 99900, // $999.00 MXN
+        galaxy: 179900 // $1,799.00 MXN
+      }
+
+      const expectedPrice = mexicoPrices[selectedPlan as keyof typeof mexicoPrices]
+      const isValid = priceAttempted === expectedPrice && userRegion === 'mexico'
+
+      return NextResponse.json({
+        success: true,
+        valid: isValid,
+        userRegion: 'mexico',
+        expectedPrice,
+        priceAttempted,
+        message: isValid ? 'Precio válido para México' : 'Precio inválido',
+        metadata: {
+          featureEnabled: false,
+          timestamp: new Date().toISOString()
+        }
+      })
+    }
 
     // Obtener IP del usuario
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0] || 

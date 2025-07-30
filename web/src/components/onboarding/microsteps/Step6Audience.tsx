@@ -22,26 +22,10 @@ export default function Step6Audience() {
   const { objectives, updateObjectives } = useOnboardingState()
 
   const handleAgeUpdate = (age: string) => {
-    const currentAges = objectives.targetAudience?.ageRange || []
-    let newAges: string[]
-    
-    if (currentAges.includes(age)) {
-      // Si ya está seleccionado, lo quitamos
-      newAges = currentAges.filter(a => a !== age)
-    } else {
-      // Si no está seleccionado, lo agregamos (máximo 3)
-      if (currentAges.length < 3) {
-        newAges = [...currentAges, age]
-      } else {
-        // Si ya hay 3, reemplazamos el último
-        newAges = [...currentAges.slice(0, 2), age]
-      }
-    }
-    
     updateObjectives({
       targetAudience: {
         ...objectives.targetAudience,
-        ageRange: newAges
+        ageRange: age
       }
     })
   }
@@ -79,14 +63,14 @@ export default function Step6Audience() {
         transition={{ delay: 0.2 }}
         className="space-y-3"
       >
-        <h4 className="text-sm font-medium text-gray-300">Edad principal (máximo 3)</h4>
+        <h4 className="text-sm font-medium text-gray-300">Edad principal</h4>
         <div className="grid grid-cols-2 gap-3">
           {ageGroups.map((age, index) => (
             <motion.button
               key={age.value}
               onClick={() => handleAgeUpdate(age.value)}
               className={`p-4 rounded-xl border-2 transition-all text-left ${
-                objectives.targetAudience?.ageRange?.includes(age.value)
+                objectives.targetAudience?.ageRange === age.value
                   ? 'border-blue-500 bg-blue-500/10 text-white'
                   : 'border-gray-700 hover:border-gray-600 text-gray-300'
               }`}
@@ -145,7 +129,7 @@ export default function Step6Audience() {
       </motion.div>
 
       {/* Preview */}
-      {objectives.targetAudience?.ageRange?.length > 0 && objectives.targetAudience?.location && (
+      {objectives.targetAudience?.ageRange && objectives.targetAudience?.location && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -158,9 +142,7 @@ export default function Step6Audience() {
           </div>
           <div className="text-sm text-gray-300">
             <span className="text-blue-400">
-              {objectives.targetAudience?.ageRange?.map(age => 
-                ageGroups.find(a => a.value === age)?.label
-              ).join(', ')}
+              {ageGroups.find(a => a.value === objectives.targetAudience?.ageRange)?.label}
             </span>
             <span className="text-gray-400"> con alcance </span>
             <span className="text-blue-400">

@@ -59,8 +59,6 @@ model User {
   updatedAt     DateTime  @updatedAt
   projects      Project[]
   onboardingResponse OnboardingResponse?
-  subscription  Subscription?
-  payments      Payment[]
   
   // Campos para auto-login temporal
   autoLoginToken       String?
@@ -133,91 +131,4 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-}
-
-// Modelo para suscripciones y facturación
-model Subscription {
-  id                  String            @id @default(cuid())
-  userId              String            @unique
-  stripeCustomerId    String?           @unique
-  stripeSubscriptionId String?          @unique
-  stripePriceId       String?
-  
-  // Información de la suscripción
-  plan                String            // "Rocket", "Galaxy"
-  status              SubscriptionStatus @default(ACTIVE)
-  amount              Int               // Precio en centavos
-  currency            String            @default("USD")
-  interval            String            @default("month") // "month", "year"
-  
-  // Fechas importantes
-  startDate           DateTime
-  currentPeriodStart  DateTime
-  currentPeriodEnd    DateTime
-  cancelAt            DateTime?
-  canceledAt          DateTime?
-  endedAt             DateTime?
-  
-  // Información de facturación
-  lastPaymentDate     DateTime?
-  lastPaymentAmount   Int?
-  nextPaymentDate     DateTime?
-  paymentFailureCount Int               @default(0)
-  
-  // Relaciones
-  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
-  payments            Payment[]
-  
-  createdAt           DateTime          @default(now())
-  updatedAt           DateTime          @updatedAt
-}
-
-enum SubscriptionStatus {
-  ACTIVE      // Suscripción activa y pagada
-  PAST_DUE    // Pago atrasado pero aún activa
-  UNPAID      // Sin pago, suspendida temporalmente
-  CANCELED    // Cancelada por el usuario
-  INCOMPLETE  // Pago inicial no completado
-  TRIALING    // En período de prueba
-}
-
-// Modelo para historial de pagos
-model Payment {
-  id                  String        @id @default(cuid())
-  userId              String
-  subscriptionId      String
-  stripePaymentIntentId String?     @unique
-  stripeInvoiceId     String?       @unique
-  
-  // Información del pago
-  amount              Int           // Monto en centavos
-  currency            String        @default("USD")
-  status              PaymentStatus @default(PENDING)
-  description         String?
-  
-  // Fechas
-  attemptedAt         DateTime      @default(now())
-  paidAt              DateTime?
-  failedAt            DateTime?
-  
-  // Información adicional
-  failureReason       String?
-  receiptUrl          String?
-  invoiceUrl          String?
-  
-  // Relaciones
-  user                User          @relation(fields: [userId], references: [id], onDelete: Cascade)
-  subscription        Subscription  @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
-  
-  createdAt           DateTime      @default(now())
-  updatedAt           DateTime      @updatedAt
-}
-
-enum PaymentStatus {
-  PENDING     // Pago pendiente
-  PROCESSING  // Procesando pago
-  SUCCEEDED   // Pago exitoso
-  FAILED      // Pago fallido
-  CANCELED    // Pago cancelado
-  REFUNDED    // Pago reembolsado
 }

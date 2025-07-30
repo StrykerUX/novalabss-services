@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { motion } from 'framer-motion'
 import { useOnboardingState } from '@/hooks/useOnboardingState'
 
@@ -23,8 +23,6 @@ const interests = [
 
 export default function Step7Interests() {
   const { objectives, updateObjectives } = useOnboardingState()
-  const [customInterest, setCustomInterest] = useState('')
-  const [showCustomInput, setShowCustomInput] = useState(false)
 
   const handleInterestToggle = (interest: string) => {
     const currentInterests = objectives.targetAudience?.interests || []
@@ -38,24 +36,6 @@ export default function Step7Interests() {
         interests: newInterests
       }
     })
-  }
-
-  const handleCustomInterestAdd = () => {
-    if (customInterest.trim() && !objectives.targetAudience?.interests?.includes(customInterest.trim())) {
-      const currentInterests = objectives.targetAudience?.interests || []
-      const currentCustomInterests = objectives.targetAudience?.customInterests || []
-      
-      updateObjectives({
-        targetAudience: {
-          ...objectives.targetAudience,
-          interests: [...currentInterests, customInterest.trim()],
-          customInterests: [...currentCustomInterests, customInterest.trim()]
-        }
-      })
-      
-      setCustomInterest('')
-      setShowCustomInput(false)
-    }
   }
 
   const selectedCount = objectives.targetAudience?.interests?.length || 0
@@ -131,66 +111,7 @@ export default function Step7Interests() {
             </motion.button>
           )
         })}
-        
-        {/* Botón para agregar interés personalizado */}
-        {canSelectMore && (
-          <motion.button
-            onClick={() => setShowCustomInput(true)}
-            className="p-4 rounded-xl border-2 border-dashed border-gray-700 hover:border-gray-600 text-gray-400 hover:text-gray-300 transition-all text-left"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.3 + interests.length * 0.03 }}
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-          >
-            <div className="flex items-center space-x-3">
-              <div className="w-8 h-8 rounded-lg bg-gray-700 flex items-center justify-center text-lg">
-                ➕
-              </div>
-              <div className="flex-1">
-                <div className="font-medium text-sm">Agregar otro interés</div>
-              </div>
-            </div>
-          </motion.button>
-        )}
       </motion.div>
-
-      {/* Input para interés personalizado */}
-      {showCustomInput && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="p-4 bg-gray-900/50 border border-gray-700 rounded-xl"
-        >
-          <div className="flex items-center space-x-3">
-            <input
-              type="text"
-              value={customInterest}
-              onChange={(e) => setCustomInterest(e.target.value)}
-              placeholder="Escribe un interés personalizado..."
-              className="flex-1 px-3 py-2 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500"
-              autoFocus
-              onKeyPress={(e) => e.key === 'Enter' && handleCustomInterestAdd()}
-            />
-            <button
-              onClick={handleCustomInterestAdd}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-            >
-              Agregar
-            </button>
-            <button
-              onClick={() => {
-                setShowCustomInput(false)
-                setCustomInterest('')
-              }}
-              className="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 transition-colors"
-            >
-              Cancelar
-            </button>
-          </div>
-        </motion.div>
-      )}
 
       {/* Preview de intereses seleccionados */}
       {selectedCount > 0 && (
@@ -207,17 +128,13 @@ export default function Step7Interests() {
           <div className="flex flex-wrap gap-2">
             {objectives.targetAudience?.interests?.map((interest, index) => {
               const interestData = interests.find(i => i.name === interest)
-              const isCustom = objectives.targetAudience?.customInterests?.includes(interest)
               return (
                 <div
                   key={index}
                   className="flex items-center space-x-2 bg-gray-800/50 px-3 py-1 rounded-full text-sm"
                 >
-                  <span>{interestData?.icon || '🎯'}</span>
+                  <span>{interestData?.icon}</span>
                   <span className="text-gray-300">{interest}</span>
-                  {isCustom && (
-                    <span className="text-blue-400 text-xs">✨</span>
-                  )}
                 </div>
               )
             })}

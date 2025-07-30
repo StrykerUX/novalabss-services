@@ -67,7 +67,6 @@ export async function POST(request: NextRequest) {
       case 'customer.subscription.updated':
         const updatedSubscription = event.data.object as Stripe.Subscription
         console.log('🔄 Subscription updated:', updatedSubscription.id)
-        await handleSubscriptionUpdate(updatedSubscription)
         break
 
       case 'customer.subscription.deleted':
@@ -79,7 +78,6 @@ export async function POST(request: NextRequest) {
       case 'invoice.payment_succeeded':
         const invoice = event.data.object as Stripe.Invoice
         console.log('📄 Invoice paid:', invoice.id)
-        await handlePaymentSucceeded(invoice)
         break
 
       case 'invoice.payment_failed':
@@ -358,160 +356,6 @@ async function handleCancelledSubscription(subscription: Stripe.Subscription) {
   }
 }
 
-async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
-  try {
-    console.log('Processing subscription update:', subscription.id)
-    
-    // Obtener customer
-    const customer = await stripe.customers.retrieve(subscription.customer as string)
-    
-    if (customer.deleted || !customer.email) {
-      console.log('Customer deleted or missing email')
-      return
-    }
-
-    // Buscar usuario
-    const user = await prisma.user.findUnique({
-      where: { email: customer.email },
-      include: { subscription: true }
-    })
-
-    if (!user) {
-      console.log('User not found for email:', customer.email)
-      return
-    }
-
-    // Obtener información del precio
-    const priceId = subscription.items.data[0]?.price.id
-    const amount = subscription.items.data[0]?.price.unit_amount || 0
-    const currency = subscription.items.data[0]?.price.currency || 'usd'
-    const interval = subscription.items.data[0]?.price.recurring?.interval || 'month'
-
-    // Mapear estados de Stripe a nuestros estados
-    const statusMap: { [key: string]: string } = {
-      'active': 'ACTIVE',
-      'past_due': 'PAST_DUE',
-      'unpaid': 'UNPAID',
-      'canceled': 'CANCELED',
-      'incomplete': 'INCOMPLETE',
-      'trialing': 'TRIALING'
-    }
-
-    const status = statusMap[subscription.status] || 'INCOMPLETE'
-
-    // Calcular próximo pago
-    const nextPaymentDate = subscription.current_period_end 
-      ? new Date(subscription.current_period_end * 1000)
-      : null
-
-    // Actualizar o crear suscripción
-    await prisma.subscription.upsert({
-      where: { userId: user.id },
-      update: {
-        stripeSubscriptionId: subscription.id,
-        stripePriceId: priceId,
-        status: status as any,
-        amount,
-        currency,
-        interval,
-        currentPeriodStart: new Date(subscription.current_period_start * 1000),
-        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-        nextPaymentDate,
-        cancelAt: subscription.cancel_at ? new Date(subscription.cancel_at * 1000) : null,
-        canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
-        endedAt: subscription.ended_at ? new Date(subscription.ended_at * 1000) : null,
-        updatedAt: new Date()
-      },
-      create: {
-        userId: user.id,
-        stripeCustomerId: customer.id,
-        stripeSubscriptionId: subscription.id,
-        stripePriceId: priceId,
-        plan: 'Rocket', // Por defecto, ajustar según lógica de negocio
-        status: status as any,
-        amount,
-        currency,
-        interval,
-        startDate: new Date(subscription.created * 1000),
-        currentPeriodStart: new Date(subscription.current_period_start * 1000),
-        currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-        nextPaymentDate,
-        cancelAt: subscription.cancel_at ? new Date(subscription.cancel_at * 1000) : null,
-        canceledAt: subscription.canceled_at ? new Date(subscription.canceled_at * 1000) : null,
-        endedAt: subscription.ended_at ? new Date(subscription.ended_at * 1000) : null
-      }
-    })
-
-    console.log('✅ Subscription updated for user:', user.id)
-    
-  } catch (error) {
-    console.error('Error processing subscription update:', error)
-    throw error
-  }
-}
-
-async function handlePaymentSucceeded(invoice: Stripe.Invoice) {
-  try {
-    console.log('Processing successful payment:', invoice.id)
-    
-    if (!invoice.customer) {
-      return
-    }
-
-    // Obtener customer
-    const customer = await stripe.customers.retrieve(invoice.customer as string)
-    
-    if (customer.deleted || !customer.email) {
-      return
-    }
-
-    // Buscar usuario
-    const user = await prisma.user.findUnique({
-      where: { email: customer.email },
-      include: { subscription: true }
-    })
-
-    if (!user || !user.subscription) {
-      console.log('User or subscription not found for customer:', customer.id)
-      return
-    }
-
-    // Crear registro de pago exitoso
-    await prisma.payment.create({
-      data: {
-        userId: user.id,
-        subscriptionId: user.subscription.id,
-        stripePaymentIntentId: invoice.payment_intent as string,
-        stripeInvoiceId: invoice.id,
-        amount: invoice.amount_paid,
-        currency: invoice.currency,
-        status: 'SUCCEEDED',
-        description: invoice.description || 'Pago de suscripción',
-        paidAt: new Date(),
-        receiptUrl: invoice.receipt_number ? `https://pay.stripe.com/receipts/${invoice.receipt_number}` : null,
-        invoiceUrl: invoice.hosted_invoice_url
-      }
-    })
-
-    // Actualizar información de último pago en la suscripción
-    await prisma.subscription.update({
-      where: { id: user.subscription.id },
-      data: {
-        lastPaymentDate: new Date(),
-        lastPaymentAmount: invoice.amount_paid,
-        paymentFailureCount: 0, // Resetear contador de fallos
-        updatedAt: new Date()
-      }
-    })
-
-    console.log('✅ Payment succeeded for user:', user.id, 'amount:', invoice.amount_paid)
-    
-  } catch (error) {
-    console.error('Error processing payment succeeded:', error)
-    throw error
-  }
-}
-
 async function handleFailedPayment(invoice: Stripe.Invoice) {
   try {
     console.log('Processing failed payment:', invoice.id)
@@ -529,41 +373,11 @@ async function handleFailedPayment(invoice: Stripe.Invoice) {
 
     // Buscar usuario
     const user = await prisma.user.findUnique({
-      where: { email: customer.email },
-      include: { subscription: true }
+      where: { email: customer.email }
     })
 
     if (!user) {
       return
-    }
-
-    // Si existe suscripción, crear registro de pago fallido
-    if (user.subscription) {
-      await prisma.payment.create({
-        data: {
-          userId: user.id,
-          subscriptionId: user.subscription.id,
-          stripePaymentIntentId: invoice.payment_intent as string,
-          stripeInvoiceId: invoice.id,
-          amount: invoice.amount_due,
-          currency: invoice.currency,
-          status: 'FAILED',
-          description: invoice.description || 'Pago de suscripción',
-          failedAt: new Date(),
-          failureReason: 'Payment failed'
-        }
-      })
-
-      // Incrementar contador de fallos
-      await prisma.subscription.update({
-        where: { id: user.subscription.id },
-        data: {
-          paymentFailureCount: {
-            increment: 1
-          },
-          updatedAt: new Date()
-        }
-      })
     }
 
     // Marcar proyectos como con problemas de pago

@@ -18,8 +18,8 @@ export async function POST(request: NextRequest) {
     // Por ahora, simplemente devolvemos datos del usuario
     const mockUser = {
       id: 'stripe_' + sessionId,
-      email: 'usuario@stripe-checkout.com',
-      name: 'Usuario desde Stripe',
+      email: 'user@example.com',
+      name: 'Usuario Stripe',
       plan: 'rocket',
       subscriptionId: sessionId
     }

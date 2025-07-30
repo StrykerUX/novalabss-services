@@ -50,54 +50,6 @@ const colorPalettes = [
     colors: ['#0891B2', '#06B6D4', '#67E8F9', '#A5F3FC'],
     desc: 'Fresco y tecnológico',
     mood: 'Moderno, tecnológico, limpio'
-  },
-  {
-    name: 'Dorado Lujo',
-    colors: ['#A16207', '#D97706', '#F59E0B', '#FDE68A'],
-    desc: 'Lujo y exclusividad',
-    mood: 'Premium, elegante, exclusivo'
-  },
-  {
-    name: 'Turquesa Tropical',
-    colors: ['#0F766E', '#14B8A6', '#5EEAD4', '#A7F3D0'],
-    desc: 'Tropical y relajante',
-    mood: 'Fresco, tropical, relajante'
-  },
-  {
-    name: 'Morado Misterioso',
-    colors: ['#581C87', '#7C2D12', '#A855F7', '#DDD6FE'],
-    desc: 'Misterioso y sofisticado',
-    mood: 'Misterioso, premium, sofisticado'
-  },
-  {
-    name: 'Azul Marino',
-    colors: ['#1E293B', '#334155', '#64748B', '#CBD5E1'],
-    desc: 'Clásico y confiable',
-    mood: 'Clásico, confiable, profesional'
-  },
-  {
-    name: 'Coral Vibrante',
-    colors: ['#DC2626', '#F97316', '#FBBF24', '#FEF3C7'],
-    desc: 'Vibrante y cálido',
-    mood: 'Vibrante, cálido, energético'
-  },
-  {
-    name: 'Lavanda Suave',
-    colors: ['#6366F1', '#8B5CF6', '#C084FC', '#E9D5FF'],
-    desc: 'Suave y relajante',
-    mood: 'Suave, relajante, zen'
-  },
-  {
-    name: 'Verde Bosque',
-    colors: ['#166534', '#15803D', '#22C55E', '#BBF7D0'],
-    desc: 'Natural y orgánico',
-    mood: 'Natural, orgánico, sustentable'
-  },
-  {
-    name: 'Sunset Gradient',
-    colors: ['#DC2626', '#EA580C', '#F59E0B', '#FEF3C7'],
-    desc: 'Cálido como un atardecer',
-    mood: 'Cálido, acogedor, inspirador'
   }
 ]
 
@@ -218,61 +170,22 @@ export default function Step12Colors() {
               </div>
             </div>
             
-            {/* Mockup simple con previsualización en tiempo real */}
+            {/* Mockup simple */}
             <div className="bg-gray-900 rounded-lg p-4 border border-gray-700">
-              <div className="text-xs text-gray-400 mb-3">Vista previa del sitio:</div>
-              <div className="space-y-3">
-                {/* Header simulado */}
-                <div className="flex items-center space-x-3">
-                  <div 
-                    className="w-8 h-8 rounded-full"
-                    style={{ backgroundColor: getSelectedPalette()!.colors[0] }}
-                  />
-                  <div className="flex-1">
-                    <div 
-                      className="h-2 rounded w-20"
-                      style={{ backgroundColor: getSelectedPalette()!.colors[1] }}
-                    />
-                  </div>
-                  <div 
-                    className="h-6 w-16 rounded text-xs flex items-center justify-center text-white font-medium"
-                    style={{ backgroundColor: getSelectedPalette()!.colors[0] }}
-                  >
-                    Botón
-                  </div>
-                </div>
-                
-                {/* Contenido simulado */}
-                <div className="space-y-2">
-                  <div 
-                    className="h-4 rounded w-full"
-                    style={{ backgroundColor: getSelectedPalette()!.colors[1] }}
-                  />
-                  <div 
-                    className="h-2 rounded w-3/4"
-                    style={{ backgroundColor: getSelectedPalette()!.colors[2] }}
-                  />
-                  <div 
-                    className="h-2 rounded w-1/2"
-                    style={{ backgroundColor: getSelectedPalette()!.colors[3] }}
-                  />
-                </div>
-                
-                {/* Elementos de acción */}
-                <div className="flex space-x-2">
-                  <div 
-                    className="h-6 w-12 rounded text-xs flex items-center justify-center text-white font-medium"
-                    style={{ backgroundColor: getSelectedPalette()!.colors[1] }}
-                  >
-                    CTA
-                  </div>
-                  <div 
-                    className="h-6 w-12 rounded text-xs flex items-center justify-center text-white font-medium"
-                    style={{ backgroundColor: getSelectedPalette()!.colors[2] }}
-                  >
-                    Link
-                  </div>
-                </div>
+              <div className="text-xs text-gray-400 mb-2">Vista previa:</div>
+              <div className="space-y-2">
+                <div 
+                  className="h-3 rounded"
+                  style={{ backgroundColor: getSelectedPalette()!.colors[0] }}
+                />
+                <div 
+                  className="h-2 rounded w-3/4"
+                  style={{ backgroundColor: getSelectedPalette()!.colors[1] }}
+                />
+                <div 
+                  className="h-2 rounded w-1/2"
+                  style={{ backgroundColor: getSelectedPalette()!.colors[2] }}
+                />
               </div>
             </div>
           </div>

@@ -29,18 +29,16 @@ export const authOptions: NextAuthOptions = {
         })
 
         if (!user) {
-          // Lista de administradores autorizados desde variables de entorno
-          const adminEmailsString = process.env.ADMIN_EMAILS || "";
-          const adminEmails = adminEmailsString.split(',').map(email => email.trim()).filter(Boolean);
-          const adminPassword = process.env.ADMIN_DEFAULT_PASSWORD || "";
+          // Lista de administradores autorizados (solo Abraham y emails autorizados)
+          const adminEmails = [
+            "abraham.stryker117@gmail.com",
+            "admin@novalabs.com"
+          ];
           
-          // Usuario de prueba desde variables de entorno
-          const testUserEmail = process.env.TEST_USER_EMAIL;
-          const testUserPassword = process.env.TEST_USER_PASSWORD;
+          const adminPassword = "NovaLabs2024!"; // Cambiar después del primer uso
           
-          if (testUserEmail && testUserPassword && 
-              credentials.email === testUserEmail && 
-              credentials.password === testUserPassword) {
+          // Usuario de prueba hardcodeado
+          if (credentials.email === "test@test.com" && credentials.password === "test123") {
             const newTestUser = await prisma.user.create({
               data: {
                 email: credentials.email,
@@ -57,13 +55,11 @@ export const authOptions: NextAuthOptions = {
             }
           }
           
-          if (adminEmails.length > 0 && adminPassword && 
-              adminEmails.includes(credentials.email) && 
-              credentials.password === adminPassword) {
+          if (adminEmails.includes(credentials.email) && credentials.password === adminPassword) {
             const newAdmin = await prisma.user.create({
               data: {
                 email: credentials.email,
-                name: credentials.email.includes("abraham") ? "Abraham Stryker" : "Admin NovaLabs",
+                name: credentials.email === "abraham.stryker117@gmail.com" ? "Abraham Stryker" : "Admin NovaLabs",
                 role: "ADMIN"
               }
             });
@@ -86,14 +82,15 @@ export const authOptions: NextAuthOptions = {
             return null
           }
         } else {
-          // Si no tiene password pero es admin, verificar con password desde env
-          const adminEmailsString = process.env.ADMIN_EMAILS || "";
-          const adminEmails = adminEmailsString.split(',').map(email => email.trim()).filter(Boolean);
-          const adminPassword = process.env.ADMIN_DEFAULT_PASSWORD || "";
+          // Si no tiene password pero es admin, verificar con password hardcodeado
+          const adminEmails = [
+            "abraham.stryker117@gmail.com",
+            "admin@novalabs.com"
+          ];
           
-          if (adminEmails.includes(credentials.email) && 
-              credentials.password === adminPassword && 
-              user.role === "ADMIN") {
+          const adminPassword = "NovaLabs2024!";
+          
+          if (adminEmails.includes(credentials.email) && credentials.password === adminPassword && user.role === "ADMIN") {
             return {
               id: user.id,
               email: user.email,

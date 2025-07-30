@@ -1,8 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useOnboardingState } from '@/hooks/useOnboardingState'
-import { useUserProjects } from '@/hooks/useUserProjects'
-import { useSubscription } from '@/hooks/useSubscription'
 
 const basicFeatures = [
   { 
@@ -96,41 +94,18 @@ const advancedFeatures = [
 
 export default function Step10Features() {
   const { contentArchitecture, updateContentArchitecture } = useOnboardingState()
-  const { projects } = useUserProjects()
-  const subscriptionData = useSubscription()
-
-  // Determinar el plan del usuario y límites
-  const getUserPlan = () => {
-    if (projects && projects.length > 0) {
-      return projects[0].plan
-    }
-    return subscriptionData.plan?.name?.includes('Galaxy') ? 'Galaxy' : 'Rocket'
-  }
-
-  const userPlan = getUserPlan()
-  const isGalaxyPlan = userPlan === 'Galaxy'
-  const maxFeatures = isGalaxyPlan ? 10 : 6  // Galaxy: 10 features, Rocket: 6 features
 
   const toggleFeature = (featureName: string) => {
     const currentFeatures = contentArchitecture.features || []
-    const isSelected = currentFeatures.includes(featureName)
+    const newFeatures = currentFeatures.includes(featureName)
+      ? currentFeatures.filter(f => f !== featureName)
+      : [...currentFeatures, featureName]
     
-    if (isSelected) {
-      // Si ya está seleccionado, lo quitamos
-      const newFeatures = currentFeatures.filter(f => f !== featureName)
-      updateContentArchitecture({ features: newFeatures })
-    } else {
-      // Si no está seleccionado, verificamos el límite
-      if (currentFeatures.length < maxFeatures) {
-        const newFeatures = [...currentFeatures, featureName]
-        updateContentArchitecture({ features: newFeatures })
-      }
-    }
+    updateContentArchitecture({ features: newFeatures })
   }
 
   const allFeatures = [...basicFeatures, ...advancedFeatures]
   const selectedFeatures = contentArchitecture.features || []
-  const canSelectMore = selectedFeatures.length < maxFeatures
 
   return (
     <div className="space-y-6">
@@ -147,14 +122,6 @@ export default function Step10Features() {
         <p className="text-sm text-gray-400">
           Selecciona las características para tu sitio
         </p>
-        <div className="mt-2 flex items-center justify-center space-x-4">
-          <div className="text-xs text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">
-            Plan {userPlan} - Máximo {maxFeatures} funcionalidades
-          </div>
-          <div className="text-xs text-gray-500">
-            {selectedFeatures.length}/{maxFeatures} seleccionadas
-          </div>
-        </div>
       </motion.div>
 
       {/* Funcionalidades básicas */}
@@ -173,25 +140,21 @@ export default function Step10Features() {
         <div className="grid grid-cols-1 gap-3">
           {basicFeatures.map((feature, index) => {
             const isSelected = selectedFeatures.includes(feature.name)
-            const canSelect = canSelectMore || isSelected
             
             return (
               <motion.button
                 key={feature.name}
-                onClick={() => canSelect && toggleFeature(feature.name)}
-                disabled={!canSelect}
+                onClick={() => toggleFeature(feature.name)}
                 className={`p-4 rounded-xl border-2 transition-all text-left relative overflow-hidden ${
                   isSelected
                     ? 'border-blue-500 bg-blue-500/10 text-white'
-                    : canSelect
-                    ? 'border-gray-700 hover:border-gray-600 text-gray-300'
-                    : 'border-gray-800 text-gray-500 cursor-not-allowed opacity-50'
+                    : 'border-gray-700 hover:border-gray-600 text-gray-300'
                 }`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.3 + index * 0.05 }}
-                whileHover={canSelect ? { scale: 1.01 } : {}}
-                whileTap={canSelect ? { scale: 0.99 } : {}}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
               >
                 {/* Gradient background cuando está seleccionado */}
                 {isSelected && (
@@ -234,25 +197,21 @@ export default function Step10Features() {
         <div className="grid grid-cols-2 gap-3 max-h-80 overflow-y-auto">
           {advancedFeatures.map((feature, index) => {
             const isSelected = selectedFeatures.includes(feature.name)
-            const canSelect = canSelectMore || isSelected
             
             return (
               <motion.button
                 key={feature.name}
-                onClick={() => canSelect && toggleFeature(feature.name)}
-                disabled={!canSelect}
+                onClick={() => toggleFeature(feature.name)}
                 className={`p-4 rounded-xl border-2 transition-all text-left relative overflow-hidden ${
                   isSelected
                     ? 'border-blue-500 bg-blue-500/10 text-white'
-                    : canSelect
-                    ? 'border-gray-700 hover:border-gray-600 text-gray-300'
-                    : 'border-gray-800 text-gray-500 cursor-not-allowed opacity-50'
+                    : 'border-gray-700 hover:border-gray-600 text-gray-300'
                 }`}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 + index * 0.03 }}
-                whileHover={canSelect ? { scale: 1.02 } : {}}
-                whileTap={canSelect ? { scale: 0.98 } : {}}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
                 {/* Gradient background cuando está seleccionado */}
                 {isSelected && (
@@ -317,7 +276,7 @@ export default function Step10Features() {
         transition={{ delay: 0.7 }}
         className="text-center text-xs text-gray-500 bg-gray-900/50 p-3 rounded-xl"
       >
-        💡 {isGalaxyPlan ? 'Las funcionalidades avanzadas pueden agregarse después según necesidades específicas' : 'Puedes actualizar a Plan Galaxy para acceder a más funcionalidades'}
+        💡 Las funcionalidades avanzadas pueden agregarse después según necesidades específicas
       </motion.div>
     </div>
   )

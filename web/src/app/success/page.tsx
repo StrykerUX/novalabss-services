@@ -4,7 +4,7 @@ import { useEffect, useState, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { signIn } from "next-auth/react"
 import SmoothMagneticButton from "@/components/SmoothMagneticButton"
-import { useOnboardingState } from "@/hooks/useOnboardingState"
+import { useOptimizedOnboarding } from "@/hooks/useOptimizedOnboarding"
 
 function SuccessPageContent() {
   const searchParams = useSearchParams()
@@ -18,7 +18,8 @@ function SuccessPageContent() {
   const [confirmPassword, setConfirmPassword] = useState('')
   const [passwordLoading, setPasswordLoading] = useState(false)
   const [passwordError, setPasswordError] = useState('')
-  const { resetOnboarding } = useOnboardingState()
+  const [error, setError] = useState('')
+  const { resetOnboarding } = useOptimizedOnboarding()
 
   useEffect(() => {
     async function handleAutoLogin() {

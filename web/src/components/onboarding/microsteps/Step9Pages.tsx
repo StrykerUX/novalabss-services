@@ -1,8 +1,6 @@
 import React from 'react'
 import { motion } from 'framer-motion'
 import { useOnboardingState } from '@/hooks/useOnboardingState'
-import { useUserProjects } from '@/hooks/useUserProjects'
-import { useSubscription } from '@/hooks/useSubscription'
 
 const essentialPages = [
   { 
@@ -35,38 +33,14 @@ const essentialPages = [
   }
 ]
 
-const essentialSections = [
-  { 
-    name: 'Hero', 
-    icon: '🎯', 
-    desc: 'Sección principal con llamada a la acción',
-    essential: true,
-    color: 'from-blue-500 to-cyan-500'
-  },
-  { 
-    name: 'Sobre Nosotros', 
-    icon: '👥', 
-    desc: 'Información sobre la empresa',
-    essential: true,
-    color: 'from-purple-500 to-pink-500'
-  },
-  { 
-    name: 'Servicios', 
-    icon: '⚙️', 
-    desc: 'Productos o servicios principales',
-    essential: true,
-    color: 'from-green-500 to-emerald-500'
-  },
-  { 
-    name: 'Contacto', 
-    icon: '📞', 
-    desc: 'Formulario de contacto',
-    essential: true,
-    color: 'from-orange-500 to-red-500'
-  }
-]
-
 const optionalPages = [
+  { 
+    name: 'Blog', 
+    icon: '📝', 
+    desc: 'Artículos y contenido actualizado',
+    essential: false,
+    color: 'from-indigo-500 to-purple-500'
+  },
   { 
     name: 'Portafolio', 
     icon: '🎨', 
@@ -89,100 +63,35 @@ const optionalPages = [
     color: 'from-teal-500 to-green-500'
   },
   { 
-    name: 'Catálogo', 
+    name: 'Tienda', 
     icon: '🛍️', 
     desc: 'Catálogo de productos para venta',
     essential: false,
     color: 'from-emerald-500 to-teal-500'
   },
   { 
-    name: 'Servicios Premium', 
-    icon: '✨', 
-    desc: 'Servicios exclusivos y especializados',
-    essential: false,
-    color: 'from-violet-500 to-purple-500'
-  },
-  { 
-    name: 'Centro de Ayuda', 
-    icon: '🆘', 
-    desc: 'Soporte y documentación',
+    name: 'Reservas', 
+    icon: '📅', 
+    desc: 'Sistema de citas o reservaciones',
     essential: false,
     color: 'from-slate-500 to-gray-500'
   }
 ]
 
-const optionalSections = [
-  { 
-    name: 'Portafolio', 
-    icon: '🎨', 
-    desc: 'Galería de trabajos',
-    essential: false,
-    color: 'from-pink-500 to-rose-500'
-  },
-  { 
-    name: 'Testimonios', 
-    icon: '⭐', 
-    desc: 'Reseñas de clientes',
-    essential: false,
-    color: 'from-yellow-500 to-orange-500'
-  },
-  { 
-    name: 'FAQ', 
-    icon: '❓', 
-    desc: 'Preguntas frecuentes',
-    essential: false,
-    color: 'from-teal-500 to-green-500'
-  },
-  { 
-    name: 'Catálogo', 
-    icon: '🛍️', 
-    desc: 'Productos principales',
-    essential: false,
-    color: 'from-emerald-500 to-teal-500'
-  }
-]
-
 export default function Step9Pages() {
   const { contentArchitecture, updateContentArchitecture } = useOnboardingState()
-  const { projects } = useUserProjects()
-  const subscriptionData = useSubscription()
-
-  // Determinar el plan del usuario
-  const getUserPlan = () => {
-    if (projects && projects.length > 0) {
-      return projects[0].plan // Usar plan del proyecto más reciente
-    }
-    return subscriptionData.plan?.name?.includes('Galaxy') ? 'Galaxy' : 'Rocket'
-  }
-
-  const userPlan = getUserPlan()
-  const isGalaxyPlan = userPlan === 'Galaxy'
 
   const togglePage = (pageName: string) => {
     const currentPages = contentArchitecture.pages || []
-    const currentSections = contentArchitecture.sections || []
+    const newPages = currentPages.includes(pageName)
+      ? currentPages.filter(p => p !== pageName)
+      : [...currentPages, pageName]
     
-    if (isGalaxyPlan) {
-      // Para Galaxy, manejamos páginas
-      const newPages = currentPages.includes(pageName)
-        ? currentPages.filter(p => p !== pageName)
-        : [...currentPages, pageName]
-      
-      updateContentArchitecture({ pages: newPages })
-    } else {
-      // Para Rocket, manejamos secciones
-      const newSections = currentSections.includes(pageName)
-        ? currentSections.filter(s => s !== pageName)
-        : [...currentSections, pageName]
-      
-      updateContentArchitecture({ sections: newSections })
-    }
+    updateContentArchitecture({ pages: newPages })
   }
 
-  const essentialItems = isGalaxyPlan ? essentialPages : essentialSections
-  const optionalItems = isGalaxyPlan ? optionalPages : optionalSections
-  const allItems = [...essentialItems, ...optionalItems]
-  const selectedItems = isGalaxyPlan ? (contentArchitecture.pages || []) : (contentArchitecture.sections || [])
+  const allPages = [...essentialPages, ...optionalPages]
+  const selectedPages = contentArchitecture.pages || []
 
   return (
     <div className="space-y-6">
@@ -194,17 +103,11 @@ export default function Step9Pages() {
         className="text-center"
       >
         <h3 className="text-lg font-medium text-gray-300 mb-2">
-          {isGalaxyPlan ? '¿Qué páginas necesitas?' : '¿Qué secciones necesitas?'}
+          ¿Qué páginas necesitas?
         </h3>
         <p className="text-sm text-gray-400">
-          {isGalaxyPlan 
-            ? 'Selecciona las páginas para tu sitio web' 
-            : 'Selecciona las secciones para tu página web'
-          }
+          Selecciona las páginas para tu sitio web
         </p>
-        <div className="mt-2 text-xs text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full inline-block">
-          Plan {userPlan} - {isGalaxyPlan ? 'Sitio multipágina' : 'Página única'}
-        </div>
       </motion.div>
 
       {/* Páginas esenciales */}
@@ -216,18 +119,18 @@ export default function Step9Pages() {
       >
         <h4 className="text-sm font-medium text-gray-300 flex items-center space-x-2">
           <span>⭐</span>
-          <span>{isGalaxyPlan ? 'Páginas esenciales' : 'Secciones esenciales'}</span>
+          <span>Páginas esenciales</span>
           <span className="text-xs text-gray-500">(recomendadas)</span>
         </h4>
         
         <div className="grid grid-cols-2 gap-3">
-          {essentialItems.map((item, index) => {
-            const isSelected = selectedItems.includes(item.name)
+          {essentialPages.map((page, index) => {
+            const isSelected = selectedPages.includes(page.name)
             
             return (
               <motion.button
-                key={item.name}
-                onClick={() => togglePage(item.name)}
+                key={page.name}
+                onClick={() => togglePage(page.name)}
                 className={`p-4 rounded-xl border-2 transition-all text-left relative overflow-hidden ${
                   isSelected
                     ? 'border-blue-500 bg-blue-500/10 text-white'
@@ -241,16 +144,16 @@ export default function Step9Pages() {
               >
                 {/* Gradient background cuando está seleccionado */}
                 {isSelected && (
-                  <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-5`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${page.color} opacity-5`} />
                 )}
                 
                 <div className="relative z-10 flex items-center space-x-3">
-                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${item.color} flex items-center justify-center text-lg shadow-sm`}>
-                    {item.icon}
+                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${page.color} flex items-center justify-center text-lg shadow-sm`}>
+                    {page.icon}
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium text-sm">{item.name}</div>
-                    <div className="text-xs opacity-70">{item.desc}</div>
+                    <div className="font-medium text-sm">{page.name}</div>
+                    <div className="text-xs opacity-70">{page.desc}</div>
                   </div>
                   {isSelected && (
                     <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">
@@ -273,18 +176,18 @@ export default function Step9Pages() {
       >
         <h4 className="text-sm font-medium text-gray-300 flex items-center space-x-2">
           <span>✨</span>
-          <span>{isGalaxyPlan ? 'Páginas adicionales' : 'Secciones adicionales'}</span>
+          <span>Páginas adicionales</span>
           <span className="text-xs text-gray-500">(opcionales)</span>
         </h4>
         
         <div className="grid grid-cols-2 gap-3">
-          {optionalItems.map((item, index) => {
-            const isSelected = selectedItems.includes(item.name)
+          {optionalPages.map((page, index) => {
+            const isSelected = selectedPages.includes(page.name)
             
             return (
               <motion.button
-                key={item.name}
-                onClick={() => togglePage(item.name)}
+                key={page.name}
+                onClick={() => togglePage(page.name)}
                 className={`p-4 rounded-xl border-2 transition-all text-left relative overflow-hidden ${
                   isSelected
                     ? 'border-blue-500 bg-blue-500/10 text-white'
@@ -298,16 +201,16 @@ export default function Step9Pages() {
               >
                 {/* Gradient background cuando está seleccionado */}
                 {isSelected && (
-                  <div className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-5`} />
+                  <div className={`absolute inset-0 bg-gradient-to-br ${page.color} opacity-5`} />
                 )}
                 
                 <div className="relative z-10 flex items-center space-x-3">
-                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${item.color} flex items-center justify-center text-lg shadow-sm`}>
-                    {item.icon}
+                  <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${page.color} flex items-center justify-center text-lg shadow-sm`}>
+                    {page.icon}
                   </div>
                   <div className="flex-1">
-                    <div className="font-medium text-sm">{item.name}</div>
-                    <div className="text-xs opacity-70">{item.desc}</div>
+                    <div className="font-medium text-sm">{page.name}</div>
+                    <div className="text-xs opacity-70">{page.desc}</div>
                   </div>
                   {isSelected && (
                     <div className="w-5 h-5 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs">
@@ -321,8 +224,8 @@ export default function Step9Pages() {
         </div>
       </motion.div>
 
-      {/* Resumen de páginas/secciones seleccionadas */}
-      {selectedItems.length > 0 && (
+      {/* Resumen de páginas seleccionadas */}
+      {selectedPages.length > 0 && (
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -332,19 +235,19 @@ export default function Step9Pages() {
           <div className="flex items-center space-x-2 mb-3">
             <span>📋</span>
             <span className="font-semibold text-white">
-              {selectedItems.length} {isGalaxyPlan ? 'página' : 'sección'}{selectedItems.length !== 1 ? 's' : ''} seleccionada{selectedItems.length !== 1 ? 's' : ''}:
+              {selectedPages.length} página{selectedPages.length !== 1 ? 's' : ''} seleccionada{selectedPages.length !== 1 ? 's' : ''}:
             </span>
           </div>
           <div className="flex flex-wrap gap-2">
-            {selectedItems.map((itemName, index) => {
-              const itemData = allItems.find(p => p.name === itemName)
+            {selectedPages.map((pageName, index) => {
+              const pageData = allPages.find(p => p.name === pageName)
               return (
                 <div
                   key={index}
                   className="flex items-center space-x-2 bg-gray-800/50 px-3 py-1 rounded-full text-sm"
                 >
-                  <span>{itemData?.icon}</span>
-                  <span className="text-gray-300">{itemName}</span>
+                  <span>{pageData?.icon}</span>
+                  <span className="text-gray-300">{pageName}</span>
                 </div>
               )
             })}
@@ -359,7 +262,7 @@ export default function Step9Pages() {
         transition={{ delay: 0.7 }}
         className="text-center text-xs text-gray-500 bg-gray-900/50 p-3 rounded-xl"
       >
-        💡 Puedes agregar más {isGalaxyPlan ? 'páginas' : 'secciones'} después. Empezamos con las más importantes
+        💡 Puedes agregar más páginas después. Empezamos con las más importantes
       </motion.div>
     </div>
   )

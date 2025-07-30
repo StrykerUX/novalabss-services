@@ -4,60 +4,47 @@ const prisma = new PrismaClient();
 
 async function createAdmin() {
   try {
-    // Obtener emails de administradores desde variables de entorno
-    const adminEmailsString = process.env.ADMIN_EMAILS || "";
-    const adminEmails = adminEmailsString.split(',').map(email => email.trim()).filter(Boolean);
+    // Crear usuario admin
+    const admin = await prisma.user.upsert({
+      where: { email: 'admin@novalabs.com' },
+      update: {},
+      create: {
+        email: 'admin@novalabs.com',
+        name: 'Admin NovaLabs',
+        role: 'ADMIN'
+      }
+    });
 
-    if (adminEmails.length === 0) {
-      console.log('⚠️ No hay emails de administradores configurados en ADMIN_EMAILS');
-      return;
-    }
+    console.log('✅ Usuario admin creado:', admin);
 
-    // Crear usuarios admin desde variables de entorno
-    const admins = await Promise.all(
-      adminEmails.map(email => 
-        prisma.user.upsert({
-          where: { email },
-          update: {},
-          create: {
-            email,
-            name: email.includes("abraham") ? "Abraham Stryker" : "Admin NovaLabs",
-            role: 'ADMIN'
-          }
-        })
-      )
-    );
-
-    console.log('✅ Usuarios admin creados:', admins.length);
-
-    // Crear algunos usuarios de ejemplo (sin emails hardcodeados)
+    // Crear algunos usuarios de ejemplo
     const users = await Promise.all([
       prisma.user.upsert({
-        where: { email: 'demo-juan@example.com' },
+        where: { email: 'juan@empresa.com' },
         update: {},
         create: {
-          email: 'demo-juan@example.com',
-          name: 'Juan Pérez (Demo)',
+          email: 'juan@empresa.com',
+          name: 'Juan Pérez',
           role: 'USER',
           company: 'Empresa ABC'
         }
       }),
       prisma.user.upsert({
-        where: { email: 'demo-maria@example.com' },
+        where: { email: 'maria@startup.com' },
         update: {},
         create: {
-          email: 'demo-maria@example.com',
-          name: 'María González (Demo)',
+          email: 'maria@startup.com',
+          name: 'María González',
           role: 'USER',
           company: 'Startup XYZ'
         }
       }),
       prisma.user.upsert({
-        where: { email: 'demo-carlos@example.com' },
+        where: { email: 'carlos@negocio.com' },
         update: {},
         create: {
-          email: 'demo-carlos@example.com',
-          name: 'Carlos Ruiz (Demo)',
+          email: 'carlos@negocio.com',
+          name: 'Carlos Ruiz',
           role: 'USER',
           company: 'Negocio 123'
         }
