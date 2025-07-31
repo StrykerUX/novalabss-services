@@ -27,12 +27,12 @@ export type RegionType = 'mexico' | 'latam' | 'usa' | 'international'
 export const STRIPE_PRODUCTS: Record<'rocket' | 'galaxy', StripeProductConfig> = {
   rocket: {
     mexico: {
-      productId: process.env.STRIPE_ROCKET_PRODUCT_ID || 'prod_SivqhJc31UvLUv', // Producto para México en MXN
-      priceId: 'price_1Rqta8RWwts4e65Ct3MxdGmF', // Price ID promocional
-      price: parseInt(process.env.ROCKET_PROMO_PRICE_MX || '119900'), // $1,199.00 MXN (precio promocional)
-      regularPrice: parseInt(process.env.ROCKET_REGULAR_PRICE_MX || '179900'), // $1,799.00 MXN (precio regular)
-      regularPriceId: 'price_1RqtZjRWwts4e65CoHsB1RRA', // Price ID regular
-      promoActive: process.env.ROCKET_PROMO_ACTIVE !== 'false', // Por defecto activa
+      productId: process.env.STRIPE_ROCKET_PRODUCT_ID || 'prod_SivqhJc31UvLUv',
+      priceId: process.env.STRIPE_ROCKET_PROMO_PRICE_ID, // Price ID promocional desde env
+      price: parseInt(process.env.ROCKET_PROMO_PRICE_MX || '119900'), // $1,199.00 MXN
+      regularPrice: parseInt(process.env.ROCKET_REGULAR_PRICE_MX || '179900'), // $1,799.00 MXN
+      regularPriceId: process.env.STRIPE_ROCKET_REGULAR_PRICE_ID, // Price ID regular desde env
+      promoActive: process.env.ROCKET_PROMO_ACTIVE !== 'false',
       currency: 'mxn'
     },
     latam: {
@@ -64,12 +64,12 @@ export const STRIPE_PRODUCTS: Record<'rocket' | 'galaxy', StripeProductConfig> =
   },
   galaxy: {
     mexico: {
-      productId: process.env.STRIPE_GALAXY_PRODUCT_ID || 'prod_Sivwz5FIJNAVkT', // Producto para México en MXN
-      priceId: 'price_1RqtYvRWwts4e65CqYDmSumD', // Price ID promocional
-      price: parseInt(process.env.GALAXY_PROMO_PRICE_MX || '224900'), // $2,249.00 MXN (precio promocional)
-      regularPrice: parseInt(process.env.GALAXY_REGULAR_PRICE_MX || '299900'), // $2,999.00 MXN (precio regular)
-      regularPriceId: 'price_1RqtYYRWwts4e65CyLI5VLu3', // Price ID regular
-      promoActive: process.env.GALAXY_PROMO_ACTIVE !== 'false', // Por defecto activa
+      productId: process.env.STRIPE_GALAXY_PRODUCT_ID || 'prod_Sivwz5FIJNAVkT',
+      priceId: process.env.STRIPE_GALAXY_PROMO_PRICE_ID, // Price ID promocional desde env
+      price: parseInt(process.env.GALAXY_PROMO_PRICE_MX || '224900'), // $2,249.00 MXN
+      regularPrice: parseInt(process.env.GALAXY_REGULAR_PRICE_MX || '299900'), // $2,999.00 MXN
+      regularPriceId: process.env.STRIPE_GALAXY_REGULAR_PRICE_ID, // Price ID regular desde env
+      promoActive: process.env.GALAXY_PROMO_ACTIVE !== 'false',
       currency: 'mxn'
     },
     latam: {
