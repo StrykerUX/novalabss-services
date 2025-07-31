@@ -56,6 +56,12 @@ export async function POST(request: NextRequest) {
         await handleNewSubscription(subscription)
         break
 
+      case 'subscription_schedule.updated':
+        const scheduleUpdated = event.data.object as Stripe.SubscriptionSchedule
+        console.log('📅 Subscription schedule updated:', scheduleUpdated.id)
+        await handleSubscriptionScheduleUpdate(scheduleUpdated)
+        break
+
       case 'customer.subscription.updated':
         const updatedSubscription = event.data.object as Stripe.Subscription
         console.log('🔄 Subscription updated:', updatedSubscription.id)
@@ -195,6 +201,11 @@ async function handleSuccessfulPayment(session: Stripe.Checkout.Session) {
       timestamp: Date.now(),
       expiresAt: Date.now() + (60 * 60 * 1000) // 1 hora
     })
+
+    // Crear Subscription Schedule si hay pricing promocional
+    if (session.metadata?.hasScheduledChange === 'true' && session.metadata?.regularPriceId) {
+      await createSubscriptionSchedule(session)
+    }
 
   } catch (error) {
     console.error('Error processing successful payment:', error)
@@ -360,6 +371,115 @@ async function handleCancelledSubscription(subscription: Stripe.Subscription) {
     
   } catch (error) {
     console.error('Error processing cancelled subscription:', error)
+    throw error
+  }
+}
+
+async function createSubscriptionSchedule(session: Stripe.Checkout.Session) {
+  try {
+    console.log('📅 Creating subscription schedule for session:', session.id)
+    
+    // Obtener la suscripción recién creada
+    const subscription = await stripe.subscriptions.retrieve(session.subscription as string)
+    
+    if (!subscription) {
+      console.error('No subscription found for session:', session.id)
+      return
+    }
+
+    const regularPriceId = session.metadata?.regularPriceId
+    if (!regularPriceId) {
+      console.error('No regular price ID found in metadata')
+      return
+    }
+
+    // Calcular fecha de cambio (12 meses desde ahora)
+    const changeDate = new Date()
+    changeDate.setMonth(changeDate.getMonth() + 12)
+    const changeDateTimestamp = Math.floor(changeDate.getTime() / 1000)
+
+    // Crear Subscription Schedule
+    const schedule = await stripe.subscriptionSchedules.create({
+      from_subscription: subscription.id,
+      phases: [
+        {
+          // Fase 1: Precio promocional (12 meses)
+          items: [{
+            price: subscription.items.data[0].price.id,
+            quantity: 1
+          }],
+          end_date: changeDateTimestamp
+        },
+        {
+          // Fase 2: Precio regular (indefinido)
+          items: [{
+            price: regularPriceId,
+            quantity: 1
+          }]
+          // Sin end_date = indefinido
+        }
+      ],
+      metadata: {
+        sessionId: session.id,
+        customerEmail: session.customer_details?.email || '',
+        plan: session.metadata?.plan || '',
+        region: session.metadata?.region || '',
+        originalPromoPrice: subscription.items.data[0].price.unit_amount?.toString() || '',
+        scheduledChangeDate: changeDate.toISOString()
+      }
+    })
+
+    console.log('✅ Subscription schedule created:', {
+      scheduleId: schedule.id,
+      subscriptionId: subscription.id,
+      changeDate: changeDateTimestamp,
+      phases: schedule.phases?.length
+    })
+
+  } catch (error) {
+    console.error('❌ Error creating subscription schedule:', error)
+    throw error
+  }
+}
+
+async function handleSubscriptionScheduleUpdate(schedule: Stripe.SubscriptionSchedule) {
+  try {
+    console.log('Processing subscription schedule update:', schedule.id)
+    
+    const customerEmail = schedule.metadata?.customerEmail
+    if (!customerEmail) {
+      console.log('No customer email in schedule metadata')
+      return
+    }
+
+    const { PrismaClient } = await import('@prisma/client')
+    const prisma = new PrismaClient()
+
+    try {
+      // Buscar usuario
+      const user = await prisma.user.findUnique({
+        where: { email: customerEmail }
+      })
+
+      if (!user) {
+        console.log('User not found for email:', customerEmail)
+        return
+      }
+
+      // Crear notificación en el dashboard sobre el cambio de precio
+      // (Esto se implementará cuando tengas un sistema de notificaciones)
+      console.log('🔔 Should notify user about price change:', {
+        userId: user.id,
+        email: customerEmail,
+        scheduleId: schedule.id
+      })
+
+    } finally {
+      await prisma.$disconnect()
+    }
+    
+  } catch (error) {
+    console.error('Error processing subscription schedule update:', error)
     throw error
   }
 }

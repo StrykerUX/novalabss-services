@@ -18,6 +18,7 @@ interface HeroProps {
 export default function Hero({ loaderComplete = false }: HeroProps) {
   const [mounted, setMounted] = useState(false);
   const [particlePositions, setParticlePositions] = useState<Array<{left: string, top: string}>>([]);
+  const [showOfferModal, setShowOfferModal] = useState(false);
   const rocketRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
 
@@ -247,7 +248,7 @@ export default function Hero({ loaderComplete = false }: HeroProps) {
                   className="animated-badge bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-white"
                   pulseDelay={0}
                 >
-                  Plan desde $999 MXN/bimestre
+                  $1,199 bimestrales = $600/mes
                 </AnimatedBadge>
                 <AnimatedBadge 
                   className="animated-badge bg-blue-600/20 backdrop-blur-sm border border-blue-400/30 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-blue-200"
@@ -262,38 +263,161 @@ export default function Hero({ loaderComplete = false }: HeroProps) {
                   Solo queda vender
                 </AnimatedBadge>
               </div>
+
+              {/* Contador de escasez exclusivo */}
+              <div className="bg-red-500/10 backdrop-blur-sm border border-red-400/30 rounded-xl p-3 mb-6 max-w-sm opacity-0">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-red-200 text-sm font-bold">⏰ ESPACIOS EXCLUSIVOS</p>
+                    <p className="text-white/80 text-xs">Promoción especial limitada</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-red-400 text-2xl font-black">11/12</p>
+                    <p className="text-white/60 text-xs">restantes</p>
+                  </div>
+                </div>
+                <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
+                  <div className="bg-gradient-to-r from-red-500 to-orange-500 h-2 rounded-full" style={{width: '8.3%'}}></div>
+                </div>
+              </div>
               </div>
             </div>
             
-            {/* Button at bottom */}
+            {/* Dual CTA Buttons */}
             <div className="hero-button max-w-4xl mt-16 lg:mt-0 mb-4 lg:mb-8 opacity-0">
-              <SmoothMagneticButton 
-                onClick={() => {
-                  const planesSection = document.getElementById('planes');
-                  if (planesSection) {
-                    planesSection.scrollIntoView({ 
-                      behavior: 'smooth',
-                      block: 'start'
-                    });
-                  }
-                }}
-                className="smooth-magnetic-button text-white px-8 py-4 font-space-grotesk font-semibold text-base lg:text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center space-x-3"
-                magneticStrength={0.2}
-              >
-                <span>Quiero mi sitio web</span>
-                <svg 
-                  className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  viewBox="0 0 24 24"
+              <div className="flex flex-col sm:flex-row gap-6 items-center">
+                
+                {/* CTA Primario - Comenzar ahora */}
+                <SmoothMagneticButton 
+                  onClick={() => {
+                    const planesSection = document.getElementById('planes');
+                    if (planesSection) {
+                      planesSection.scrollIntoView({ 
+                        behavior: 'smooth',
+                        block: 'start'
+                      });
+                    }
+                  }}
+                  className="w-full sm:w-auto smooth-magnetic-button text-white px-8 py-4 font-space-grotesk font-semibold text-base lg:text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center space-x-3"
+                  magneticStrength={0.2}
                 >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                </svg>
-              </SmoothMagneticButton>
+                  <span>🚀 Comenzar ahora</span>
+                  <svg 
+                    className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </SmoothMagneticButton>
+                
+                {/* CTA Secundario - Reclamar oferta */}
+                <SmoothMagneticButton
+                  onClick={() => setShowOfferModal(true)}
+                  className="w-full sm:w-auto border-2 border-white bg-gradient-to-r from-black/0 to-black/100 text-white px-8 py-4 font-space-grotesk font-semibold text-base lg:text-lg hover:shadow-2xl hover:shadow-white/40 transition-shadow duration-300 shadow-xl shadow-white/30 flex items-center justify-center space-x-2"
+                  magneticStrength={0.2}
+                >
+                  <span>🔥 Reclamar mi oferta</span>
+                </SmoothMagneticButton>
+                
+              </div>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modal de Oferta Exclusiva */}
+      {showOfferModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
+          {/* Backdrop */}
+          <div 
+            className="absolute inset-0 bg-black/80 backdrop-blur-sm"
+            onClick={() => setShowOfferModal(false)}
+          />
+          
+          {/* Modal Content */}
+          <div className="relative bg-gradient-to-br from-gray-900 to-black border border-red-500/50 rounded-2xl p-8 max-w-md mx-4 shadow-2xl shadow-red-500/25">
+            {/* Close Button */}
+            <button
+              onClick={() => setShowOfferModal(false)}
+              className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
+            >
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            
+            {/* Header */}
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-black text-red-400 mb-2">
+                🔥 OFERTA EXCLUSIVA
+              </h3>
+              <p className="text-white/60 text-sm">
+                Solo quedan 11 espacios de 12
+              </p>
+            </div>
+            
+            {/* Offer Details */}
+            <div className="space-y-4 mb-6">
+              <div className="bg-white/5 rounded-xl p-4 border border-white/10">
+                <h4 className="text-white font-bold text-lg mb-2">Plan Rocket Exclusivo</h4>
+                <div className="flex items-center space-x-3 mb-3">
+                  <span className="text-3xl font-black text-green-400">$1,199</span>
+                  <span className="text-white/60">bimestrales</span>
+                  <span className="text-gray-500 line-through text-lg">$1,799</span>
+                </div>
+                <p className="text-green-400 text-sm font-semibold">
+                  💰 Ahorras $3,600 MXN en tu primer año
+                </p>
+              </div>
+              
+              <div className="space-y-2 text-sm">
+                <div className="flex items-center text-white/90">
+                  <span className="text-green-400 mr-2">✅</span>
+                  Sitio web profesional en 72 horas garantizadas
+                </div>
+                <div className="flex items-center text-white/90">
+                  <span className="text-green-400 mr-2">✅</span>
+                  Soporte continuo incluido
+                </div>
+                <div className="flex items-center text-white/90">
+                  <span className="text-green-400 mr-2">✅</span>
+                  Hosting seguro + SSL + optimización SEO
+                </div>
+                <div className="flex items-center text-white/90">
+                  <span className="text-green-400 mr-2">✅</span>
+                  Analytics y versión móvil optimizada
+                </div>
+              </div>
+            </div>
+            
+            {/* Urgency */}
+            <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 mb-6 text-center">
+              <p className="text-red-200 text-sm font-bold">
+                ⏰ Esta oferta expira cuando se agoten los espacios
+              </p>
+            </div>
+            
+            {/* CTA */}
+            <button
+              onClick={() => {
+                setShowOfferModal(false);
+                const planesSection = document.getElementById('planes');
+                if (planesSection) {
+                  planesSection.scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                  });
+                }
+              }}
+              className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-8 py-4 font-bold text-lg rounded-xl shadow-xl shadow-red-500/40 transition-all duration-300 flex items-center justify-center space-x-2"
+            >
+              <span>🚀 Aprovechar oferta ahora</span>
+            </button>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

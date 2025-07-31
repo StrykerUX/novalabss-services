@@ -6,6 +6,10 @@ export interface RegionConfig {
   priceId?: string
   price: number
   currency: 'usd' | 'mxn'
+  // Nuevos campos para pricing promocional
+  regularPrice?: number
+  regularPriceId?: string
+  promoActive?: boolean
 }
 
 export interface StripeProductConfig {
@@ -24,8 +28,11 @@ export const STRIPE_PRODUCTS: Record<'rocket' | 'galaxy', StripeProductConfig> =
   rocket: {
     mexico: {
       productId: process.env.STRIPE_ROCKET_PRODUCT_ID || 'prod_SivqhJc31UvLUv', // Producto para México en MXN
-      priceId: undefined,
-      price: 99900, // $999.00 MXN
+      priceId: 'price_1Rqta8RWwts4e65Ct3MxdGmF', // Price ID promocional
+      price: parseInt(process.env.ROCKET_PROMO_PRICE_MX || '119900'), // $1,199.00 MXN (precio promocional)
+      regularPrice: parseInt(process.env.ROCKET_REGULAR_PRICE_MX || '179900'), // $1,799.00 MXN (precio regular)
+      regularPriceId: 'price_1RqtZjRWwts4e65CoHsB1RRA', // Price ID regular
+      promoActive: process.env.ROCKET_PROMO_ACTIVE !== 'false', // Por defecto activa
       currency: 'mxn'
     },
     latam: {
@@ -58,8 +65,11 @@ export const STRIPE_PRODUCTS: Record<'rocket' | 'galaxy', StripeProductConfig> =
   galaxy: {
     mexico: {
       productId: process.env.STRIPE_GALAXY_PRODUCT_ID || 'prod_Sivwz5FIJNAVkT', // Producto para México en MXN
-      priceId: undefined,
-      price: 179900, // $1,799.00 MXN
+      priceId: 'price_1RqtYvRWwts4e65CqYDmSumD', // Price ID promocional
+      price: parseInt(process.env.GALAXY_PROMO_PRICE_MX || '224900'), // $2,249.00 MXN (precio promocional)
+      regularPrice: parseInt(process.env.GALAXY_REGULAR_PRICE_MX || '299900'), // $2,999.00 MXN (precio regular)
+      regularPriceId: 'price_1RqtYYRWwts4e65CyLI5VLu3', // Price ID regular
+      promoActive: process.env.GALAXY_PROMO_ACTIVE !== 'false', // Por defecto activa
       currency: 'mxn'
     },
     latam: {
@@ -96,7 +106,7 @@ export const REGIONS = [
   { 
     id: 'mexico' as RegionType, 
     label: '🇲🇽 México', 
-    prices: { rocket: 999, galaxy: 1799 }, 
+    prices: { rocket: 1199, galaxy: 2249 }, // Precios promocionales actualizados
     currency: 'MXN',
     currencySymbol: '$'
   },
@@ -182,6 +192,43 @@ export function detectRegionFromCountry(countryCode?: string): RegionType {
   // Lógica original para cuando esté habilitado
   if (!countryCode) return 'international'
   return COUNTRY_TO_REGION_MAP[countryCode] || 'international'
+}
+
+// Helper para obtener precio promocional
+export function getPromoPrice(
+  plan: 'rocket' | 'galaxy',
+  region: RegionType
+): number {
+  const config = STRIPE_PRODUCTS[plan][region]
+  return config.price / 100 // Convertir de centavos
+}
+
+// Helper para obtener precio regular
+export function getRegularPrice(
+  plan: 'rocket' | 'galaxy',
+  region: RegionType
+): number {
+  const config = STRIPE_PRODUCTS[plan][region]
+  return (config.regularPrice || config.price) / 100 // Convertir de centavos
+}
+
+// Helper para verificar si la promoción está activa
+export function isPromoActive(
+  plan: 'rocket' | 'galaxy',
+  region: RegionType
+): boolean {
+  const config = STRIPE_PRODUCTS[plan][region]
+  return config.promoActive !== false // Por defecto activa
+}
+
+// Helper para obtener el precio actual (promocional si está activa, regular si no)
+export function getCurrentPrice(
+  plan: 'rocket' | 'galaxy',
+  region: RegionType
+): number {
+  return isPromoActive(plan, region) 
+    ? getPromoPrice(plan, region)
+    : getRegularPrice(plan, region)
 }
 
 // Productos para crear en Stripe Dashboard si no existen

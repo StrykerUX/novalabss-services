@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
-import { STRIPE_PRODUCTS, getProductConfig, RegionType } from '@/lib/stripe-products'
+import { STRIPE_PRODUCTS, getProductConfig, RegionType, isPromoActive, getPromoPrice, getRegularPrice } from '@/lib/stripe-products'
 import { FEATURES } from '@/config/features'
 
 // Debug environment variables
@@ -74,60 +74,59 @@ export async function POST(request: NextRequest) {
 
     console.log('📋 Step 4: Listando precios del producto...')
     
-    // Buscar o crear precio bimestral para este producto
-    let priceId: string
+    // Determinar si usar pricing promocional
+    const usePromoPrice = isPromoActive(plan as 'rocket' | 'galaxy', userRegion)
+    const currentPrice = usePromoPrice ? regionConfig.price : (regionConfig.regularPrice || regionConfig.price)
+    
+    console.log('🎯 Precio determinado:', {
+      usePromoPrice,
+      currentPrice,
+      promoPrice: regionConfig.price,
+      regularPrice: regionConfig.regularPrice
+    })
 
-    try {
-      // Buscar precio existente
-      const prices = await stripe.prices.list({
-        product: regionConfig.productId,
-        active: true,
-        type: 'recurring',
-        limit: 10
-      })
+    // Usar Price IDs configurados directamente
+    const promoPriceId = regionConfig.priceId
+    const regularPriceId = regionConfig.regularPriceId
 
-      console.log('📋 Precios encontrados:', prices.data.length)
-      console.log('📋 Precios detalles:', prices.data.map(p => ({
-        id: p.id,
-        amount: p.unit_amount,
-        interval: p.recurring?.interval,
-        interval_count: p.recurring?.interval_count
-      })))
+    console.log('📋 Price IDs configurados:', {
+      promoPriceId,
+      regularPriceId,
+      usePromoPrice
+    })
 
-      const bimonthlyPrice = prices.data.find(price => 
-        price.recurring?.interval === 'month' && 
-        price.recurring?.interval_count === 2 &&
-        price.unit_amount === regionConfig.price &&
-        price.currency === regionConfig.currency
-      )
-
-      if (bimonthlyPrice) {
-        priceId = bimonthlyPrice.id
-        console.log('✅ Usando precio existente:', priceId)
-      } else {
-        // Crear nuevo precio bimestral
-        console.log('🔨 Creando nuevo precio bimestral...')
-        const newPrice = await stripe.prices.create({
-          currency: regionConfig.currency,
-          unit_amount: regionConfig.price,
-          recurring: {
-            interval: 'month',
-            interval_count: 2,
-          },
-          product: regionConfig.productId,
-        })
-        priceId = newPrice.id
-        console.log('✅ Precio bimestral creado:', priceId)
-      }
-    } catch (priceError) {
-      console.error('❌ Error manejando precios:', priceError)
+    if (!promoPriceId) {
+      console.error('❌ No se encontró Price ID promocional para:', { plan, region: userRegion })
       return NextResponse.json({ 
-        error: 'Error configurando precio', 
-        details: priceError instanceof Error ? priceError.message : 'Unknown price error' 
+        error: 'Price ID promocional no configurado', 
+        details: `No priceId found for ${plan} in ${userRegion}` 
       }, { status: 500 })
     }
     
     console.log('📋 Step 5: Creando sesión de checkout...')
+    
+    // Determinar qué precio usar para la sesión inicial
+    const initialPriceId = usePromoPrice && promoPriceId ? promoPriceId : (regularPriceId || promoPriceId)
+    
+    if (!initialPriceId) {
+      throw new Error('No se pudo determinar el precio inicial')
+    }
+
+    // Preparar metadata completo
+    const sessionMetadata = {
+      plan,
+      region: userRegion,
+      selectedRegion: metadata?.selectedRegion || userRegion,
+      detectedRegion: metadata?.detectedRegion || '',
+      ipCountry: metadata?.ipCountry || '',
+      source: metadata?.source || 'unknown',
+      flow: metadata?.flow || 'direct',
+      timestamp: new Date().toISOString(),
+      usePromoPrice: usePromoPrice.toString(),
+      promoPriceId: promoPriceId || '',
+      regularPriceId: regularPriceId || '',
+      hasScheduledChange: (usePromoPrice && regularPriceId ? 'true' : 'false')
+    }
     
     // Crear sesión de Stripe Checkout
     const session = await stripe.checkout.sessions.create({
@@ -135,23 +134,13 @@ export async function POST(request: NextRequest) {
       payment_method_types: ['card'],
       line_items: [
         {
-          price: priceId,
+          price: initialPriceId,
           quantity: 1,
         },
       ],
-      metadata: {
-        plan,
-        region: userRegion,
-        selectedRegion: metadata?.selectedRegion || userRegion,
-        detectedRegion: metadata?.detectedRegion || '',
-        ipCountry: metadata?.ipCountry || '',
-        source: metadata?.source || 'unknown',
-        flow: metadata?.flow || 'direct',
-        timestamp: new Date().toISOString()
-      },
+      metadata: sessionMetadata,
       success_url: `${process.env.NEXTAUTH_URL}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.NEXTAUTH_URL}/cancel`,
-      // customer_creation solo funciona en payment mode, no en subscription mode
       billing_address_collection: 'required',
       allow_promotion_codes: true,
     })
@@ -160,7 +149,9 @@ export async function POST(request: NextRequest) {
       sessionId: session.id,
       url: session.url,
       plan,
-      priceId
+      initialPriceId,
+      usePromoPrice,
+      hasScheduledChange: usePromoPrice && regularPriceId
     })
     
     return NextResponse.json({ 

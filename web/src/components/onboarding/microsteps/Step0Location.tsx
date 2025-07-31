@@ -66,16 +66,16 @@ const regions = [
 
 const pricingInfo = {
   latam: {
-    rocket: 49,
-    galaxy: 99,
-    currency: 'USD',
-    note: 'Precios adaptados para el mercado latinoamericano'
+    rocket: 1199,
+    galaxy: 1999,
+    currency: 'MXN',
+    note: 'Precios fijos para México'
   },
   international: {
-    rocket: 129,
-    galaxy: 249,
-    currency: 'USD', 
-    note: 'Precios para mercados internacionales'
+    rocket: 1199,
+    galaxy: 1999,
+    currency: 'MXN', 
+    note: 'Precios fijos para México'
   }
 }
 
@@ -228,14 +228,14 @@ export default function Step0Location() {
               <div className="text-sm text-gray-400 mb-1">Plan Rocket</div>
               <div className="text-2xl font-bold text-white">
                 ${getCurrentPricing()!.rocket}
-                <span className="text-sm text-gray-400">/mes</span>
+                <span className="text-sm text-gray-400">/bimestre</span>
               </div>
             </div>
             <div className="text-center p-4 bg-gray-800/50 rounded-lg">
               <div className="text-sm text-gray-400 mb-1">Plan Galaxy</div>
               <div className="text-2xl font-bold text-white">
                 ${getCurrentPricing()!.galaxy}
-                <span className="text-sm text-gray-400">/mes</span>
+                <span className="text-sm text-gray-400">/bimestre</span>
               </div>
             </div>
           </div>
