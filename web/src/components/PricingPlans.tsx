@@ -4,6 +4,11 @@ import { useState, useEffect } from 'react';
 import SmoothMagneticButton from './SmoothMagneticButton';
 import { REGIONS, RegionType, detectRegionFromCountry, getRegionInfo, isPromoActive, getCurrentPrice, getRegularPrice } from '@/lib/stripe-products';
 
+// Helper function to format prices with commas
+const formatPrice = (price: string | number): string => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
 export default function PricingPlans() {
   const [detectedRegion, setDetectedRegion] = useState<RegionType | null>(null)
   const [ipCountry, setIpCountry] = useState<string | null>(null)
@@ -112,7 +117,7 @@ export default function PricingPlans() {
                       {/* Precio promocional */}
                       <div className="flex items-baseline">
                         <span className="text-4xl lg:text-5xl font-black text-white">
-                          ${prices.rocket}
+                          ${formatPrice(prices.rocket)}
                         </span>
                         <span className="text-white/60 ml-2 text-lg">{prices.currency}</span>
                       </div>
@@ -121,7 +126,7 @@ export default function PricingPlans() {
                       {prices.rocketPromo && prices.rocketRegular !== prices.rocket && (
                         <div className="flex items-baseline">
                           <span className="text-xl lg:text-2xl font-bold text-white/40 line-through">
-                            ${prices.rocketRegular}
+                            ${formatPrice(prices.rocketRegular)}
                           </span>
                           <span className="text-white/30 ml-1 text-sm">{prices.currency}</span>
                         </div>
@@ -130,7 +135,7 @@ export default function PricingPlans() {
                   )}
                 </div>
                 <p className="text-white/60 text-sm">
-                  Bimestral {prices.rocketPromo ? '• Después: $' + prices.rocketRegular + ' ' + prices.currency : ''}
+                  Bimestral {prices.rocketPromo ? '• Después: $' + formatPrice(prices.rocketRegular) + ' ' + prices.currency : ''}
                 </p>
               </div>
 
@@ -145,7 +150,7 @@ export default function PricingPlans() {
                   <svg className="w-5 h-5 text-blue-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  Entrega garantizada en 72 horas
+                  Entrega garantizada en 3 días
                 </li>
                 <li className="flex items-center text-white/90">
                   <svg className="w-5 h-5 text-blue-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -232,7 +237,7 @@ export default function PricingPlans() {
                       {/* Precio promocional */}
                       <div className="flex items-baseline">
                         <span className="text-4xl lg:text-5xl font-black text-white">
-                          ${prices.galaxy}
+                          ${formatPrice(prices.galaxy)}
                         </span>
                         <span className="text-white/60 ml-2 text-lg">{prices.currency}</span>
                       </div>
@@ -241,7 +246,7 @@ export default function PricingPlans() {
                       {prices.galaxyPromo && prices.galaxyRegular !== prices.galaxy && (
                         <div className="flex items-baseline">
                           <span className="text-xl lg:text-2xl font-bold text-white/40 line-through">
-                            ${prices.galaxyRegular}
+                            ${formatPrice(prices.galaxyRegular)}
                           </span>
                           <span className="text-white/30 ml-1 text-sm">{prices.currency}</span>
                         </div>
@@ -250,7 +255,7 @@ export default function PricingPlans() {
                   )}
                 </div>
                 <p className="text-white/60 text-sm">
-                  Bimestral {prices.galaxyPromo ? '• Después: $' + prices.galaxyRegular + ' ' + prices.currency : ''}
+                  Bimestral {prices.galaxyPromo ? '• Después: $' + formatPrice(prices.galaxyRegular) + ' ' + prices.currency : ''}
                 </p>
               </div>
 
@@ -265,7 +270,7 @@ export default function PricingPlans() {
                   <svg className="w-5 h-5 text-blue-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
-                  Entrega garantizada en 96 horas
+                  Entrega garantizada en 5 días
                 </li>
                 <li className="flex items-center text-white/90">
                   <svg className="w-5 h-5 text-blue-400 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">

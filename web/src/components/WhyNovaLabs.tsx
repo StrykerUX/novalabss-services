@@ -157,7 +157,7 @@ export default function WhyNovaLabs() {
             {/* Mobile layout - column */}
             <div className="flex flex-col lg:hidden flex-1">
               <p className="text-white/90 text-base leading-relaxed mb-6">
-                $999 MXN bimestrales, sin sorpresas ni costos ocultos. Presupuesto controlado para que puedas proyectar tu crecimiento sin riesgos.
+                Pagos bimestrales, sin sorpresas ni costos ocultos. Presupuesto controlado para que puedas proyectar tu crecimiento sin riesgos.
               </p>
               <div className="text-[80px] font-black bg-gradient-to-b from-[#0147FF] to-[#0147FF38] bg-clip-text text-transparent leading-none text-center -mt-6 transform scale-[1.45] translate-x-12 translate-y-8">
                 03
@@ -168,7 +168,7 @@ export default function WhyNovaLabs() {
             <div className="hidden lg:flex items-end justify-between flex-1">
               <div className="max-w-[60%]">
                 <p className="text-white/90 text-base leading-relaxed">
-                  $999 MXN bimestrales, sin sorpresas ni costos ocultos. Presupuesto controlado para que puedas proyectar tu crecimiento sin riesgos.
+                  Pagos bimestrales, sin sorpresas ni costos ocultos. Presupuesto controlado para que puedas proyectar tu crecimiento sin riesgos.
                 </p>
               </div>
               <div 

@@ -6,6 +6,11 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 import { getCurrentPrice, getRegularPrice, isPromoActive } from '@/lib/stripe-products'
 
+// Helper function to format prices with commas
+const formatPrice = (price: string | number): string => {
+  return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+}
+
 function CheckoutPageContent() {
   const params = useParams()
   const searchParams = useSearchParams()
@@ -46,7 +51,7 @@ function CheckoutPageContent() {
       pricing: getplanPricing('rocket'),
       features: [
         "1 landing page profesional",
-        "Entrega garantizada en 72 horas",
+        "Entrega garantizada en 3 días",
         "Optimización para Google",
         "Analytics de rendimiento",
         "Versión optimizada para móvil",
@@ -60,7 +65,7 @@ function CheckoutPageContent() {
       pricing: getplanPricing('galaxy'),
       features: [
         "Sitio completo de 3-5 páginas",
-        "Entrega garantizada en 96 horas",
+        "Entrega garantizada en 5 días",
         "Optimización avanzada para Google",
         "Analytics de rendimiento avanzado",
         "Versión optimizada para móvil",
@@ -175,8 +180,8 @@ function CheckoutPageContent() {
               Pago 100% Seguro
             </div>
             <div className="flex items-center">
-              <span className="text-green-400 mr-1">✅</span>
-              Garantía 30 días
+              <span className="text-green-400 mr-1">🚀</span>
+              Soporte Continuo
             </div>
             <div className="flex items-center">
               <span className="text-green-400 mr-1">🚀</span>
@@ -212,18 +217,18 @@ function CheckoutPageContent() {
                 
                 <div className="flex items-baseline space-x-3 mb-2">
                   <div className="text-3xl font-bold text-blue-400">
-                    ${currentPlan.pricing.current} MXN
+                    ${formatPrice(currentPlan.pricing.current)} MXN
                   </div>
                   
                   {currentPlan.pricing.hasPromo && currentPlan.pricing.regular !== currentPlan.pricing.current && (
                     <div className="text-xl font-bold text-gray-500 line-through">
-                      ${currentPlan.pricing.regular} MXN
+                      ${formatPrice(currentPlan.pricing.regular)} MXN
                     </div>
                   )}
                 </div>
                 
                 <p className="text-gray-400 text-sm">
-                  Bimestral {currentPlan.pricing.hasPromo ? `• Después: $${currentPlan.pricing.regular} MXN` : ''}
+                  Bimestral {currentPlan.pricing.hasPromo ? `• Después: $${formatPrice(currentPlan.pricing.regular)} MXN` : ''}
                 </p>
               </div>
 
@@ -282,7 +287,7 @@ function CheckoutPageContent() {
                   ⏰ Promesa de entrega
                 </h3>
                 <p className="text-sm text-gray-300">
-                  Tu sitio estará listo en {plan === 'rocket' ? '72 horas' : '96 horas'} o te devolvemos tu dinero
+                  Tu sitio estará listo en {plan === 'rocket' ? '3 días' : '5 días'} laborales garantizados
                 </p>
               </div>
             </div>
@@ -313,7 +318,7 @@ function CheckoutPageContent() {
               {/* Security */}
               <div className="mt-6 text-center">
                 <p className="text-xs text-gray-500">
-                  🛡️ Pago 100% seguro | SSL | Garantía de devolución
+                  🛡️ Pago 100% seguro | SSL | Soporte continuo
                 </p>
               </div>
             </div>

@@ -97,7 +97,6 @@ export interface BusinessInfo {
   name: string
   industry: string
   size: 'freelancer' | 'startup' | 'pyme' | 'empresa'
-  location: string
   yearsOperating: number
   businessRegion: 'latam' | 'international'
   businessCountry: string

@@ -91,7 +91,7 @@ export default function ProjectsPage() {
           
           <p className="text-white/60 mb-8 max-w-md leading-relaxed">
             Suscríbete a uno de nuestros planes para crear tu primer sitio web profesional. 
-            Nuestro equipo lo tendrá listo en 72-96 horas.
+            Nuestro equipo lo tendrá listo en 3-5 días laborales.
           </p>
           
           <Link href="/#pricing">

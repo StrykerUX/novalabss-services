@@ -15,22 +15,37 @@ export default function PromotionCountdown({ onClaimDiscount }: PromotionCountdo
     minutes: 0,
     seconds: 0
   });
-  const [prevTimeLeft, setPrevTimeLeft] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0
-  });
   
   const daysRef = useRef<HTMLDivElement>(null);
   const hoursRef = useRef<HTMLDivElement>(null);
   const minutesRef = useRef<HTMLDivElement>(null);
   const secondsRef = useRef<HTMLDivElement>(null);
+  
+  // Use ref to track current values within timer callback
+  const currentTimeRef = useRef({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0
+  });
+
+  // Animation function
+  const animateFlip = (element: HTMLDivElement) => {
+    gsap.fromTo(element, 
+      { rotationX: 0, scale: 1 },
+      { 
+        rotationX: 360, 
+        scale: 1.1,
+        duration: 0.6,
+        ease: "back.out(1.7)",
+        transformOrigin: "center center"
+      }
+    );
+  };
 
   useEffect(() => {
-    // Set target date to 40 days from tomorrow
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 41); // +1 for tomorrow, +40 for the period
+    // Set target date to September 11, 2025 at 23:59:59
+    const targetDate = new Date('2025-09-11T23:59:59'); // Fixed date: September 11, 2025
 
     const updateTimer = () => {
       const now = new Date().getTime();
@@ -43,8 +58,30 @@ export default function PromotionCountdown({ onClaimDiscount }: PromotionCountdo
         const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((difference % (1000 * 60)) / 1000);
 
-        setPrevTimeLeft(timeLeft);
-        setTimeLeft({ days, hours, minutes, seconds });
+        const newTimeLeft = { days, hours, minutes, seconds };
+        
+        // Get previous values from ref
+        const prevTime = currentTimeRef.current;
+        
+        // Animate only the units that actually changed
+        if (days !== prevTime.days && daysRef.current) {
+          animateFlip(daysRef.current);
+        }
+        if (hours !== prevTime.hours && hoursRef.current) {
+          animateFlip(hoursRef.current);
+        }
+        if (minutes !== prevTime.minutes && minutesRef.current) {
+          animateFlip(minutesRef.current);
+        }
+        if (seconds !== prevTime.seconds && secondsRef.current) {
+          animateFlip(secondsRef.current);
+        }
+        
+        // Update the ref with new values
+        currentTimeRef.current = newTimeLeft;
+        
+        // Update state for rendering
+        setTimeLeft(newTimeLeft);
       }
     };
 
@@ -53,29 +90,6 @@ export default function PromotionCountdown({ onClaimDiscount }: PromotionCountdo
 
     return () => clearInterval(interval);
   }, []);
-
-  // Animate number changes
-  useEffect(() => {
-    const animateFlip = (ref: React.RefObject<HTMLDivElement>, newValue: number, prevValue: number) => {
-      if (ref.current && newValue !== prevValue) {
-        gsap.fromTo(ref.current, 
-          { rotationX: 0, scale: 1 },
-          { 
-            rotationX: 360, 
-            scale: 1.1,
-            duration: 0.6,
-            ease: "back.out(1.7)",
-            transformOrigin: "center center"
-          }
-        );
-      }
-    };
-
-    animateFlip(daysRef, timeLeft.days, prevTimeLeft.days);
-    animateFlip(hoursRef, timeLeft.hours, prevTimeLeft.hours);
-    animateFlip(minutesRef, timeLeft.minutes, prevTimeLeft.minutes);
-    animateFlip(secondsRef, timeLeft.seconds, prevTimeLeft.seconds);
-  }, [timeLeft, prevTimeLeft]);
 
   return (
     <section className="py-20">

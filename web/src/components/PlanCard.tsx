@@ -14,7 +14,7 @@ export default function PlanCard({ plan, showButton = false, onButtonClick }: Pl
       badge: 'Más popular',
       features: [
         '1 landing page profesional',
-        'Entrega garantizada en 72 horas',
+        'Entrega garantizada en 3 días',
         'Optimización para Google',
         'Analytics de rendimiento',
         'Versión optimizada para móvil',
@@ -33,7 +33,7 @@ export default function PlanCard({ plan, showButton = false, onButtonClick }: Pl
       badge: null,
       features: [
         'Sitio completo de 3-5 páginas',
-        'Entrega garantizada en 96 horas',
+        'Entrega garantizada en 5 días',
         'Optimización avanzada para Google',
         'Analytics de rendimiento avanzado',
         'Versión optimizada para móvil',

@@ -51,7 +51,7 @@ export default function Footer() {
               El futuro del marketing digital mexicano
             </p>
             <p className="text-white/60 text-sm leading-relaxed max-w-md">
-              Sitios web profesionales en 72 horas. Sin complicaciones técnicas, solo resultados.
+              Sitios web profesionales en 3 días. Sin complicaciones técnicas, solo resultados.
             </p>
           </div>
 
@@ -61,11 +61,11 @@ export default function Footer() {
               Planes
             </h4>
             <nav className="space-y-2">
-              <a href="#" className="block text-white/60 hover:text-[#0147FF] text-sm transition-colors duration-300 relative group">
+              <a href="/checkout/rocket" className="block text-white/60 hover:text-[#0147FF] text-sm transition-colors duration-300 relative group">
                 Plan Rocket
                 <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#0147FF] transition-all duration-300 group-hover:w-full"></span>
               </a>
-              <a href="#" className="block text-white/60 hover:text-[#0147FF] text-sm transition-colors duration-300 relative group">
+              <a href="/checkout/galaxy" className="block text-white/60 hover:text-[#0147FF] text-sm transition-colors duration-300 relative group">
                 Plan Galaxy
                 <span className="absolute left-0 bottom-0 w-0 h-0.5 bg-[#0147FF] transition-all duration-300 group-hover:w-full"></span>
               </a>
@@ -131,7 +131,7 @@ export default function Footer() {
 
             {/* Legal links */}
             <div className="flex items-center gap-6">
-              <a href="#" className="text-white/60 hover:text-[#0147FF] text-xs transition-colors duration-300">
+              <a href="/terminos-y-condiciones" className="text-white/60 hover:text-[#0147FF] text-xs transition-colors duration-300">
                 Términos
               </a>
               <a href="/aviso-de-privacidad" className="text-white/60 hover:text-[#0147FF] text-xs transition-colors duration-300">

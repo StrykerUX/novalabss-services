@@ -308,7 +308,7 @@ export function getFeaturesByCategory(category: string, plan?: 'rocket' | 'galax
 export function getPlanRestrictions(plan: 'rocket' | 'galaxy') {
   const config = {
     rocket: {
-      maxPages: 1,
+      maxPages: 3,
       maxFeatures: 3,
       allowedTypes: ['static', 'dynamic'],
       description: 'Landing page profesional con funcionalidades esenciales'

@@ -233,7 +233,7 @@ export default function Hero({ loaderComplete = false, showOfferModal = false, s
           <div className="flex flex-col p-6 lg:p-12 h-full relative z-10">
             {/* Title, subtitle and badges at top */}
             <div className="max-w-4xl xl:max-w-5xl flex-1">
-              <div className="space-y-3 lg:space-y-12">
+              <div className="space-y-3 lg:space-y-6">
               <h1 className="hero-title text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black text-white leading-[100%] tracking-tight opacity-0">
                 MIENTRAS TU COMPETENCIA LUCHA CON TECNOLOGÍA,
                 <br />
@@ -265,27 +265,11 @@ export default function Hero({ loaderComplete = false, showOfferModal = false, s
                 </AnimatedBadge>
               </div>
 
-              {/* Contador de escasez exclusivo */}
-              <div className="bg-red-500/10 backdrop-blur-sm border border-red-400/30 rounded-xl p-3 mb-6 max-w-sm opacity-0">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-red-200 text-sm font-bold">⏰ ESPACIOS EXCLUSIVOS</p>
-                    <p className="text-white/80 text-xs">Promoción especial limitada</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-red-400 text-2xl font-black">11/12</p>
-                    <p className="text-white/60 text-xs">restantes</p>
-                  </div>
-                </div>
-                <div className="w-full bg-gray-700 rounded-full h-2 mt-2">
-                  <div className="bg-gradient-to-r from-red-500 to-orange-500 h-2 rounded-full" style={{width: '8.3%'}}></div>
-                </div>
-              </div>
               </div>
             </div>
             
             {/* Dual CTA Buttons */}
-            <div className="hero-button max-w-4xl mt-16 lg:mt-0 mb-4 lg:mb-8 opacity-0">
+            <div className="hero-button max-w-4xl mt-16 lg:mt-0 opacity-0">
               <div className="flex flex-col sm:flex-row gap-6 items-center">
                 
                 {/* CTA Primario - Comenzar ahora */}
@@ -376,7 +360,7 @@ export default function Hero({ loaderComplete = false, showOfferModal = false, s
               <div className="space-y-2 text-sm">
                 <div className="flex items-center text-white/90">
                   <span className="text-green-400 mr-2">✅</span>
-                  Sitio web profesional en 72 horas garantizadas
+                  Sitio web profesional en 3 días garantizados
                 </div>
                 <div className="flex items-center text-white/90">
                   <span className="text-green-400 mr-2">✅</span>

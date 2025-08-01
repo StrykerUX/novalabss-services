@@ -144,30 +144,12 @@ export default function Step1BusinessInfo() {
         </div>
       </motion.div>
 
-      {/* Ubicación */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.4 }}
-        className="space-y-2"
-      >
-        <label className="block text-sm font-medium text-gray-300">
-          Ubicación principal *
-        </label>
-        <input
-          type="text"
-          value={businessInfo.location || ''}
-          onChange={(e) => handleInputChange('location', e.target.value)}
-          placeholder="Ej: Ciudad de México, CDMX"
-          className="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-        />
-      </motion.div>
 
       {/* Años Operando */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5 }}
+        transition={{ delay: 0.4 }}
         className="space-y-2"
       >
         <label className="block text-sm font-medium text-gray-300">
@@ -202,7 +184,7 @@ export default function Step1BusinessInfo() {
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.6 }}
+          transition={{ delay: 0.5 }}
           className="mt-8 p-6 bg-gradient-to-br from-blue-500/10 to-purple-500/10 border border-blue-500/30 rounded-xl"
         >
           <h3 className="text-lg font-semibold text-white mb-3">Vista previa:</h3>
@@ -213,9 +195,6 @@ export default function Step1BusinessInfo() {
             )}
             {businessInfo.size && (
               <p><span className="text-blue-400">Tamaño:</span> {businessSizes.find(s => s.value === businessInfo.size)?.label}</p>
-            )}
-            {businessInfo.location && (
-              <p><span className="text-blue-400">Ubicación:</span> {businessInfo.location}</p>
             )}
             {businessInfo.yearsOperating !== undefined && (
               <p><span className="text-blue-400">Experiencia:</span> {businessInfo.yearsOperating === 0 ? 'Nuevo negocio' : `${businessInfo.yearsOperating}+ años`}</p>

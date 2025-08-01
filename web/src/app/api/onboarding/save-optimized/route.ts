@@ -73,7 +73,6 @@ export async function POST(request: NextRequest) {
         industry: onboardingData.business?.industry,
         customIndustry: onboardingData.business?.customIndustry,
         size: onboardingData.business?.size,
-        location: onboardingData.business?.location,
         businessRegion: onboardingData.business?.location?.region,
         businessCountry: onboardingData.business?.location?.country
       }),
@@ -241,7 +240,6 @@ export async function GET(request: NextRequest) {
         industry: businessInfo.industry,
         customIndustry: businessInfo.customIndustry,
         size: businessInfo.size,
-        location: businessInfo.location
       },
       goals: {
         primaryGoal: objectives.primaryGoal,

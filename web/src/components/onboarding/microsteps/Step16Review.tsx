@@ -33,7 +33,7 @@ export default function Step16Review() {
 
   const getProgressPercentage = () => {
     const sections = [
-      { name: 'Información del Negocio', complete: businessInfo.name && businessInfo.industry && businessInfo.size && businessInfo.location },
+      { name: 'Información del Negocio', complete: businessInfo.name && businessInfo.industry && businessInfo.size },
       { name: 'Objetivos', complete: objectivesData.primaryGoal && objectivesData.targetAudience?.ageRange },
       { name: 'Contenido', complete: contentArchitecture.pages && contentArchitecture.features },
       { name: 'Diseño', complete: brandDesign.colors && brandDesign.style },
@@ -108,10 +108,6 @@ export default function Step16Review() {
                 <span className="text-white ml-2">
                   {businessSizes.find(s => s.value === businessInfo.size)?.label}
                 </span>
-              </div>
-              <div>
-                <span className="text-gray-400">Ubicación:</span>
-                <span className="text-white ml-2">{businessInfo.location}</span>
               </div>
             </div>
           </motion.div>
