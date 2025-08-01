@@ -85,6 +85,20 @@ export async function POST(request: NextRequest) {
       regularPrice: regionConfig.regularPrice
     })
 
+    // DEBUG: Verificar variables de entorno
+    console.log('🔍 DEBUG Environment Variables:', {
+      STRIPE_ROCKET_PRODUCT_ID: process.env.STRIPE_ROCKET_PRODUCT_ID,
+      STRIPE_ROCKET_PROMO_PRICE_ID: process.env.STRIPE_ROCKET_PROMO_PRICE_ID,
+      STRIPE_ROCKET_REGULAR_PRICE_ID: process.env.STRIPE_ROCKET_REGULAR_PRICE_ID,
+      STRIPE_GALAXY_PROMO_PRICE_ID: process.env.STRIPE_GALAXY_PROMO_PRICE_ID,
+      STRIPE_GALAXY_REGULAR_PRICE_ID: process.env.STRIPE_GALAXY_REGULAR_PRICE_ID,
+      ROCKET_PROMO_ACTIVE: process.env.ROCKET_PROMO_ACTIVE,
+      plan,
+      userRegion
+    })
+
+    console.log('🔍 DEBUG regionConfig:', regionConfig)
+
     // Usar Price IDs configurados directamente
     const promoPriceId = regionConfig.priceId
     const regularPriceId = regionConfig.regularPriceId

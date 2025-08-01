@@ -89,7 +89,9 @@ export default function Footer() {
             <div ref={socialRef} className="flex justify-center lg:justify-end space-x-3">
               {/* LinkedIn */}
               <a 
-                href="#" 
+                href="https://www.linkedin.com/company/novalabss/" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-8 h-8 bg-white/10 hover:bg-[#0147FF]/20 border border-white/20 hover:border-[#0147FF]/40 rounded-[12px] flex items-center justify-center transition-all duration-300"
               >
                 <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">
@@ -99,7 +101,9 @@ export default function Footer() {
               
               {/* Instagram */}
               <a 
-                href="#" 
+                href="https://www.instagram.com/novalabss/" 
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-8 h-8 bg-white/10 hover:bg-[#0147FF]/20 border border-white/20 hover:border-[#0147FF]/40 rounded-[12px] flex items-center justify-center transition-all duration-300"
               >
                 <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 24 24">

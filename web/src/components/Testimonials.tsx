@@ -46,39 +46,32 @@ export default function Testimonials() {
 
   const testimonials = [
     {
-      category: "RESULTADOS INCREÍBLES",
-      quote: "NovaLabs transformó completamente nuestro negocio. En solo 2 meses triplicamos nuestras reservas online y ahora somos el restaurante más buscado de la zona.",
-      name: "María González",
-      role: "Propietaria, Restaurante La Cantina",
+      category: "EXCELENTE PROFESIONALISMO",
+      quote: "El sitio web que nos desarrollaron ha sido clave para atraer nuevos pacientes. El diseño es limpio, profesional y fácil de navegar. Mis pacientes pueden agendar citas fácilmente.",
+      name: "Dra. Paulina Herrera",
+      role: "Directora, Sonrisa de Oro - Clínica Dental",
       image: "/imgs/client1.jpg"
     },
     {
-      category: "LA MEJOR INVERSIÓN",
-      quote: "Increíble equipo, resultados de primer nivel y la mejor atención al cliente. Todo en un solo lugar, justo lo que necesitábamos para crecer.",
-      name: "Carlos Mendoza",
-      role: "CEO, Tienda Artesanal Maya",
+      category: "PLATAFORMA PERFECTA",
+      quote: "La plataforma que crearon para mis consultas online es increíble. Mis pacientes se sienten cómodos y seguros. Ha sido fundamental para el crecimiento de mi práctica.",
+      name: "Elizabeth Achirica",
+      role: "Psicóloga Clínica Online",
       image: "/imgs/client2.jpg"
     },
     {
-      category: "OPORTUNIDADES SIN LÍMITES",
-      quote: "Desde talleres prácticos hasta estrategias visionarias, NovaLabs es imprescindible para cualquier emprendedor que quiera destacar en el mercado digital.",
-      name: "Ana Rodríguez",
-      role: "Directora, Consultora Legal Pro",
+      category: "RESULTADOS VISIBLES",
+      quote: "Trabajar con NovaLabs fue una decisión acertada. El sitio web refleja perfectamente la calidad de nuestros servicios y nos ha ayudado a conectar con más clientes.",
+      name: "Andrés Morales",
+      role: "Director de Marketing Digital",
       image: "/imgs/client3.jpg"
     },
     {
-      category: "CRECIMIENTO EXPONENCIAL",
-      quote: "En 3 meses pasamos de 0 a ser líderes en nuestro sector. El ROI ha sido espectacular y el soporte técnico es excepcional.",
-      name: "Roberto Silva",
-      role: "Fundador, TechStart Solutions",
+      category: "SITIO WEB EXCEPCIONAL",
+      quote: "Nuestro restaurante ahora tiene presencia digital profesional. El sitio web muestra perfectamente nuestros platillos y la esencia familiar de La Cocina de María.",
+      name: "María Fernández",
+      role: "Propietaria, La Cocina de María",
       image: "/imgs/client4.jpg"
-    },
-    {
-      category: "RESULTADOS GARANTIZADOS",
-      quote: "No solo cumplieron con los tiempos prometidos, sino que superaron nuestras expectativas. Ahora generamos 5x más leads calificados.",
-      name: "Laura Morales",
-      role: "CMO, Innovate Marketing",
-      image: "/imgs/client5.jpg"
     }
   ];
 

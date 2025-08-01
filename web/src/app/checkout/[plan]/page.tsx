@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react"
 import { useParams, useSearchParams } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
+import { getCurrentPrice, getRegularPrice, isPromoActive } from '@/lib/stripe-products'
 
 function CheckoutPageContent() {
   const params = useParams()
@@ -11,6 +12,7 @@ function CheckoutPageContent() {
   const { data: session } = useSession()
   const router = useRouter()
   const [flowData, setFlowData] = useState<any>(null)
+  const [isLoading, setIsLoading] = useState(false)
   
   const plan = params.plan as string
   const source = searchParams.get('source')
@@ -25,29 +27,46 @@ function CheckoutPageContent() {
     }
   }, [source])
 
+  // Obtener precios dinámicos
+  const getplanPricing = (planName: 'rocket' | 'galaxy') => {
+    const currentPrice = getCurrentPrice(planName, 'mexico')
+    const regularPrice = getRegularPrice(planName, 'mexico')
+    const hasPromo = isPromoActive(planName, 'mexico')
+    
+    return {
+      current: currentPrice,
+      regular: regularPrice,
+      hasPromo: hasPromo
+    }
+  }
+
   const planDetails = {
     rocket: {
       name: "Plan Rocket",
-      price: "$999 MXN",
+      pricing: getplanPricing('rocket'),
       features: [
         "1 landing page profesional",
-        "Entrega garantizada en 72h",
-        "2 créditos para cambios",
-        "SEO básico incluido",
-        "Hosting con dominio temporal",
-        "Analytics básico"
+        "Entrega garantizada en 72 horas",
+        "Optimización para Google",
+        "Analytics de rendimiento",
+        "Versión optimizada para móvil",
+        "Formulario de contacto",
+        "Soporte continuo",
+        "Hosting seguro incluido"
       ]
     },
     galaxy: {
       name: "Plan Galaxy", 
-      price: "$1,799 MXN",
+      pricing: getplanPricing('galaxy'),
       features: [
-        "Sitio web 3-5 páginas",
-        "Entrega garantizada en 96h", 
-        "2 créditos para cambios",
-        "SEO avanzado incluido",
-        "Hosting con dominio temporal",
-        "Analytics avanzado"
+        "Sitio completo de 3-5 páginas",
+        "Entrega garantizada en 96 horas",
+        "Optimización avanzada para Google",
+        "Analytics de rendimiento avanzado",
+        "Versión optimizada para móvil",
+        "Múltiples formularios de contacto",
+        "Soporte prioritario continuo",
+        "Hosting seguro incluido"
       ]
     }
   }
@@ -55,6 +74,7 @@ function CheckoutPageContent() {
   const currentPlan = planDetails[plan as keyof typeof planDetails]
 
   const handleProceedToStripe = async () => {
+    setIsLoading(true)
     try {
       console.log('🚀 Iniciando checkout desde página de checkout para plan:', plan)
       
@@ -65,9 +85,12 @@ function CheckoutPageContent() {
         },
         body: JSON.stringify({
           plan: plan,
+          region: 'mexico', // Siempre México por ahora
           metadata: {
             source: source || 'checkout-page',
             flow: 'fallback',
+            selectedRegion: 'mexico',
+            detectedRegion: 'mexico',
             ...flowData
           }
         })
@@ -95,6 +118,8 @@ function CheckoutPageContent() {
     } catch (error) {
       console.error('❌ Error creating checkout session:', error)
       alert('Error al procesar el pago. Por favor intenta nuevamente.')
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -107,27 +132,99 @@ function CheckoutPageContent() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           
+          {/* Progress Bar */}
+          <div className="mb-8">
+            <div className="flex items-center justify-center space-x-4 mb-6">
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                  ✓
+                </div>
+                <span className="ml-2 text-white text-sm">Plan seleccionado</span>
+              </div>
+              <div className="w-12 h-0.5 bg-blue-600"></div>
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold">
+                  2
+                </div>
+                <span className="ml-2 text-white text-sm font-semibold">Revisar detalles</span>
+              </div>
+              <div className="w-12 h-0.5 bg-gray-600"></div>
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-gray-600 rounded-full flex items-center justify-center text-gray-400 text-sm">
+                  3
+                </div>
+                <span className="ml-2 text-gray-400 text-sm">Pago seguro</span>
+              </div>
+            </div>
+          </div>
+
           {/* Header */}
           <div className="text-center mb-8">
-            <h1 className="text-3xl font-bold text-white mb-2">
-              Finalizar Compra
+            <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">
+              🎆 ¡Excelente elección!
             </h1>
-            <p className="text-gray-400">
-              Estás a un paso de transformar tu presencia digital
+            <p className="text-gray-400 text-lg">
+              Revisemos los detalles de tu {currentPlan.name} antes del pago
             </p>
+          </div>
+
+          {/* Trust Badges */}
+          <div className="flex justify-center items-center space-x-8 mb-8 text-sm text-gray-400">
+            <div className="flex items-center">
+              <span className="text-green-400 mr-1">🔒</span>
+              Pago 100% Seguro
+            </div>
+            <div className="flex items-center">
+              <span className="text-green-400 mr-1">✅</span>
+              Garantía 30 días
+            </div>
+            <div className="flex items-center">
+              <span className="text-green-400 mr-1">🚀</span>
+              Entrega Garantizada
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
             {/* Plan Details */}
-            <div className="bg-[#1A1A1A] rounded-2xl p-6 border border-gray-800">
-              <h2 className="text-xl font-semibold text-white mb-4">
-                {currentPlan.name}
-              </h2>
+            <div className="bg-[#1A1A1A] rounded-2xl p-6 border border-gray-800 relative overflow-hidden">
+              {/* Popular badge para Rocket */}
+              {plan === 'rocket' && (
+                <div className="absolute top-4 right-4 bg-blue-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
+                  Más popular
+                </div>
+              )}
               
-              <div className="text-3xl font-bold text-blue-400 mb-6">
-                {currentPlan.price}
-                <span className="text-lg text-gray-400 font-normal"> bimestral</span>
+              <div className="flex items-center mb-4">
+                <h2 className="text-xl font-semibold text-white">
+                  {currentPlan.name}
+                </h2>
+                <span className="ml-2 text-2xl">{plan === 'rocket' ? '🚀' : '🌌'}</span>
+              </div>
+              
+              {/* Pricing Section */}
+              <div className="mb-6">
+                {currentPlan.pricing.hasPromo && (
+                  <div className="inline-flex items-center bg-gradient-to-r from-green-500/20 to-green-400/10 border border-green-400/30 rounded-full px-3 py-1 mb-3">
+                    <span className="text-green-400 text-xs font-semibold">🔥 PRECIO ESPECIAL - PRIMER AÑO</span>
+                  </div>
+                )}
+                
+                <div className="flex items-baseline space-x-3 mb-2">
+                  <div className="text-3xl font-bold text-blue-400">
+                    ${currentPlan.pricing.current} MXN
+                  </div>
+                  
+                  {currentPlan.pricing.hasPromo && currentPlan.pricing.regular !== currentPlan.pricing.current && (
+                    <div className="text-xl font-bold text-gray-500 line-through">
+                      ${currentPlan.pricing.regular} MXN
+                    </div>
+                  )}
+                </div>
+                
+                <p className="text-gray-400 text-sm">
+                  Bimestral {currentPlan.pricing.hasPromo ? `• Después: $${currentPlan.pricing.regular} MXN` : ''}
+                </p>
               </div>
 
               <ul className="space-y-3 mb-6">
@@ -141,10 +238,36 @@ function CheckoutPageContent() {
                 ))}
               </ul>
 
+              {/* Value Proposition */}
+              <div className="bg-gradient-to-r from-green-900/20 to-green-800/20 border border-green-500/20 rounded-lg p-4 mb-4">
+                <h3 className="text-green-400 font-semibold mb-2 flex items-center">
+                  💰 Ahorro garantizado
+                </h3>
+                <p className="text-sm text-gray-300">
+                  {plan === 'rocket' 
+                    ? 'Ahorras $3,600 MXN en tu primer año vs precio regular'
+                    : 'Ahorras $4,500 MXN en tu primer año vs precio regular'
+                  }
+                </p>
+              </div>
+
+              {/* Social Proof */}
+              <div className="bg-blue-900/20 border border-blue-500/20 rounded-lg p-4 mb-4">
+                <h3 className="text-blue-400 font-semibold mb-2 flex items-center">
+                  ⭐ ¡Elección inteligente!
+                </h3>
+                <p className="text-sm text-gray-300">
+                  {plan === 'rocket' 
+                    ? 'El 78% de nuestros clientes eligen este plan para empezar'
+                    : 'Plan recomendado para negocios serios que buscan resultados'
+                  }
+                </p>
+              </div>
+
               {/* Flow Data Display */}
               {flowData && (
-                <div className="bg-blue-900/20 border border-blue-500/20 rounded-lg p-4">
-                  <h3 className="text-white font-semibold mb-2">
+                <div className="bg-purple-900/20 border border-purple-500/20 rounded-lg p-4 mb-4">
+                  <h3 className="text-purple-400 font-semibold mb-2">
                     💡 Personalizado para ti
                   </h3>
                   <p className="text-sm text-gray-300">
@@ -152,6 +275,16 @@ function CheckoutPageContent() {
                   </p>
                 </div>
               )}
+              
+              {/* Delivery Promise */}
+              <div className="bg-orange-900/20 border border-orange-500/20 rounded-lg p-4">
+                <h3 className="text-orange-400 font-semibold mb-2 flex items-center">
+                  ⏰ Promesa de entrega
+                </h3>
+                <p className="text-sm text-gray-300">
+                  Tu sitio estará listo en {plan === 'rocket' ? '72 horas' : '96 horas'} o te devolvemos tu dinero
+                </p>
+              </div>
             </div>
 
             {/* Checkout Form */}
