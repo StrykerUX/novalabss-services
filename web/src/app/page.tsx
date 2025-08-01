@@ -16,10 +16,15 @@ import GalaxyFormation from "@/components/GalaxyFormation";
 export default function Home() {
   const [showLoader, setShowLoader] = useState(true);
   const [loaderComplete, setLoaderComplete] = useState(false);
+  const [showOfferModal, setShowOfferModal] = useState(false);
 
   const handleLoaderComplete = () => {
     setShowLoader(false);
     setLoaderComplete(true);
+  };
+
+  const handleShowOfferModal = () => {
+    setShowOfferModal(true);
   };
 
   return (
@@ -33,13 +38,17 @@ export default function Home() {
       {!showLoader && (
         <>
           <Navigation />
-          <Hero loaderComplete={loaderComplete} />
+          <Hero 
+            loaderComplete={loaderComplete} 
+            showOfferModal={showOfferModal}
+            setShowOfferModal={setShowOfferModal}
+          />
           <WhyNovaLabs />
           <PricingPlans />
           <TeamAndTools />
           <Portfolio />
           <Testimonials />
-          <PromotionCountdown />
+          <PromotionCountdown onClaimDiscount={handleShowOfferModal} />
           <ContactSection />
           <Footer />
         </>

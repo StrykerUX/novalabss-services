@@ -134,10 +134,10 @@ export default function Footer() {
               <a href="#" className="text-white/60 hover:text-[#0147FF] text-xs transition-colors duration-300">
                 Términos
               </a>
-              <a href="#" className="text-white/60 hover:text-[#0147FF] text-xs transition-colors duration-300">
+              <a href="/aviso-de-privacidad" className="text-white/60 hover:text-[#0147FF] text-xs transition-colors duration-300">
                 Privacidad
               </a>
-              <a href="#" className="text-white/60 hover:text-[#0147FF] text-xs transition-colors duration-300">
+              <a href="/politica-de-cookies" className="text-white/60 hover:text-[#0147FF] text-xs transition-colors duration-300">
                 Cookies
               </a>
             </div>

@@ -4,7 +4,11 @@ import { useState, useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import SmoothMagneticButton from './SmoothMagneticButton';
 
-export default function PromotionCountdown() {
+interface PromotionCountdownProps {
+  onClaimDiscount?: () => void;
+}
+
+export default function PromotionCountdown({ onClaimDiscount }: PromotionCountdownProps) {
   const [timeLeft, setTimeLeft] = useState({
     days: 0,
     hours: 0,
@@ -24,9 +28,9 @@ export default function PromotionCountdown() {
   const secondsRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Set target date to 40 days from now
+    // Set target date to 40 days from tomorrow
     const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + 40);
+    targetDate.setDate(targetDate.getDate() + 41); // +1 for tomorrow, +40 for the period
 
     const updateTimer = () => {
       const now = new Date().getTime();
@@ -117,11 +121,11 @@ export default function PromotionCountdown() {
               {/* Promotion details */}
               <div className="space-y-4">
                 <div className="inline-flex items-center bg-gradient-to-r from-[#0147FF]/20 to-[#0147FF]/10 border border-[#0147FF]/30 rounded-full px-6 py-3">
-                  <span className="text-2xl lg:text-3xl font-black text-white mr-3">33% OFF</span>
-                  <span className="text-white/80 text-sm">en tus primeros 2 pagos</span>
+                  <span className="text-2xl lg:text-3xl font-black text-white mr-3">33% de descuento</span>
+                  <span className="text-white/80 text-sm">en tu primer año</span>
                 </div>
                 <p className="text-white/70 text-sm">
-                  * Promoción válida para nuevos usuarios. Aplica solo a los primeros 2 pagos bimestrales.
+                  * Solo válido para los primeros usuarios.
                 </p>
               </div>
             </div>
@@ -188,6 +192,7 @@ export default function PromotionCountdown() {
               {/* CTA Button */}
               <div className="pt-8">
                 <SmoothMagneticButton 
+                  onClick={onClaimDiscount}
                   className="w-full lg:w-auto text-white px-8 py-4 font-semibold text-lg hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center lg:justify-start space-x-3"
                   magneticStrength={0.18}
                 >

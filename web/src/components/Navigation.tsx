@@ -151,7 +151,7 @@ export default function Navigation() {
                   </Link>
                   <Link 
                     href="/auth/signup"
-                    className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors font-medium"
+                    className="px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors font-medium hidden"
                   >
                     Comenzar
                   </Link>
@@ -248,7 +248,7 @@ export default function Navigation() {
                     </Link>
                     <Link 
                       href="/auth/signup"
-                      className="block px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors font-medium text-center"
+                      className="block px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700 transition-colors font-medium text-center hidden"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       Comenzar

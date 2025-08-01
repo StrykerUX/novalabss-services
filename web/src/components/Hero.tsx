@@ -13,12 +13,13 @@ if (typeof window !== 'undefined') {
 
 interface HeroProps {
   loaderComplete?: boolean;
+  showOfferModal?: boolean;
+  setShowOfferModal?: (show: boolean) => void;
 }
 
-export default function Hero({ loaderComplete = false }: HeroProps) {
+export default function Hero({ loaderComplete = false, showOfferModal = false, setShowOfferModal }: HeroProps) {
   const [mounted, setMounted] = useState(false);
   const [particlePositions, setParticlePositions] = useState<Array<{left: string, top: string}>>([]);
-  const [showOfferModal, setShowOfferModal] = useState(false);
   const rocketRef = useRef<HTMLDivElement>(null);
   const particlesRef = useRef<HTMLDivElement>(null);
 
@@ -314,7 +315,7 @@ export default function Hero({ loaderComplete = false }: HeroProps) {
                 
                 {/* CTA Secundario - Reclamar oferta */}
                 <SmoothMagneticButton
-                  onClick={() => setShowOfferModal(true)}
+                  onClick={() => setShowOfferModal?.(true)}
                   className="w-full sm:w-auto border-2 border-white bg-gradient-to-r from-black/0 to-black/100 text-white px-8 py-4 font-space-grotesk font-semibold text-base lg:text-lg hover:shadow-2xl hover:shadow-white/40 transition-shadow duration-300 shadow-xl shadow-white/30 flex items-center justify-center space-x-2"
                   magneticStrength={0.2}
                 >
@@ -333,14 +334,14 @@ export default function Hero({ loaderComplete = false }: HeroProps) {
           {/* Backdrop */}
           <div 
             className="absolute inset-0 bg-black/80 backdrop-blur-sm"
-            onClick={() => setShowOfferModal(false)}
+            onClick={() => setShowOfferModal?.(false)}
           />
           
           {/* Modal Content */}
           <div className="relative bg-gradient-to-br from-gray-900 to-black border border-red-500/50 rounded-2xl p-8 max-w-md mx-4 shadow-2xl shadow-red-500/25">
             {/* Close Button */}
             <button
-              onClick={() => setShowOfferModal(false)}
+              onClick={() => setShowOfferModal?.(false)}
               className="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors"
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -402,7 +403,7 @@ export default function Hero({ loaderComplete = false }: HeroProps) {
             {/* CTA */}
             <button
               onClick={() => {
-                setShowOfferModal(false);
+                setShowOfferModal?.(false);
                 const planesSection = document.getElementById('planes');
                 if (planesSection) {
                   planesSection.scrollIntoView({ 
