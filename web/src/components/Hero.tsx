@@ -241,7 +241,9 @@ export default function Hero({ loaderComplete = false, showOfferModal = false, s
               </h1>
               
               <p className="hero-subtitle text-base lg:text-2xl text-white/90 leading-relaxed font-medium max-w-3xl opacity-0">
-                Tu ventaja competitiva: tecnología profesional sin complicaciones ni dolores de cabeza
+                Diseñamos sitios web que convierten visitantes en clientes: interfaz profesional, SEO estratégico y hosting confiable. 
+                <br />
+                <span className="text-blue-400 font-semibold">Tu presencia digital lista en solo días</span>
               </p>
               
               <div className="hero-badges flex flex-wrap gap-2 sm:gap-3 opacity-0">
@@ -249,19 +251,19 @@ export default function Hero({ loaderComplete = false, showOfferModal = false, s
                   className="animated-badge bg-white/10 backdrop-blur-sm border border-white/20 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-white"
                   pulseDelay={0}
                 >
-                  $1,199 bimestrales = $600/mes
+                  Página web personalizada
                 </AnimatedBadge>
                 <AnimatedBadge 
                   className="animated-badge bg-blue-600/20 backdrop-blur-sm border border-blue-400/30 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-blue-200"
                   pulseDelay={0.5}
                 >
-                  Tecnología enterprise
+                  Soporte continuo
                 </AnimatedBadge>
                 <AnimatedBadge 
                   className="animated-badge bg-green-600/20 backdrop-blur-sm border border-green-400/30 rounded-full px-3 py-1.5 sm:px-4 sm:py-2 text-xs sm:text-sm font-medium text-green-200"
                   pulseDelay={1}
                 >
-                  Solo queda vender
+                  Sin complicaciones técnicas
                 </AnimatedBadge>
               </div>
 
@@ -360,7 +362,7 @@ export default function Hero({ loaderComplete = false, showOfferModal = false, s
               <div className="space-y-2 text-sm">
                 <div className="flex items-center text-white/90">
                   <span className="text-green-400 mr-2">✅</span>
-                  Sitio web profesional en 3 días garantizados
+                  Sitio web profesional en 3 días
                 </div>
                 <div className="flex items-center text-white/90">
                   <span className="text-green-400 mr-2">✅</span>

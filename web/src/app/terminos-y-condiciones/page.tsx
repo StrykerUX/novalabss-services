@@ -117,15 +117,9 @@ export default function TerminosYCondiciones() {
               excluyendo fines de semana y días festivos mexicanos).
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="border border-white/10 rounded-xl p-4 bg-white/3">
-                <h4 className="font-semibold text-white mb-2">✅ Garantía de entrega</h4>
-                <p className="text-white/70 text-sm">Cumplimos con los tiempos establecidos o trabajamos sin costo adicional</p>
-              </div>
-              <div className="border border-white/10 rounded-xl p-4 bg-white/3">
-                <h4 className="font-semibold text-white mb-2">🏆 Garantía de calidad</h4>
-                <p className="text-white/70 text-sm">Sitio web funcional, optimizado y según estándares profesionales</p>
-              </div>
+            <div className="border border-white/10 rounded-xl p-4 bg-white/3 max-w-md">
+              <h4 className="font-semibold text-white mb-2">🏆 Garantía de calidad</h4>
+              <p className="text-white/70 text-sm">Sitio web funcional, optimizado y según estándares profesionales</p>
             </div>
           </section>
 
@@ -163,6 +157,51 @@ export default function TerminosYCondiciones() {
               <div className="border border-white/10 rounded-xl p-4 bg-white/3">
                 <h4 className="font-semibold text-white mb-2">💰 Sin costos ocultos</h4>
                 <p className="text-white/70 text-sm">El precio mostrado es el precio final</p>
+              </div>
+            </div>
+          </section>
+
+          {/* Política de revisiones detallada */}
+          <section className="mb-12">
+            <h2 className="text-2xl font-bold text-[#0147FF] mb-4">Política de Revisiones y Modificaciones</h2>
+            
+            <div className="bg-blue-500/10 border border-blue-400/30 rounded-2xl p-6 mb-6">
+              <h3 className="text-lg font-bold text-blue-200 mb-4 flex items-center">
+                📋 Proceso de Revisión Estructurado
+              </h3>
+              
+              <div className="space-y-6">
+                {/* Fase 1 */}
+                <div className="border-l-4 border-blue-400 pl-6">
+                  <h4 className="font-semibold text-white mb-2">Fase 1: Entrega Inicial</h4>
+                  <ul className="text-white/80 text-sm space-y-1">
+                    <li>• Se entregan las primeras <strong>2 secciones desarrolladas</strong> del proyecto</li>
+                    <li>• El cliente tiene <strong>2 días hábiles</strong> para revisar y proporcionar feedback</li>
+                    <li>• Derecho a <strong>un rechazo completo</strong> si el enfoque no cumple expectativas</li>
+                    <li>• En caso de rechazo, se inicia un <strong>nuevo diseño sin costo adicional</strong></li>
+                  </ul>
+                </div>
+
+                {/* Fase 2 */}
+                <div className="border-l-4 border-green-400 pl-6">
+                  <h4 className="font-semibold text-white mb-2">Fase 2: Desarrollo y Refinamiento</h4>
+                  <ul className="text-white/80 text-sm space-y-1">
+                    <li>• Una vez aceptado el enfoque, se procede con el desarrollo completo</li>
+                    <li>• Se incluyen <strong>hasta 3 rondas de cambios menores</strong> sin costo</li>
+                    <li>• Cambios menores: ajustes de texto, colores, imágenes, espaciados</li>
+                    <li>• Cada ronda de cambios debe solicitarse en un <strong>máximo de 48 horas</strong></li>
+                  </ul>
+                </div>
+
+                {/* Fase 3 */}
+                <div className="border-l-4 border-yellow-400 pl-6">
+                  <h4 className="font-semibold text-white mb-2">Cambios Adicionales</h4>
+                  <ul className="text-white/80 text-sm space-y-1">
+                    <li>• Modificaciones posteriores a las 3 rondas incluidas tendrán <strong>costo adicional</strong> <span className="text-xs text-white/60">($199 MXN)</span></li>
+                    <li>• Se proporcionará cotización antes de proceder con el trabajo</li>
+                    <li>• Cambios mayores (estructura, funcionalidades) se cotizan por separado</li>
+                  </ul>
+                </div>
               </div>
             </div>
           </section>
@@ -220,10 +259,13 @@ export default function TerminosYCondiciones() {
               </div>
 
               <div className="border-l-4 border-[#0147FF] pl-6 py-2">
-                <h4 className="font-semibold text-white mb-1">🔄 Revisiones incluidas</h4>
-                <p className="text-white/80 text-sm">
-                  Hasta 3 rondas de ajustes sin costo adicional durante el desarrollo
-                </p>
+                <h4 className="font-semibold text-white mb-1">🔄 Proceso de revisión y cambios</h4>
+                <div className="text-white/80 text-sm space-y-2">
+                  <p><strong>Entrega inicial:</strong> Se presentan 2 secciones del proyecto para revisión</p>
+                  <p><strong>Derecho de rechazo:</strong> Una oportunidad de solicitar diseño completamente nuevo sin costo</p>
+                  <p><strong>Tras aceptación:</strong> Hasta 3 cambios menores incluidos sin costo adicional</p>
+                  <p><strong>Modificaciones posteriores:</strong> Cambios adicionales tendrán costo extra según cotización</p>
+                </div>
               </div>
             </div>
           </section>

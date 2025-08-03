@@ -9,6 +9,7 @@ import TeamAndTools from "@/components/TeamAndTools";
 import Portfolio from "@/components/Portfolio";
 import Testimonials from "@/components/Testimonials";
 import PromotionCountdown from "@/components/PromotionCountdown";
+import FAQs from "@/components/FAQs";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
 import GalaxyFormation from "@/components/GalaxyFormation";
@@ -49,6 +50,7 @@ export default function Home() {
           <Portfolio />
           <Testimonials />
           <PromotionCountdown onClaimDiscount={handleShowOfferModal} />
+          <FAQs />
           <ContactSection />
           <Footer />
         </>

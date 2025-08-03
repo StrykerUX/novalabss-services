@@ -153,7 +153,7 @@ export default function TeamAndTools() {
               </h3>
               {/* Default description - hidden on hover */}
               <p className="text-white/70 text-lg group-hover:opacity-0 transition-opacity duration-300">
-                Co-Fundador • Frontend Designer • AI Prompt Engineer • Research & Market Specialist
+                Co-Fundador • Frontend Designer • AI Prompt Engineer
               </p>
               
               {/* Hover experience summary - shown on hover */}
@@ -163,13 +163,13 @@ export default function TeamAndTools() {
                 </h3>
                 <div className="text-white/90 text-sm leading-relaxed">
                   <p className="mb-3">
-                    <span className="text-green-300 font-semibold">Frontend Designer</span> especializado en investigación de mercado y análisis de competencia.
+                    <span className="text-green-300 font-semibold">Frontend Designer</span> especializado en crear interfaces modernas y funcionales.
                   </p>
                   <p className="mb-3">
-                    Experto en <span className="text-green-300">AI prompting</span>, <span className="text-green-300">user research</span> y estrategias de posicionamiento.
+                    Experto en <span className="text-green-300">AI prompting</span> y optimización de flujos de trabajo con inteligencia artificial.
                   </p>
                   <p>
-                    Sus análisis han optimizado estrategias que generaron +$2M MXN en ventas.
+                    Se enfoca en diseñar experiencias digitales que impulsan el crecimiento de los proyectos.
                   </p>
                 </div>
               </div>
@@ -232,27 +232,27 @@ export default function TeamAndTools() {
             <div className="h-full bg-gradient-to-br from-red-500/20 to-red-700/20 bg-[#1A1A1A] relative p-6 flex flex-col justify-between">
               {/* Name at top left */}
               <h3 className="text-white text-4xl font-black font-space-grotesk leading-tight">
-                Hector<br />Sánchez
+                Hector<br />Lemus
               </h3>
               {/* Default description - hidden on hover */}
               <p className="text-white/70 text-lg group-hover:opacity-0 transition-opacity duration-300">
-                Frontend Developer • Server Infrastructure • Performance Expert • Technical Assistance
+                Frontend Developer • Infrastructure Specialist • Technical Support
               </p>
               
               {/* Hover experience summary - shown on hover */}
               <div className="absolute inset-6 flex flex-col justify-between opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none group-hover:pointer-events-auto">
                 <h3 className="text-white text-4xl font-black font-space-grotesk leading-tight">
-                  Hector<br />Sánchez
+                  Hector<br />Lemus
                 </h3>
                 <div className="text-white/90 text-sm leading-relaxed">
                   <p className="mb-3">
-                    <span className="text-red-300 font-semibold">Frontend Developer</span> especializado en infraestructura de servidores y optimización de rendimiento.
+                    <span className="text-red-300 font-semibold">Frontend Developer</span> con enfoque en infraestructura y rendimiento de aplicaciones web.
                   </p>
                   <p className="mb-3">
-                    Experto en <span className="text-red-300">performance optimization</span>, <span className="text-red-300">server management</span> y soporte técnico avanzado.
+                    Especializado en <span className="text-red-300">optimización de sitios</span>, <span className="text-red-300">configuración de servidores</span> y soporte técnico.
                   </p>
                   <p>
-                    Garantiza +99% uptime y soporte técnico 24/7 para todos los proyectos.
+                    Garantiza que cada proyecto funcione de manera eficiente y sin interrupciones.
                   </p>
                 </div>
               </div>
@@ -290,7 +290,7 @@ export default function TeamAndTools() {
             <div className="h-full bg-gradient-to-br from-[#0147FF]/20 to-[#0147FF]/10 bg-[#1A1A1A] relative p-6 flex flex-col justify-between">
               {/* Discount badge */}
               <div className="absolute top-6 right-6 bg-[#0147FF] text-white px-3 py-1 rounded-full text-xs font-bold">
-                25% OFF
+                33% OFF
               </div>
               {/* Title at top left */}
               <h3 className="text-white text-4xl font-black font-space-grotesk leading-tight">
@@ -299,11 +299,14 @@ export default function TeamAndTools() {
               {/* Description and CTA at bottom */}
               <div>
                 <p className="text-white/80 text-sm mb-4">
-                  Tu sitio web por solo <span className="font-bold text-blue-300">$749 MXN</span> el primer mes
+                  <span className="line-through text-white/50">$1,799 MXN</span> por solo <span className="font-bold text-blue-300">$1,199 MXN</span> bimestral el primer año
                 </p>
-                <button className="w-full bg-gradient-to-r from-[#0147FF] to-[#0147FF80] text-white px-4 py-3 rounded-full font-semibold text-sm hover:from-[#0147FF] hover:to-[#0147FF] transition-all duration-300 shadow-lg shadow-blue-600/30">
+                <a 
+                  href="/checkout/rocket"
+                  className="w-full bg-gradient-to-r from-[#0147FF] to-[#0147FF80] text-white px-4 py-3 rounded-full font-semibold text-sm hover:from-[#0147FF] hover:to-[#0147FF] transition-all duration-300 shadow-lg shadow-blue-600/30 block text-center"
+                >
                   Reclamar descuento
-                </button>
+                </a>
               </div>
             </div>
           </div>

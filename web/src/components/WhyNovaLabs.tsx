@@ -87,13 +87,13 @@ export default function WhyNovaLabs() {
           {/* Card 1 */}
           <div className="bg-[#1A1A1A] rounded-[48px] p-8 lg:p-12 relative overflow-hidden min-h-[280px] flex flex-col">
             <h3 className="text-white text-2xl lg:text-2xl font-semibold mb-6 tracking-wide">
-              SIN COMPLICACIONES TÉCNICAS
+              TU SITIO WEB PROFESIONAL
             </h3>
             
             {/* Mobile layout - column */}
             <div className="flex flex-col lg:hidden flex-1">
               <p className="text-white/90 text-base leading-relaxed mb-6">
-                Nosotros manejamos toda la tecnología mientras tú te enfocas en vender. Sin dolores de cabeza, sin curvas de aprendizaje, solo resultados.
+                Diseñamos y desarrollamos tu página web completa: diseño atractivo, contenido optimizado y funcionalidades que convierten visitantes en clientes reales.
               </p>
               <div className="text-[80px] font-black bg-gradient-to-b from-[#0147FF] to-[#0147FF38] bg-clip-text text-transparent leading-none text-center -mt-6 transform scale-[1.45] translate-x-12 translate-y-8">
                 01
@@ -104,7 +104,7 @@ export default function WhyNovaLabs() {
             <div className="hidden lg:flex items-end justify-between flex-1">
               <div className="max-w-[60%]">
                 <p className="text-white/90 text-base leading-relaxed">
-                  Nosotros manejamos toda la tecnología mientras tú te enfocas en vender. Sin dolores de cabeza, sin curvas de aprendizaje, solo resultados.
+                  Diseñamos y desarrollamos tu página web completa: diseño atractivo, contenido optimizado y funcionalidades que convierten visitantes en clientes reales.
                 </p>
               </div>
               <div 
@@ -119,13 +119,13 @@ export default function WhyNovaLabs() {
           {/* Card 2 */}
           <div className="bg-[#1A1A1A] rounded-[48px] p-8 lg:p-12 relative overflow-hidden min-h-[280px] flex flex-col">
             <h3 className="text-white text-2xl lg:text-2xl font-semibold mb-6 tracking-wide">
-              RESULTADOS EN 72 HORAS
+              LISTO PARA VENDER EN DÍAS
             </h3>
             
             {/* Mobile layout - column */}
             <div className="flex flex-col lg:hidden flex-1">
               <p className="text-white/90 text-base leading-relaxed mb-6">
-                Tu sitio web funcionando y vendiendo en menos de una semana. Mientras tu competencia planifica, tú ya estás generando ingresos.
+                Tu sitio web funcionando en menos de una semana. Mientras tu competencia busca desarrolladores, tú ya estás recibiendo clientes online.
               </p>
               <div className="text-[80px] font-black bg-gradient-to-b from-[#0147FF] to-[#0147FF38] bg-clip-text text-transparent leading-none text-center -mt-6 transform scale-[1.45] translate-x-12 translate-y-8">
                 02
@@ -136,7 +136,7 @@ export default function WhyNovaLabs() {
             <div className="hidden lg:flex items-end justify-between flex-1">
               <div className="max-w-[60%]">
                 <p className="text-white/90 text-base leading-relaxed">
-                  Tu sitio web funcionando y vendiendo en menos de una semana. Mientras tu competencia planifica, tú ya estás generando ingresos.
+                  Tu sitio web funcionando en menos de una semana. Mientras tu competencia busca desarrolladores, tú ya estás recibiendo clientes online.
                 </p>
               </div>
               <div 
@@ -183,13 +183,13 @@ export default function WhyNovaLabs() {
           {/* Card 4 */}
           <div className="bg-[#1A1A1A] rounded-[48px] p-8 lg:p-12 relative overflow-hidden min-h-[280px] flex flex-col">
             <h3 className="text-white text-2xl lg:text-2xl font-semibold mb-6 tracking-wide">
-              SOPORTE 100% MEXICANO
+              SOPORTE CONTINUO INCLUIDO
             </h3>
             
             {/* Mobile layout - column */}
             <div className="flex flex-col lg:hidden flex-1">
               <p className="text-white/90 text-base leading-relaxed mb-6">
-                Entendemos tu negocio y hablamos tu idioma. Soporte en horario mexicano con gente que conoce tu mercado y desafíos reales.
+                Actualizaciones, mantenimiento y soporte técnico mexicano. Tu sitio siempre funcionando mientras tú te enfocas en hacer crecer tu negocio.
               </p>
               <div className="text-[80px] font-black bg-gradient-to-b from-[#0147FF] to-[#0147FF38] bg-clip-text text-transparent leading-none text-center -mt-6 transform scale-[1.45] translate-x-12 translate-y-8">
                 04
@@ -200,7 +200,7 @@ export default function WhyNovaLabs() {
             <div className="hidden lg:flex items-end justify-between flex-1">
               <div className="max-w-[60%]">
                 <p className="text-white/90 text-base leading-relaxed">
-                  Entendemos tu negocio y hablamos tu idioma. Soporte en horario mexicano con gente que conoce tu mercado y desafíos reales.
+                  Actualizaciones, mantenimiento y soporte técnico mexicano. Tu sitio siempre funcionando mientras tú te enfocas en hacer crecer tu negocio.
                 </p>
               </div>
               <div 
