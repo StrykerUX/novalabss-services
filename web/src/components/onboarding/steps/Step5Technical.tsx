@@ -15,9 +15,7 @@ export default function Step5Technical() {
   const [formData, setFormData] = useState({
     hasDomain: technical.domain?.hasDomain ?? undefined,
     domainName: technical.domain?.domainName || '',
-    needsHelp: technical.domain?.needsHelp || false,
-    hasContent: technical.hasContent ?? undefined,
-    needsCopywriting: technical.needsCopywriting ?? true
+    needsHelp: technical.domain?.needsHelp || false
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -35,18 +33,6 @@ export default function Step5Technical() {
     }
   }
 
-  const handleContentChoice = (hasContent: boolean) => {
-    setFormData(prev => ({ 
-      ...prev, 
-      hasContent,
-      needsCopywriting: !hasContent
-    }))
-    
-    if (errors.hasContent) {
-      setErrors(prev => ({ ...prev, hasContent: '' }))
-    }
-  }
-
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
@@ -56,10 +42,6 @@ export default function Step5Technical() {
 
     if (formData.hasDomain && !formData.domainName.trim()) {
       newErrors.domainName = 'Escribe tu dominio actual'
-    }
-
-    if (formData.hasContent === undefined) {
-      newErrors.hasContent = 'Indica si tienes contenido existente'
     }
 
     setErrors(newErrors)
@@ -75,9 +57,7 @@ export default function Step5Technical() {
         hasDomain: formData.hasDomain!,
         domainName: formData.domainName.trim() || undefined,
         needsHelp: formData.needsHelp
-      },
-      hasContent: formData.hasContent!,
-      needsCopywriting: formData.needsCopywriting
+      }
     })
 
     markStepCompleted(5)
@@ -103,7 +83,7 @@ export default function Step5Technical() {
         </h2>
         
         <p className="text-gray-400 text-lg">
-          Información sobre dominio y contenido existente
+          Configuración de dominio para tu sitio web
         </p>
       </div>
 
@@ -136,7 +116,7 @@ export default function Step5Technical() {
               <div className="flex items-start gap-4">
                 <span className="text-3xl">✅</span>
                 <div>
-                  <h4 className="font-semibold text-lg mb-1">Sí, ya tengo dominio</h4>
+                  <h4 className="font-semibold text-lg mb-1">Tengo dominio</h4>
                   <p className="text-sm opacity-75">
                     Tengo un dominio registrado que quiero usar
                   </p>
@@ -160,7 +140,7 @@ export default function Step5Technical() {
               <div className="flex items-start gap-4">
                 <span className="text-3xl">🆘</span>
                 <div>
-                  <h4 className="font-semibold text-lg mb-1">No, necesito ayuda</h4>
+                  <h4 className="font-semibold text-lg mb-1">No tengo dominio</h4>
                   <p className="text-sm opacity-75">
                     Te ayudaremos a registrar el dominio perfecto
                   </p>
@@ -185,27 +165,17 @@ export default function Step5Technical() {
               ¿Cuál es tu dominio actual? *
             </label>
             
-            <div className="relative">
-              <input
-                type="text"
-                value={formData.domainName}
-                onChange={(e) => setFormData(prev => ({ ...prev, domainName: e.target.value }))}
-                placeholder="tuempresa.com"
-                className={`w-full px-4 py-3 bg-gray-800 border rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
-                  errors.domainName 
-                    ? 'border-red-500 focus:ring-red-500/20' 
-                    : 'border-gray-700 focus:border-green-500 focus:ring-green-500/20'
-                }`}
-              />
-              <div className="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none">
-                https://
-              </div>
-              <style jsx>{`
-                input {
-                  padding-left: 4.5rem;
-                }
-              `}</style>
-            </div>
+            <input
+              type="text"
+              value={formData.domainName}
+              onChange={(e) => setFormData(prev => ({ ...prev, domainName: e.target.value }))}
+              placeholder="tuempresa.com"
+              className={`w-full px-4 py-3 bg-gray-800 border rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all ${
+                errors.domainName 
+                  ? 'border-red-500 focus:ring-red-500/20' 
+                  : 'border-gray-700 focus:border-green-500 focus:ring-green-500/20'
+              }`}
+            />
             
             {errors.domainName && (
               <p className="text-red-400 text-sm mt-1">{errors.domainName}</p>
@@ -240,124 +210,17 @@ export default function Step5Technical() {
           </motion.div>
         )}
 
-        {/* Contenido existente */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6 }}
-        >
-          <h3 className="text-xl font-semibold text-white mb-4">
-            ¿Tienes contenido existente para tu sitio? *
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <motion.button
-              onClick={() => handleContentChoice(true)}
-              className={`p-6 rounded-xl border text-left transition-all ${
-                formData.hasContent === true
-                  ? 'bg-green-500/20 border-green-500/50 text-white'
-                  : 'bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600'
-              }`}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <div className="flex items-start gap-4">
-                <span className="text-3xl">📄</span>
-                <div>
-                  <h4 className="font-semibold text-lg mb-1">Sí, tengo contenido</h4>
-                  <p className="text-sm opacity-75">
-                    Tengo textos, imágenes y descripciones listas
-                  </p>
-                </div>
-              </div>
-            </motion.button>
-
-            <motion.button
-              onClick={() => handleContentChoice(false)}
-              className={`p-6 rounded-xl border text-left transition-all ${
-                formData.hasContent === false
-                  ? 'bg-purple-500/20 border-purple-500/50 text-white'
-                  : 'bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600'
-              }`}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.7 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <div className="flex items-start gap-4">
-                <span className="text-3xl">✍️</span>
-                <div>
-                  <h4 className="font-semibold text-lg mb-1">No, necesito redacción</h4>
-                  <p className="text-sm opacity-75">
-                    Ayúdenme a crear el contenido profesional
-                  </p>
-                </div>
-              </div>
-            </motion.button>
-          </div>
-          
-          {errors.hasContent && (
-            <p className="text-red-400 text-sm mt-2">{errors.hasContent}</p>
-          )}
-        </motion.div>
-
-        {/* Información adicional según la elección de contenido */}
-        {formData.hasContent === true && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            transition={{ duration: 0.3 }}
-            className="bg-green-500/10 border border-green-500/30 rounded-xl p-6"
-          >
-            <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-              <span>👍</span>
-              Perfecto, tienes contenido listo
-            </h4>
-            <p className="text-gray-300 text-sm">
-              Podrás compartir tus textos e imágenes con nuestro equipo durante el proceso de desarrollo. 
-              Esto acelerará significativamente el tiempo de entrega de tu sitio web.
-            </p>
-          </motion.div>
-        )}
-
-        {formData.hasContent === false && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            transition={{ duration: 0.3 }}
-            className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6"
-          >
-            <h4 className="text-white font-semibold mb-2 flex items-center gap-2">
-              <span>✍️</span>
-              Incluiremos redacción profesional
-            </h4>
-            <p className="text-gray-300 text-sm mb-3">
-              Nuestro equipo de copywriters creará contenido profesional para tu sitio, incluyendo:
-            </p>
-            <ul className="text-gray-300 text-sm space-y-1">
-              <li>• Textos optimizados para SEO</li>
-              <li>• Descripciones persuasivas de productos/servicios</li>
-              <li>• Calls-to-action efectivos</li>
-              <li>• Contenido adaptado a tu audiencia objetivo</li>
-            </ul>
-          </motion.div>
-        )}
-
         {/* Resumen */}
-        {(formData.hasDomain !== undefined && formData.hasContent !== undefined) && (
+        {formData.hasDomain !== undefined && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.8 }}
+            transition={{ delay: 0.6 }}
             className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6"
           >
             <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
               <span>📋</span>
-              Resumen de configuración
+              Configuración de dominio
             </h4>
             
             <div className="space-y-2 text-sm">
@@ -366,13 +229,6 @@ export default function Step5Technical() {
                 {formData.hasDomain 
                   ? `Usar dominio existente ${formData.domainName ? `(${formData.domainName})` : ''}` 
                   : 'Ayuda para registrar nuevo dominio'
-                }
-              </p>
-              <p className="text-gray-300">
-                <span className="text-blue-400 font-medium">Contenido:</span> {' '}
-                {formData.hasContent 
-                  ? 'Cliente proporcionará contenido existente'
-                  : 'Incluir servicio de redacción profesional'
                 }
               </p>
             </div>
@@ -384,11 +240,11 @@ export default function Step5Technical() {
           className="pt-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 0.8 }}
         >
           <button
             onClick={handleContinue}
-            disabled={formData.hasDomain === undefined || formData.hasContent === undefined}
+            disabled={formData.hasDomain === undefined}
             className="w-full px-6 py-4 bg-blue-500 text-white rounded-xl font-semibold text-lg hover:bg-blue-600 disabled:bg-gray-700 disabled:cursor-not-allowed transition-all"
           >
             Continuar a Confirmación ✅

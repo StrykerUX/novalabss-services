@@ -1,147 +1,121 @@
 'use client'
 
-import { useState, useCallback } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
 import { useOptimizedOnboarding } from '@/hooks/useOptimizedOnboarding'
-import { BRANDING_QUESTIONS } from '@/lib/onboarding-config'
-import FileUploadZone from '../FileUploadZone'
-
-const BRAND_STYLES = [
-  { value: 'modern', label: 'Moderno', emoji: '🚀', description: 'Limpio, minimalista y contemporáneo' },
-  { value: 'classic', label: 'Clásico', emoji: '🏛️', description: 'Elegante, tradicional y confiable' },
-  { value: 'minimal', label: 'Minimalista', emoji: '⚪', description: 'Simple, espacios blancos, esencial' },
-  { value: 'bold', label: 'Audaz', emoji: '⚡', description: 'Llamativo, vibrante y energético' },
-  { value: 'elegant', label: 'Elegante', emoji: '💎', description: 'Sofisticado, refinado y premium' },
-  { value: 'creative', label: 'Creativo', emoji: '🎨', description: 'Artístico, único y expresivo' }
-]
+import { BRAND_STYLES, SOCIAL_NETWORKS, BRAND_PERSONALITY_OPTIONS } from '@/lib/onboarding-config'
 
 export default function Step4Branding() {
   const { 
     branding, 
-    business,
-    goals,
     updateBranding, 
-    uploadFiles,
-    analyzeWithAI,
     markStepCompleted, 
     nextStep 
   } = useOptimizedOnboarding()
 
   const [formData, setFormData] = useState({
-    brandStyle: branding.brandStyle || '',
-    socialMedia: branding.socialMedia || {},
-    brandingQuestions: {
-      personality: '',
-      emotion: '',
-      differentiation: ''
+    brandStyles: branding.brandStyles || [],
+    socialMedia: branding.socialMedia || {
+      currentWebsite: '',
+      facebook: '',
+      additional: { platform: '', url: '' }
+    },
+    brandPersonality: {
+      feeling: branding.brandPersonality?.feeling || '',
+      word: branding.brandPersonality?.word || ''
     }
-  })
-
-  const [aiState, setAiState] = useState<{
-    isAnalyzing: boolean
-    hasAnalysis: boolean
-    analysis: any
-    error: string
-  }>({
-    isAnalyzing: false,
-    hasAnalysis: !!branding.aiAnalysis,
-    analysis: branding.aiAnalysis || null,
-    error: ''
-  })
-
-  const [uploadedFiles, setUploadedFiles] = useState({
-    logo: branding.logo || [],
-    brandGuide: branding.brandGuide || [],
-    images: branding.images || []
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  const handleStyleSelect = (style: string) => {
-    setFormData(prev => ({ ...prev, brandStyle: style }))
-    if (errors.brandStyle) {
-      setErrors(prev => ({ ...prev, brandStyle: '' }))
-    }
-  }
-
-  const handleSocialMediaChange = (platform: string, url: string) => {
-    setFormData(prev => ({
-      ...prev,
-      socialMedia: {
-        ...prev.socialMedia,
-        [platform]: url
-      }
-    }))
-  }
-
-  const handleQuestionChange = (questionId: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      brandingQuestions: {
-        ...prev.brandingQuestions,
-        [questionId]: value
-      }
-    }))
-  }
-
-  const handleFileUpload = useCallback(async (files: File[], type: 'logo' | 'brandGuide' | 'images') => {
-    try {
-      const urls = await uploadFiles(files, type)
-      setUploadedFiles(prev => ({
-        ...prev,
-        [type]: [...(prev[type] || []), ...urls]
-      }))
-      return urls
-    } catch (error) {
-      console.error('Upload error:', error)
-      throw error
-    }
-  }, [uploadFiles])
-
-  const handleAIAnalysis = async () => {
-    if (!formData.brandingQuestions.personality || !formData.brandingQuestions.emotion) {
-      setErrors(prev => ({ ...prev, aiQuestions: 'Completa las preguntas para el análisis de IA' }))
-      return
-    }
-
-    setAiState(prev => ({ ...prev, isAnalyzing: true, error: '' }))
-
-    try {
-      const analysis = await analyzeWithAI(formData.brandingQuestions)
+  const handleStyleToggle = (styleId: string) => {
+    setFormData(prev => {
+      const currentStyles = prev.brandStyles
+      const isSelected = currentStyles.includes(styleId)
       
-      setAiState({
-        isAnalyzing: false,
-        hasAnalysis: true,
-        analysis: analysis.analysis || analysis,
-        error: ''
-      })
-
-      // Actualizar colores recomendados si los hay
-      if (analysis.analysis?.recommendedColors) {
-        const colors = analysis.analysis.recommendedColors.map((c: any) => 
-          typeof c === 'string' ? c : c.color
-        ).filter((c: string) => c && c.startsWith('#'))
-        
-        if (colors.length > 0) {
-          updateBranding({ brandColors: colors })
+      if (isSelected) {
+        // Remove style
+        return {
+          ...prev,
+          brandStyles: currentStyles.filter(id => id !== styleId)
+        }
+      } else {
+        // Add style (max 2)
+        if (currentStyles.length >= 2) {
+          // Replace first style with new one
+          return {
+            ...prev,
+            brandStyles: [currentStyles[1], styleId]
+          }
+        } else {
+          return {
+            ...prev,
+            brandStyles: [...currentStyles, styleId]
+          }
         }
       }
+    })
+    
+    if (errors.brandStyles) {
+      setErrors(prev => ({ ...prev, brandStyles: '' }))
+    }
+  }
 
-    } catch (error) {
-      console.error('AI Analysis error:', error)
-      setAiState(prev => ({
+  const handleSocialMediaChange = (field: string, value: string) => {
+    if (field === 'additionalPlatform') {
+      setFormData(prev => ({
         ...prev,
-        isAnalyzing: false,
-        error: 'Error en el análisis. Intenta de nuevo.'
+        socialMedia: {
+          ...prev.socialMedia,
+          additional: { ...prev.socialMedia.additional, platform: value, url: '' }
+        }
       }))
+    } else if (field === 'additionalUrl') {
+      setFormData(prev => ({
+        ...prev,
+        socialMedia: {
+          ...prev.socialMedia,
+          additional: { ...prev.socialMedia.additional, url: value }
+        }
+      }))
+    } else {
+      setFormData(prev => ({
+        ...prev,
+        socialMedia: {
+          ...prev.socialMedia,
+          [field]: value
+        }
+      }))
+    }
+  }
+
+  const handlePersonalityChange = (field: string, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      brandPersonality: {
+        ...prev.brandPersonality,
+        [field]: value
+      }
+    }))
+    
+    if (errors[field]) {
+      setErrors(prev => ({ ...prev, [field]: '' }))
     }
   }
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
-    if (!formData.brandStyle) {
-      newErrors.brandStyle = 'Selecciona un estilo de marca'
+    if (formData.brandStyles.length === 0) {
+      newErrors.brandStyles = 'Selecciona al menos un estilo de marca'
+    }
+
+    if (!formData.brandPersonality.feeling.trim()) {
+      newErrors.feeling = 'Describe cómo quieres que se sientan los clientes'
+    }
+
+    if (!formData.brandPersonality.word) {
+      newErrors.word = 'Selecciona una palabra que describa tu negocio'
     }
 
     setErrors(newErrors)
@@ -151,14 +125,11 @@ export default function Step4Branding() {
   const handleContinue = () => {
     if (!validateForm()) return
 
-    // Guardar todos los datos
+    // Guardar datos
     updateBranding({
-      brandStyle: formData.brandStyle as any,
+      brandStyles: formData.brandStyles,
       socialMedia: formData.socialMedia,
-      logo: uploadedFiles.logo,
-      brandGuide: uploadedFiles.brandGuide,
-      images: uploadedFiles.images,
-      aiAnalysis: aiState.analysis
+      brandPersonality: formData.brandPersonality
     })
 
     markStepCompleted(4)
@@ -190,45 +161,65 @@ export default function Step4Branding() {
 
       <div className="space-y-8">
         
-        {/* Estilo de Marca */}
+        {/* Estilos de marca */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
         >
           <h3 className="text-xl font-semibold text-white mb-4">
-            ¿Qué estilo representa mejor tu marca? *
+            ¿Qué estilo representa mejor tu marca? * 
+            <span className="text-sm font-normal text-gray-400 ml-2">
+              (Puedes seleccionar hasta 2)
+            </span>
           </h3>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {BRAND_STYLES.map((style, index) => (
-              <motion.button
-                key={style.value}
-                onClick={() => handleStyleSelect(style.value)}
-                className={`p-6 rounded-xl border text-center transition-all ${
-                  formData.brandStyle === style.value
-                    ? 'bg-blue-500/20 border-blue-500/50 text-white'
-                    : 'bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600'
-                }`}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4 + index * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div className="text-3xl mb-2">{style.emoji}</div>
-                <h4 className="font-semibold mb-1">{style.label}</h4>
-                <p className="text-xs opacity-75">{style.description}</p>
-              </motion.button>
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {BRAND_STYLES.map((style, index) => {
+              const isSelected = formData.brandStyles.includes(style.id)
+              return (
+                <motion.button
+                  key={style.id}
+                  onClick={() => handleStyleToggle(style.id)}
+                  className={`p-4 rounded-xl border text-left transition-all ${
+                    isSelected
+                      ? 'bg-blue-500/20 border-blue-500/50 text-white'
+                      : 'bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600'
+                  }`}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ delay: 0.4 + index * 0.1 }}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <div className="text-center">
+                    <div className="text-3xl mb-2">{style.emoji}</div>
+                    <h4 className="font-semibold text-lg mb-1">{style.name}</h4>
+                    <p className="text-xs opacity-75">{style.description}</p>
+                  </div>
+                </motion.button>
+              )
+            })}
           </div>
           
-          {errors.brandStyle && (
-            <p className="text-red-400 text-sm mt-2">{errors.brandStyle}</p>
+          {errors.brandStyles && (
+            <p className="text-red-400 text-sm mt-2">{errors.brandStyles}</p>
+          )}
+          
+          {formData.brandStyles.length > 0 && (
+            <div className="mt-4 p-4 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+              <p className="text-blue-400 text-sm">
+                <span className="font-medium">Estilos seleccionados:</span> {' '}
+                {formData.brandStyles.map(id => {
+                  const style = BRAND_STYLES.find(s => s.id === id)
+                  return style?.name
+                }).join(' + ')}
+              </p>
+            </div>
           )}
         </motion.div>
 
-        {/* Redes Sociales */}
+        {/* Redes sociales */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -237,217 +228,193 @@ export default function Step4Branding() {
           <h3 className="text-xl font-semibold text-white mb-4">
             Redes sociales (opcional)
           </h3>
-          <p className="text-gray-400 text-sm mb-4">
-            Ayúdanos a entender tu estilo actual
-          </p>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {[
-              { key: 'website', label: 'Sitio web actual', placeholder: 'https://tuempresa.com' },
-              { key: 'instagram', label: 'Instagram', placeholder: 'https://instagram.com/tuempresa' },
-              { key: 'facebook', label: 'Facebook', placeholder: 'https://facebook.com/tuempresa' },
-              { key: 'linkedin', label: 'LinkedIn', placeholder: 'https://linkedin.com/company/tuempresa' }
-            ].map((social, index) => (
-              <motion.div
-                key={social.key}
-                initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.7 + index * 0.1 }}
-              >
-                <label className="block text-gray-300 text-sm font-medium mb-2">
-                  {social.label}
-                </label>
+          <div className="space-y-4">
+            {/* Sitio web actual */}
+            <div>
+              <label className="block text-white font-medium mb-2">
+                Sitio web actual
+              </label>
+              <input
+                type="url"
+                value={formData.socialMedia.currentWebsite}
+                onChange={(e) => handleSocialMediaChange('currentWebsite', e.target.value)}
+                placeholder="https://tuempresa.com"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+              />
+            </div>
+
+            {/* Facebook */}
+            <div>
+              <label className="block text-white font-medium mb-2">
+                Facebook
+              </label>
+              <input
+                type="url"
+                value={formData.socialMedia.facebook}
+                onChange={(e) => handleSocialMediaChange('facebook', e.target.value)}
+                placeholder="https://facebook.com/tu-empresa"
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+              />
+            </div>
+
+            {/* Red social adicional */}
+            <div>
+              <label className="block text-white font-medium mb-2">
+                Red social adicional
+              </label>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <select
+                  value={formData.socialMedia.additional.platform}
+                  onChange={(e) => handleSocialMediaChange('additionalPlatform', e.target.value)}
+                  className="px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                >
+                  <option value="">Selecciona red social</option>
+                  {SOCIAL_NETWORKS.map(network => (
+                    <option key={network.id} value={network.id}>{network.name}</option>
+                  ))}
+                </select>
+
                 <input
                   type="url"
-                  value={formData.socialMedia[social.key as keyof typeof formData.socialMedia] || ''}
-                  onChange={(e) => handleSocialMediaChange(social.key, e.target.value)}
-                  placeholder={social.placeholder}
-                  className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                  value={formData.socialMedia.additional.url}
+                  onChange={(e) => handleSocialMediaChange('additionalUrl', e.target.value)}
+                  placeholder={
+                    formData.socialMedia.additional.platform 
+                      ? SOCIAL_NETWORKS.find(n => n.id === formData.socialMedia.additional.platform)?.placeholder || 'https://...'
+                      : 'Primero selecciona una red social'
+                  }
+                  disabled={!formData.socialMedia.additional.platform}
+                  className="px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 />
-              </motion.div>
-            ))}
+              </div>
+            </div>
           </div>
         </motion.div>
 
-        {/* Upload de Archivos */}
+        {/* Personalidad de marca */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.8 }}
-          className="grid grid-cols-1 md:grid-cols-3 gap-6"
         >
-          <FileUploadZone
-            type="logo"
-            acceptedTypes={['.png', '.svg', '.pdf', '.jpg', '.jpeg']}
-            maxFiles={3}
-            maxSizePerFile={5}
-            onFilesUpload={(files) => handleFileUpload(files, 'logo')}
-          />
-          
-          <FileUploadZone
-            type="brandGuide"
-            acceptedTypes={['.pdf', '.doc', '.docx']}
-            maxFiles={2}
-            maxSizePerFile={10}
-            onFilesUpload={(files) => handleFileUpload(files, 'brandGuide')}
-          />
-          
-          <FileUploadZone
-            type="images"
-            acceptedTypes={['.png', '.jpg', '.jpeg', '.webp']}
-            maxFiles={5}
-            maxSizePerFile={3}
-            onFilesUpload={(files) => handleFileUpload(files, 'images')}
-          />
-        </motion.div>
-
-        {/* Preguntas para IA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
-          className="bg-purple-500/10 border border-purple-500/30 rounded-xl p-6"
-        >
-          <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-            <span>🤖</span>
-            Análisis Inteligente de Marca
+          <h3 className="text-xl font-semibold text-white mb-6">
+            Personalidad de marca *
           </h3>
           
-          <p className="text-gray-300 text-sm mb-6">
-            Responde estas preguntas y nuestra IA te dará recomendaciones personalizadas de colores y estilo
-          </p>
-          
-          <div className="space-y-4">
-            {BRANDING_QUESTIONS.map((question, index) => (
-              <motion.div
-                key={question.id}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1 + index * 0.1 }}
-              >
-                <label className="block text-white font-medium mb-2">
-                  {question.question}
-                </label>
-                
-                {question.type === 'select' ? (
-                  <select
-                    value={formData.brandingQuestions[question.id as keyof typeof formData.brandingQuestions]}
-                    onChange={(e) => handleQuestionChange(question.id, e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all"
-                  >
-                    <option value="">Selecciona una opción</option>
-                    {question.options?.map(option => (
-                      <option key={option} value={option}>{option}</option>
-                    ))}
-                  </select>
-                ) : (
-                  <textarea
-                    value={formData.brandingQuestions[question.id as keyof typeof formData.brandingQuestions]}
-                    onChange={(e) => handleQuestionChange(question.id, e.target.value)}
-                    placeholder={question.placeholder}
-                    rows={3}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-500/20 transition-all resize-none"
-                  />
-                )}
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Botón de análisis */}
-          <div className="mt-6">
-            <button
-              onClick={handleAIAnalysis}
-              disabled={aiState.isAnalyzing || (!formData.brandingQuestions.personality || !formData.brandingQuestions.emotion)}
-              className="w-full px-6 py-3 bg-purple-500 text-white rounded-xl font-semibold hover:bg-purple-600 disabled:bg-gray-700 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
-            >
-              {aiState.isAnalyzing ? (
-                <>
-                  <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Analizando tu marca...
-                </>
-              ) : (
-                <>
-                  <span>🧠</span>
-                  Analizar con IA
-                </>
+          <div className="space-y-6">
+            {/* Pregunta abierta */}
+            <div>
+              <label className="block text-white font-medium mb-2">
+                ¿Cómo quieres que los clientes se sientan al ver tu negocio? *
+              </label>
+              <textarea
+                value={formData.brandPersonality.feeling}
+                onChange={(e) => handlePersonalityChange('feeling', e.target.value)}
+                placeholder="Ej: Quiero que se sientan confiados de que van a recibir un servicio profesional y de calidad..."
+                rows={4}
+                className={`w-full px-4 py-3 bg-gray-800 border rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 transition-all resize-none ${
+                  errors.feeling 
+                    ? 'border-red-500 focus:ring-red-500/20' 
+                    : 'border-gray-700 focus:border-blue-500 focus:ring-blue-500/20'
+                }`}
+              />
+              {errors.feeling && (
+                <p className="text-red-400 text-sm mt-1">{errors.feeling}</p>
               )}
-            </button>
+            </div>
+
+            {/* Pregunta cerrada */}
+            <div>
+              <label className="block text-white font-medium mb-4">
+                ¿Qué palabra describe mejor tu negocio? *
+              </label>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                {BRAND_PERSONALITY_OPTIONS.map((option, index) => (
+                  <motion.button
+                    key={option}
+                    onClick={() => handlePersonalityChange('word', option)}
+                    className={`p-3 rounded-xl border text-center transition-all ${
+                      formData.brandPersonality.word === option
+                        ? 'bg-blue-500/20 border-blue-500/50 text-white'
+                        : 'bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600'
+                    }`}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.9 + index * 0.05 }}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <span className="font-medium text-sm">{option}</span>
+                  </motion.button>
+                ))}
+              </div>
+              {errors.word && (
+                <p className="text-red-400 text-sm mt-2">{errors.word}</p>
+              )}
+            </div>
           </div>
-
-          {errors.aiQuestions && (
-            <p className="text-red-400 text-sm mt-2">{errors.aiQuestions}</p>
-          )}
-
-          {aiState.error && (
-            <p className="text-red-400 text-sm mt-2">{aiState.error}</p>
-          )}
         </motion.div>
 
-        {/* Resultados de IA */}
-        <AnimatePresence>
-          {aiState.hasAnalysis && aiState.analysis && (
-            <motion.div
-              initial={{ opacity: 0, y: 20, height: 0 }}
-              animate={{ opacity: 1, y: 0, height: 'auto' }}
-              exit={{ opacity: 0, y: -20, height: 0 }}
-              className="bg-green-500/10 border border-green-500/30 rounded-xl p-6"
-            >
-              <h4 className="text-white font-semibold mb-4 flex items-center gap-2">
-                <span>✨</span>
-                Recomendaciones de IA
-              </h4>
+        {/* Resumen */}
+        {(formData.brandStyles.length > 0 || formData.brandPersonality.feeling || formData.brandPersonality.word) && (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 1 }}
+            className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6"
+          >
+            <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
+              <span>🎨</span>
+              Resumen de identidad visual
+            </h4>
+            
+            <div className="space-y-2 text-sm">
+              {formData.brandStyles.length > 0 && (
+                <p className="text-gray-300">
+                  <span className="text-blue-400 font-medium">Estilos:</span> {' '}
+                  {formData.brandStyles.map(id => {
+                    const style = BRAND_STYLES.find(s => s.id === id)
+                    return style?.name
+                  }).join(' + ')}
+                </p>
+              )}
               
-              <div className="space-y-4">
-                {aiState.analysis.brandPersonality && (
-                  <div>
-                    <h5 className="text-green-400 font-medium mb-1">Personalidad de Marca:</h5>
-                    <p className="text-gray-300 text-sm">{aiState.analysis.brandPersonality}</p>
-                  </div>
-                )}
-                
-                {aiState.analysis.recommendedColors && (
-                  <div>
-                    <h5 className="text-green-400 font-medium mb-2">Colores Recomendados:</h5>
-                    <div className="flex flex-wrap gap-2">
-                      {aiState.analysis.recommendedColors.map((colorItem: any, index: number) => (
-                        <div key={index} className="flex items-center gap-2">
-                          <div 
-                            className="w-6 h-6 rounded border border-gray-600"
-                            style={{ backgroundColor: typeof colorItem === 'string' ? colorItem : colorItem.color }}
-                          ></div>
-                          <span className="text-gray-300 text-sm">
-                            {typeof colorItem === 'string' ? colorItem : colorItem.name}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-                
-                {aiState.analysis.styleDirection && (
-                  <div>
-                    <h5 className="text-green-400 font-medium mb-1">Estilo Recomendado:</h5>
-                    <p className="text-gray-300 text-sm">{aiState.analysis.styleDirection}</p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              {formData.brandPersonality.word && (
+                <p className="text-gray-300">
+                  <span className="text-blue-400 font-medium">Personalidad:</span> {' '}
+                  {formData.brandPersonality.word}
+                </p>
+              )}
+              
+              {(formData.socialMedia.currentWebsite || formData.socialMedia.facebook || formData.socialMedia.additional.url) && (
+                <p className="text-gray-300">
+                  <span className="text-blue-400 font-medium">Redes sociales:</span> {' '}
+                  {[
+                    formData.socialMedia.currentWebsite && 'Sitio web',
+                    formData.socialMedia.facebook && 'Facebook',
+                    formData.socialMedia.additional.url && SOCIAL_NETWORKS.find(n => n.id === formData.socialMedia.additional.platform)?.name
+                  ].filter(Boolean).join(', ') || 'Ninguna configurada'}
+                </p>
+              )}
+            </div>
+          </motion.div>
+        )}
 
         {/* Continue Button */}
         <motion.div
           className="pt-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
+          transition={{ delay: 1.1 }}
         >
           <button
             onClick={handleContinue}
-            disabled={!formData.brandStyle}
+            disabled={formData.brandStyles.length === 0 || !formData.brandPersonality.feeling || !formData.brandPersonality.word}
             className="w-full px-6 py-4 bg-blue-500 text-white rounded-xl font-semibold text-lg hover:bg-blue-600 disabled:bg-gray-700 disabled:cursor-not-allowed transition-all"
           >
-            Continuar a Configuración 🌐
+            Continuar a Configuración Técnica 🌐
           </button>
         </motion.div>
       </div>

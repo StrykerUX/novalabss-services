@@ -51,11 +51,22 @@ export default function Step3Website() {
     const page = availablePages.find(p => p.id === pageId)
     if (page?.required) return // No permitir deseleccionar páginas requeridas
 
-    setSelectedPages(prev => 
-      prev.includes(pageId)
-        ? prev.filter(id => id !== pageId)
-        : [...prev, pageId]
-    )
+    setSelectedPages(prev => {
+      const isSelected = prev.includes(pageId)
+      
+      if (isSelected) {
+        // Remover página
+        return prev.filter(id => id !== pageId)
+      } else {
+        // Agregar página - verificar límites
+        const maxLimit = userPlan === 'rocket' ? restrictions.maxSections : restrictions.maxPages
+        if (prev.length >= maxLimit) {
+          setValidationError(`Máximo ${maxLimit} ${userPlan === 'rocket' ? 'secciones' : 'páginas'} permitidas en tu plan`)
+          return prev
+        }
+        return [...prev, pageId]
+      }
+    })
     setValidationError('')
   }
 
@@ -144,8 +155,10 @@ export default function Step3Website() {
               {restrictions.description}
             </h3>
             <p className="text-gray-300 text-sm">
-              Máximo {restrictions.maxFeatures} funcionalidades • 
-              {userPlan === 'rocket' ? ' Landing page optimizada' : ' Sitio multipágina'}
+              {userPlan === 'rocket' 
+                ? `${restrictions.minSections}-${restrictions.maxSections} secciones` 
+                : `${restrictions.minPages}-${restrictions.maxPages} páginas`
+              } • Máximo {restrictions.maxFeatures} funcionalidades
             </p>
           </div>
           <div className={`px-3 py-1 rounded-lg text-sm font-medium ${
@@ -168,24 +181,34 @@ export default function Step3Website() {
         >
           <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
             <span>📑</span>
-            Páginas de tu sitio
+            {userPlan === 'rocket' ? 'Secciones de tu sitio' : 'Páginas de tu sitio'}
+            <span className="text-sm text-gray-400">
+              ({selectedPages.length}/{userPlan === 'rocket' ? restrictions.maxSections : restrictions.maxPages})
+            </span>
           </h3>
           
           <div className="space-y-3">
-            {availablePages.map((page, index) => (
-              <motion.div
-                key={page.id}
-                className={`p-4 rounded-xl border cursor-pointer transition-all ${
-                  selectedPages.includes(page.id)
-                    ? 'bg-blue-500/20 border-blue-500/50'
-                    : 'bg-gray-800/50 border-gray-700/50 hover:border-gray-600'
-                } ${page.required ? 'opacity-75' : ''}`}
-                onClick={() => handlePageToggle(page.id)}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + index * 0.1 }}
-                whileHover={{ scale: page.required ? 1 : 1.02 }}
-              >
+            {availablePages.map((page, index) => {
+              const isSelected = selectedPages.includes(page.id)
+              const maxLimit = userPlan === 'rocket' ? restrictions.maxSections : restrictions.maxPages
+              const isDisabled = !isSelected && selectedPages.length >= maxLimit && !page.required
+              
+              return (
+                <motion.div
+                  key={page.id}
+                  className={`p-4 rounded-xl border transition-all ${
+                    isSelected
+                      ? 'bg-blue-500/20 border-blue-500/50'
+                      : isDisabled 
+                        ? 'bg-gray-800/30 border-gray-700/30 opacity-50 cursor-not-allowed'
+                        : 'bg-gray-800/50 border-gray-700/50 hover:border-gray-600 cursor-pointer'
+                  } ${page.required ? 'opacity-75' : ''}`}
+                  onClick={() => !isDisabled && handlePageToggle(page.id)}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + index * 0.1 }}
+                  whileHover={{ scale: (page.required || isDisabled) ? 1 : 1.02 }}
+                >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
@@ -212,7 +235,8 @@ export default function Step3Website() {
                   </div>
                 </div>
               </motion.div>
-            ))}
+              )
+            })}
           </div>
         </motion.div>
 
@@ -321,7 +345,7 @@ export default function Step3Website() {
         </div>
       </motion.div>
 
-      {/* Error */}
+      {/* Validation Messages */}
       {validationError && (
         <motion.div
           className="mt-6 p-4 bg-red-500/10 border border-red-500/30 rounded-xl"
@@ -329,6 +353,24 @@ export default function Step3Website() {
           animate={{ opacity: 1, scale: 1 }}
         >
           <p className="text-red-400 text-sm">{validationError}</p>
+        </motion.div>
+      )}
+
+      {/* Progress Message */}
+      {((userPlan === 'rocket' && selectedPages.length < restrictions.minSections) ||
+        (userPlan === 'galaxy' && selectedPages.length < restrictions.minPages)) && (
+        <motion.div
+          className="mt-6 p-4 bg-yellow-500/10 border border-yellow-500/30 rounded-xl"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+        >
+          <p className="text-yellow-400 text-sm">
+            📋 Necesitas seleccionar al menos{' '}
+            {userPlan === 'rocket' 
+              ? `${restrictions.minSections} secciones` 
+              : `${restrictions.minPages} páginas`
+            } para continuar ({selectedPages.length}/{userPlan === 'rocket' ? restrictions.minSections : restrictions.minPages})
+          </p>
         </motion.div>
       )}
 
@@ -341,7 +383,13 @@ export default function Step3Website() {
       >
         <button
           onClick={handleContinue}
-          disabled={selectedPages.length === 0 || selectedFeatures.length === 0 || !priority}
+          disabled={
+            selectedPages.length === 0 || 
+            selectedFeatures.length === 0 || 
+            !priority ||
+            (userPlan === 'rocket' && selectedPages.length < restrictions.minSections) ||
+            (userPlan === 'galaxy' && selectedPages.length < restrictions.minPages)
+          }
           className="px-8 py-4 bg-blue-500 text-white rounded-xl font-semibold text-lg hover:bg-blue-600 disabled:bg-gray-700 disabled:cursor-not-allowed transition-all"
         >
           Continuar a Identidad Visual 🎨

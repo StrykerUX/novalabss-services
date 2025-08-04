@@ -2,85 +2,212 @@
 
 import { PageOption, FeatureOption, BrandingQuestion, OptimizedStep } from '@/types/onboarding'
 
-// === CONFIGURACIÓN DE PÁGINAS ===
+// === CONFIGURACIÓN DE INDUSTRIAS ===
 
-export const AVAILABLE_PAGES: PageOption[] = [
+export const AVAILABLE_INDUSTRIES = [
+  'Servicios Profesionales',
+  'Retail/Comercio',
+  'Alimentación',
+  'Salud y Bienestar',
+  'Belleza y Cuidado Personal',
+  'Educación',
+  'Otro'
+]
+
+// === CONFIGURACIÓN DE ESTILOS DE MARCA ===
+
+export const BRAND_STYLES = [
+  {
+    id: 'modern',
+    name: 'Moderno',
+    emoji: '🚀',
+    description: 'Limpio, minimalista, tecnológico'
+  },
+  {
+    id: 'classic',
+    name: 'Clásico',
+    emoji: '🏛️',
+    description: 'Tradicional, elegante, confiable'
+  },
+  {
+    id: 'minimal',
+    name: 'Minimalista',
+    emoji: '⚪',
+    description: 'Simple, espacios blancos, esencial'
+  },
+  {
+    id: 'bold',
+    name: 'Audaz',
+    emoji: '⚡',
+    description: 'Llamativo, colores vibrantes, energético'
+  },
+  {
+    id: 'elegant',
+    name: 'Elegante',
+    emoji: '💎',
+    description: 'Sofisticado, refinado, premium'
+  },
+  {
+    id: 'creative',
+    name: 'Creativo',
+    emoji: '🎨',
+    description: 'Artístico, único, expresivo'
+  },
+  {
+    id: 'natural',
+    name: 'Natural',
+    emoji: '🌿',
+    description: 'Orgánico, cálido, relajante'
+  },
+  {
+    id: 'robust',
+    name: 'Robusto',
+    emoji: '💪',
+    description: 'Fuerte, industrial, confiable'
+  }
+]
+
+// === CONFIGURACIÓN DE REDES SOCIALES ===
+
+export const SOCIAL_NETWORKS = [
+  { id: 'instagram', name: 'Instagram', placeholder: 'https://instagram.com/tu-usuario' },
+  { id: 'linkedin', name: 'LinkedIn', placeholder: 'https://linkedin.com/company/tu-empresa' },
+  { id: 'youtube', name: 'YouTube', placeholder: 'https://youtube.com/@tu-canal' },
+  { id: 'tiktok', name: 'TikTok', placeholder: 'https://tiktok.com/@tu-usuario' },
+  { id: 'twitter', name: 'Twitter/X', placeholder: 'https://twitter.com/tu-usuario' },
+  { id: 'whatsapp', name: 'WhatsApp Business', placeholder: 'https://wa.me/52...' },
+  { id: 'google', name: 'Google My Business', placeholder: 'https://g.page/tu-negocio' },
+  { id: 'other', name: 'Otro', placeholder: 'https://...' }
+]
+
+// === CONFIGURACIÓN DE PÁGINAS/SECCIONES ===
+
+// Para Plan Rocket (Secciones de página web)
+export const ROCKET_SECTIONS: PageOption[] = [
   {
     id: 'hero',
-    name: 'Sección principal',
-    description: 'Hero con mensaje principal y call-to-action',
+    name: 'Inicio',
+    description: 'Sección principal con mensaje y llamada a la acción',
     required: true,
-    planCompatible: ['rocket', 'galaxy']
+    planCompatible: ['rocket']
   },
   {
     id: 'about',
     name: 'Sobre nosotros',
-    description: 'Historia, misión y valores de tu empresa',
+    description: 'Historia y valores de tu empresa',
     required: false,
-    planCompatible: ['rocket', 'galaxy']
+    planCompatible: ['rocket']
   },
   {
     id: 'services',
-    name: 'Servicios/Productos',
-    description: 'Muestra lo que ofreces a tus clientes',
+    name: 'Servicios',
+    description: 'Los servicios que ofreces',
     required: false,
-    planCompatible: ['rocket', 'galaxy']
+    planCompatible: ['rocket']
+  },
+  {
+    id: 'products',
+    name: 'Productos',
+    description: 'Los productos que vendes',
+    required: false,
+    planCompatible: ['rocket']
   },
   {
     id: 'testimonials',
     name: 'Testimonios',
-    description: 'Reseñas y opiniones de clientes satisfechos',
+    description: 'Opiniones de clientes satisfechos',
     required: false,
-    planCompatible: ['rocket', 'galaxy']
+    planCompatible: ['rocket']
   },
   {
     id: 'faq',
-    name: 'Preguntas frecuentes',
-    description: 'Respuestas a dudas comunes de tus clientes',
+    name: 'FAQs',
+    description: 'Preguntas frecuentes',
     required: false,
-    planCompatible: ['rocket', 'galaxy']
+    planCompatible: ['rocket']
   },
   {
     id: 'contact',
     name: 'Contacto',
-    description: 'Información de contacto y formulario',
-    required: true,
-    planCompatible: ['rocket', 'galaxy']
+    description: 'Información de contacto',
+    required: false,
+    planCompatible: ['rocket']
   },
-  // Solo para Galaxy
+  {
+    id: 'gallery',
+    name: 'Galería',
+    description: 'Fotos de productos o trabajos',
+    required: false,
+    planCompatible: ['rocket']
+  }
+]
+
+// Para Plan Galaxy (Páginas de sitio web)
+export const GALAXY_PAGES: PageOption[] = [
+  {
+    id: 'home',
+    name: 'Inicio',
+    description: 'Página principal del sitio',
+    required: true,
+    planCompatible: ['galaxy']
+  },
+  {
+    id: 'about',
+    name: 'Nosotros',
+    description: 'Página sobre la empresa',
+    required: false,
+    planCompatible: ['galaxy']
+  },
+  {
+    id: 'services',
+    name: 'Servicios',
+    description: 'Página de servicios',
+    required: false,
+    planCompatible: ['galaxy']
+  },
+  {
+    id: 'products',
+    name: 'Productos',
+    description: 'Página de productos',
+    required: false,
+    planCompatible: ['galaxy']
+  },
+  {
+    id: 'contact',
+    name: 'Contacto',
+    description: 'Página de contacto',
+    required: false,
+    planCompatible: ['galaxy']
+  },
+  {
+    id: 'gallery',
+    name: 'Galería',
+    description: 'Galería de fotos',
+    required: false,
+    planCompatible: ['galaxy']
+  },
   {
     id: 'portfolio',
-    name: 'Portafolio/Galería',
-    description: 'Muestra tus trabajos y proyectos realizados',
-    required: false,
-    planCompatible: ['galaxy']
-  },
-  {
-    id: 'blog',
-    name: 'Blog/Noticias',
-    description: 'Artículos y noticias de tu industria',
-    required: false,
-    planCompatible: ['galaxy']
-  },
-  {
-    id: 'custom',
-    name: 'Página personalizada',
-    description: 'Página adicional con contenido específico',
+    name: 'Portafolio',
+    description: 'Muestra de trabajos realizados',
     required: false,
     planCompatible: ['galaxy']
   }
 ]
 
+// Función helper para obtener páginas por plan
+export const AVAILABLE_PAGES: PageOption[] = [...ROCKET_SECTIONS, ...GALAXY_PAGES]
+
 // === CONFIGURACIÓN DE FUNCIONALIDADES ===
 
-export const AVAILABLE_FEATURES: FeatureOption[] = [
-  // Funcionalidades básicas (ambos planes)
+// Solo funcionalidades estáticas para Plan Rocket (máximo 4)
+export const ROCKET_FEATURES: FeatureOption[] = [
   {
     id: 'contact-form',
     name: 'Formulario de contacto',
     description: 'Formulario básico para que te contacten',
-    type: 'dynamic',
-    planCompatible: ['rocket', 'galaxy'],
+    type: 'static',
+    planCompatible: ['rocket'],
     category: 'contact'
   },
   {
@@ -88,58 +215,62 @@ export const AVAILABLE_FEATURES: FeatureOption[] = [
     name: 'Botón de WhatsApp',
     description: 'Acceso directo para contactar por WhatsApp',
     type: 'static',
-    planCompatible: ['rocket', 'galaxy'],
+    planCompatible: ['rocket'],
     category: 'contact'
   },
   {
     id: 'social-links',
-    name: 'Enlaces a redes sociales',
-    description: 'Links a Instagram, Facebook, LinkedIn, etc.',
+    name: 'Redes sociales',
+    description: 'Enlaces a tus redes sociales',
     type: 'static',
-    planCompatible: ['rocket', 'galaxy'],
+    planCompatible: ['rocket'],
     category: 'integration'
   },
   {
     id: 'google-maps',
     name: 'Mapa de ubicación',
-    description: 'Mapa interactivo con tu ubicación',
+    description: 'Mapa con tu ubicación',
     type: 'static',
-    planCompatible: ['rocket', 'galaxy'],
+    planCompatible: ['rocket'],
     category: 'content'
   },
   {
     id: 'image-gallery',
     name: 'Galería de imágenes',
-    description: 'Galería para mostrar fotos de productos/servicios',
+    description: 'Galería de fotos de productos/servicios',
     type: 'static',
-    planCompatible: ['rocket', 'galaxy'],
+    planCompatible: ['rocket'],
     category: 'content'
   },
   {
     id: 'video-embed',
-    name: 'Video promocional',
-    description: 'Video embebido de YouTube o Vimeo',
+    name: 'Video embebido',
+    description: 'Video de YouTube o Vimeo',
     type: 'static',
-    planCompatible: ['rocket', 'galaxy'],
+    planCompatible: ['rocket'],
     category: 'content'
   },
   {
     id: 'download-btn',
-    name: 'Botón de descarga',
-    description: 'Descarga de catálogos, PDFs o archivos',
+    name: 'Descarga de recursos',
+    description: 'Botón para descargar catálogos o PDFs',
     type: 'static',
-    planCompatible: ['rocket', 'galaxy'],
+    planCompatible: ['rocket'],
     category: 'interaction'
   },
   {
     id: 'click-to-call',
     name: 'Click para llamar',
-    description: 'Botón que permite llamar directamente',
+    description: 'Botón para llamar directamente',
     type: 'static',
-    planCompatible: ['rocket', 'galaxy'],
+    planCompatible: ['rocket'],
     category: 'contact'
-  },
-  
+  }
+]
+
+// Todas las funcionalidades (para Galaxy y compatibilidad)
+export const AVAILABLE_FEATURES: FeatureOption[] = [
+  ...ROCKET_FEATURES,
   // Funcionalidades avanzadas (solo Galaxy)
   {
     id: 'contact-multiple',
@@ -180,50 +311,20 @@ export const AVAILABLE_FEATURES: FeatureOption[] = [
     type: 'dynamic',
     planCompatible: ['galaxy'],
     category: 'integration'
-  },
-  {
-    id: 'multi-language',
-    name: 'Sitio multiidioma',
-    description: 'Versiones en diferentes idiomas',
-    type: 'advanced',
-    planCompatible: ['galaxy'],
-    category: 'integration'
   }
 ]
 
-// === PREGUNTAS PARA IA DE BRANDING ===
+// === PREGUNTAS DE BRANDING (SIN IA) ===
 
-export const BRANDING_QUESTIONS: BrandingQuestion[] = [
-  {
-    id: 'personality',
-    question: '¿Cómo quieres que tu marca se sienta para los clientes?',
-    type: 'select',
-    options: [
-      'Profesional y confiable',
-      'Juvenil y dinámico', 
-      'Elegante y sofisticado',
-      'Amigable y cercano',
-      'Innovador y vanguardista'
-    ]
-  },
-  {
-    id: 'emotion',
-    question: '¿Qué emoción principal quieres evocar?',
-    type: 'select',
-    options: [
-      'Confianza',
-      'Emoción',
-      'Tranquilidad',
-      'Urgencia',
-      'Inspiración'
-    ]
-  },
-  {
-    id: 'differentiation',
-    question: '¿En qué te diferencias de tu competencia?',
-    type: 'textarea',
-    placeholder: 'Describe brevemente qué te hace único en tu industria...'
-  }
+export const BRAND_PERSONALITY_OPTIONS = [
+  'Confiable',
+  'Innovador',
+  'Amigable',
+  'Profesional',
+  'Creativo',
+  'Dinámico',
+  'Exclusivo',
+  'Accesible'
 ]
 
 // === CONFIGURACIÓN DE PASOS OPTIMIZADOS ===
@@ -288,11 +389,19 @@ export const OPTIMIZED_STEPS: OptimizedStep[] = [
 // === FUNCIONES HELPER ===
 
 export function getPagesByPlan(plan: 'rocket' | 'galaxy'): PageOption[] {
-  return AVAILABLE_PAGES.filter(page => page.planCompatible.includes(plan))
+  if (plan === 'rocket') {
+    return ROCKET_SECTIONS
+  } else {
+    return GALAXY_PAGES
+  }
 }
 
 export function getFeaturesByPlan(plan: 'rocket' | 'galaxy'): FeatureOption[] {
-  return AVAILABLE_FEATURES.filter(feature => feature.planCompatible.includes(plan))
+  if (plan === 'rocket') {
+    return ROCKET_FEATURES
+  } else {
+    return AVAILABLE_FEATURES.filter(feature => feature.planCompatible.includes(plan))
+  }
 }
 
 export function getFeaturesByCategory(category: string, plan?: 'rocket' | 'galaxy'): FeatureOption[] {
@@ -308,32 +417,47 @@ export function getFeaturesByCategory(category: string, plan?: 'rocket' | 'galax
 export function getPlanRestrictions(plan: 'rocket' | 'galaxy') {
   const config = {
     rocket: {
-      maxPages: 3,
-      maxFeatures: 3,
-      allowedTypes: ['static', 'dynamic'],
-      description: 'Landing page profesional con funcionalidades esenciales'
+      minSections: 4,
+      maxSections: 7,
+      maxFeatures: 4,
+      allowedTypes: ['static'],
+      description: 'Página web con secciones y funcionalidades estáticas'
     },
     galaxy: {
-      maxPages: 8,
+      minPages: 3,
+      maxPages: 6,
       maxFeatures: 6,
-      allowedTypes: ['static', 'dynamic', 'advanced'],
-      description: 'Sitio web completo con funcionalidades avanzadas'
+      allowedTypes: ['static', 'dynamic'],
+      description: 'Sitio web completo con múltiples páginas'
     }
   }
   
   return config[plan]
 }
 
-export function validateSelection(plan: 'rocket' | 'galaxy', pages: string[], features: string[]): {
+export function validateSelection(plan: 'rocket' | 'galaxy', sections: string[], features: string[]): {
   valid: boolean
   errors: string[]
 } {
   const restrictions = getPlanRestrictions(plan)
   const errors: string[] = []
   
-  // Validar límite de páginas para Rocket
-  if (plan === 'rocket' && pages.length > restrictions.maxPages) {
-    errors.push(`El Plan Rocket permite máximo ${restrictions.maxPages} página principal`)
+  if (plan === 'rocket') {
+    // Validar límite de secciones para Rocket
+    if (sections.length < restrictions.minSections) {
+      errors.push(`El Plan Rocket requiere mínimo ${restrictions.minSections} secciones`)
+    }
+    if (sections.length > restrictions.maxSections) {
+      errors.push(`El Plan Rocket permite máximo ${restrictions.maxSections} secciones`)
+    }
+  } else {
+    // Validar límite de páginas para Galaxy
+    if (sections.length < restrictions.minPages) {
+      errors.push(`El Plan Galaxy requiere mínimo ${restrictions.minPages} páginas`)
+    }
+    if (sections.length > restrictions.maxPages) {
+      errors.push(`El Plan Galaxy permite máximo ${restrictions.maxPages} páginas`)
+    }
   }
   
   // Validar límite de funcionalidades
@@ -341,11 +465,11 @@ export function validateSelection(plan: 'rocket' | 'galaxy', pages: string[], fe
     errors.push(`Tu plan permite máximo ${restrictions.maxFeatures} funcionalidades`)
   }
   
-  // Validar compatibilidad de páginas
-  const validPages = getPagesByPlan(plan).map(p => p.id)
-  const invalidPages = pages.filter(page => !validPages.includes(page))
-  if (invalidPages.length > 0) {
-    errors.push(`Páginas no disponibles en tu plan: ${invalidPages.join(', ')}`)
+  // Validar compatibilidad de secciones/páginas
+  const validOptions = getPagesByPlan(plan).map(p => p.id)
+  const invalidOptions = sections.filter(item => !validOptions.includes(item))
+  if (invalidOptions.length > 0) {
+    errors.push(`Opciones no disponibles en tu plan: ${invalidOptions.join(', ')}`)
   }
   
   // Validar compatibilidad de funcionalidades
@@ -361,41 +485,3 @@ export function validateSelection(plan: 'rocket' | 'galaxy', pages: string[], fe
   }
 }
 
-// === PROMPT PARA OPENAI ===
-
-export function generateBrandingPrompt(
-  businessInfo: any,
-  brandingResponses: any
-): string {
-  return `
-Eres un experto en branding y diseño web. Analiza esta información de un cliente y genera recomendaciones específicas:
-
-INFORMACIÓN DEL NEGOCIO:
-- Nombre: ${businessInfo.name}
-- Industria: ${businessInfo.industry}
-- Tamaño: ${businessInfo.size}
-- Objetivo principal: ${businessInfo.primaryGoal}
-- Audiencia: ${businessInfo.targetAudience}
-
-PREFERENCIAS DEL CLIENTE:
-- Personalidad deseada: ${brandingResponses.personality}
-- Emoción objetivo: ${brandingResponses.emotion}
-- Diferenciación: ${brandingResponses.differentiation}
-
-GENERA RECOMENDACIONES EN ESTE FORMATO JSON:
-{
-  "brandPersonality": "Descripción de la personalidad de marca recomendada",
-  "recommendedColors": [
-    {"color": "#hexcode", "name": "Nombre del color", "usage": "Uso recomendado"},
-    {"color": "#hexcode", "name": "Nombre del color", "usage": "Uso recomendado"},
-    {"color": "#hexcode", "name": "Nombre del color", "usage": "Uso recomendado"}
-  ],
-  "styleDirection": "Estilo visual recomendado (modern, classic, minimal, bold, elegant, creative)",
-  "designElements": ["elemento1", "elemento2", "elemento3"],
-  "communicationTone": "Tono de comunicación recomendado",
-  "confidence": 0.95
-}
-
-Las recomendaciones deben ser específicas para la industria ${businessInfo.industry} y coherentes con el objetivo de ${businessInfo.primaryGoal}.
-  `.trim()
-}

@@ -1,16 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { useOptimizedOnboarding } from '@/hooks/useOptimizedOnboarding'
-
-const INDUSTRIES = [
-  'Tecnología', 'Salud y Bienestar', 'Educación', 'Retail/E-commerce',
-  'Alimentación y Bebidas', 'Servicios Profesionales', 'Inmobiliaria',
-  'Turismo y Hospitalidad', 'Manufactura', 'Finanzas', 'Arte y Entretenimiento',
-  'Deportes y Fitness', 'Belleza y Cuidado Personal', 'Automotriz',
-  'Construcción', 'Consultoría', 'Otro'
-]
+import { AVAILABLE_INDUSTRIES } from '@/lib/onboarding-config'
 
 const COMPANY_SIZES = [
   { value: 'freelancer', label: 'Freelancer / Independiente', emoji: '👤' },
@@ -19,11 +12,6 @@ const COMPANY_SIZES = [
   { value: 'empresa', label: 'Empresa (50+ empleados)', emoji: '🏭' }
 ]
 
-const COUNTRIES = [
-  'México', 'Argentina', 'Colombia', 'Chile', 'Perú', 'España',
-  'Estados Unidos', 'Canadá', 'Brasil', 'Ecuador', 'Uruguay',
-  'Costa Rica', 'Guatemala', 'Panamá', 'Otro'
-]
 
 export default function Step1Business() {
   const { 
@@ -37,29 +25,11 @@ export default function Step1Business() {
     name: business.name || '',
     industry: business.industry || '',
     customIndustry: business.customIndustry || '',
-    size: business.size || '',
-    country: business.location?.country || '',
-    region: business.location?.region || '',
-    city: business.location?.city || ''
+    size: business.size || ''
   })
 
   const [errors, setErrors] = useState<Record<string, string>>({})
 
-  useEffect(() => {
-    // Auto-detectar región basada en el país
-    if (formData.country) {
-      const latinCountries = [
-        'México', 'Argentina', 'Colombia', 'Chile', 'Perú', 'Ecuador', 
-        'Uruguay', 'Costa Rica', 'Guatemala', 'Panamá', 'Brasil'
-      ]
-      
-      const detectedRegion = latinCountries.includes(formData.country) ? 'latam' : 'international'
-      
-      if (detectedRegion !== formData.region) {
-        setFormData(prev => ({ ...prev, region: detectedRegion }))
-      }
-    }
-  }, [formData.country])
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
@@ -89,9 +59,6 @@ export default function Step1Business() {
       newErrors.size = 'Selecciona el tamaño de tu empresa'
     }
 
-    if (!formData.country) {
-      newErrors.country = 'Selecciona tu país'
-    }
 
     setErrors(newErrors)
     return Object.keys(newErrors).length === 0
@@ -105,12 +72,7 @@ export default function Step1Business() {
       name: formData.name.trim(),
       industry: formData.industry,
       customIndustry: formData.industry === 'Otro' ? formData.customIndustry.trim() : undefined,
-      size: formData.size as any,
-      location: {
-        country: formData.country,
-        region: formData.region,
-        city: formData.city.trim() || undefined
-      }
+      size: formData.size as any
     })
 
     markStepCompleted(1)
@@ -186,7 +148,7 @@ export default function Step1Business() {
             }`}
           >
             <option value="">Selecciona tu industria</option>
-            {INDUSTRIES.map(industry => (
+            {AVAILABLE_INDUSTRIES.map(industry => (
               <option key={industry} value={industry}>{industry}</option>
             ))}
           </select>
@@ -259,60 +221,6 @@ export default function Step1Business() {
           )}
         </motion.div>
 
-        {/* Ubicación */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7 }}
-        >
-          <label className="block text-white font-semibold mb-2">
-            Ubicación *
-          </label>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* País */}
-            <div>
-              <select
-                value={formData.country}
-                onChange={(e) => handleInputChange('country', e.target.value)}
-                className={`w-full px-4 py-3 bg-gray-800 border rounded-xl text-white focus:outline-none focus:ring-2 transition-all ${
-                  errors.country 
-                    ? 'border-red-500 focus:ring-red-500/20' 
-                    : 'border-gray-700 focus:border-blue-500 focus:ring-blue-500/20'
-                }`}
-              >
-                <option value="">Selecciona país</option>
-                {COUNTRIES.map(country => (
-                  <option key={country} value={country}>{country}</option>
-                ))}
-              </select>
-              {errors.country && (
-                <p className="text-red-400 text-sm mt-1">{errors.country}</p>
-              )}
-            </div>
-
-            {/* Ciudad */}
-            <div>
-              <input
-                type="text"
-                value={formData.city}
-                onChange={(e) => handleInputChange('city', e.target.value)}
-                placeholder="Ciudad (opcional)"
-                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
-              />
-            </div>
-          </div>
-
-          {/* Región detectada */}
-          {formData.region && (
-            <div className="mt-3 p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-              <p className="text-blue-400 text-sm">
-                <span className="font-medium">Región detectada:</span> {' '}
-                {formData.region === 'latam' ? '🌎 Latinoamérica' : '🌍 Internacional'}
-              </p>
-            </div>
-          )}
-        </motion.div>
 
         {/* Continue Button */}
         <motion.div
@@ -323,7 +231,7 @@ export default function Step1Business() {
         >
           <button
             onClick={handleContinue}
-            disabled={!formData.name || !formData.industry || !formData.size || !formData.country}
+            disabled={!formData.name || !formData.industry || !formData.size}
             className="w-full px-6 py-4 bg-blue-500 text-white rounded-xl font-semibold text-lg hover:bg-blue-600 disabled:bg-gray-700 disabled:cursor-not-allowed transition-all"
           >
             Continuar a Objetivos 🎯

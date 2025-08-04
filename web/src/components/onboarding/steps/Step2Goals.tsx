@@ -7,27 +7,27 @@ import { useOptimizedOnboarding } from '@/hooks/useOptimizedOnboarding'
 const PRIMARY_GOALS = [
   {
     value: 'sales',
-    label: 'Aumentar ventas',
+    label: 'Vender más',
     emoji: '💰',
-    description: 'Vender más productos o servicios online'
+    description: 'Quiero que más gente compre mis productos o servicios'
   },
   {
     value: 'leads',
-    label: 'Generar leads',
+    label: 'Conseguir clientes',
     emoji: '📧',
-    description: 'Capturar contactos y clientes potenciales'
+    description: 'Quiero que me contacten personas interesadas'
   },
   {
     value: 'branding',
-    label: 'Fortalecer marca',
+    label: 'Verme más profesional',
     emoji: '🚀',
-    description: 'Mejorar imagen y presencia profesional'
+    description: 'Quiero que mi negocio se vea serio y confiable'
   },
   {
     value: 'portfolio',
-    label: 'Mostrar portafolio',
+    label: 'Mostrar mi trabajo',
     emoji: '🎨',
-    description: 'Exhibir trabajos y casos de éxito'
+    description: 'Quiero enseñar lo que hago y mis mejores proyectos'
   }
 ]
 
@@ -39,21 +39,21 @@ const AGE_RANGES = [
 const AUDIENCE_LOCATIONS = [
   {
     value: 'local',
-    label: 'Local',
+    label: 'De mi ciudad',
     emoji: '🏘️',
-    description: 'Mi ciudad o región'
+    description: 'Solo de donde vivo o cerca'
   },
   {
     value: 'national',
-    label: 'Nacional',
+    label: 'De todo México',
     emoji: '🇲🇽',
-    description: 'Todo mi país'
+    description: 'De cualquier parte del país'
   },
   {
     value: 'international',
-    label: 'Internacional',
+    label: 'De otros países',
     emoji: '🌍',
-    description: 'Múltiples países'
+    description: 'También de fuera de México'
   }
 ]
 
@@ -158,11 +158,11 @@ export default function Step2Goals() {
         </motion.div>
         
         <h2 className="text-2xl lg:text-3xl font-bold text-white mb-2">
-          Objetivos y Audiencia
+          ¿Qué quieres lograr?
         </h2>
         
         <p className="text-gray-400 text-lg">
-          Define tu meta principal y a quién quieres llegar
+          Cuéntanos qué esperas de tu sitio web y quién lo va a ver
         </p>
       </div>
 
@@ -175,7 +175,7 @@ export default function Step2Goals() {
           transition={{ delay: 0.3 }}
         >
           <h3 className="text-xl font-semibold text-white mb-4">
-            ¿Cuál es tu objetivo principal? *
+            ¿Para qué quieres tu sitio web? *
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -218,7 +218,7 @@ export default function Step2Goals() {
           transition={{ delay: 0.6 }}
         >
           <h3 className="text-xl font-semibold text-white mb-4">
-            ¿Qué edad tiene tu audiencia objetivo? *
+            ¿Qué edad tienen las personas que podrían interesarse en tu negocio? *
             <span className="text-sm text-gray-400 font-normal ml-2">
               (máximo 2 rangos)
             </span>
@@ -266,7 +266,7 @@ export default function Step2Goals() {
           transition={{ delay: 0.8 }}
         >
           <h3 className="text-xl font-semibold text-white mb-4">
-            ¿Cuál es el alcance de tu audiencia? *
+            ¿De dónde son tus clientes? *
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -305,19 +305,19 @@ export default function Step2Goals() {
           transition={{ delay: 1 }}
         >
           <h3 className="text-xl font-semibold text-white mb-4">
-            Describe tu audiencia (opcional)
+            ¿Cómo son tus clientes ideales? (opcional)
           </h3>
           
           <textarea
             value={formData.audienceDescription}
             onChange={(e) => setFormData(prev => ({ ...prev, audienceDescription: e.target.value }))}
-            placeholder="Ej: Emprendedores jóvenes interesados en tecnología, profesionales que buscan eficiencia, padres de familia que valoran la calidad..."
+            placeholder="Ej: Personas jóvenes que les gusta la tecnología, profesionales ocupados que buscan ahorrar tiempo, papás y mamás que se preocupan por la calidad..."
             rows={4}
             className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
           />
           
           <p className="text-gray-500 text-sm mt-2">
-            Esto nos ayuda a personalizar mejor tu sitio web
+            Esto nos ayuda a hacer un sitio web perfecto para ti
           </p>
         </motion.div>
 
@@ -331,16 +331,16 @@ export default function Step2Goals() {
           >
             <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
               <span>📋</span>
-              Resumen de tu estrategia
+              Perfecto, esto es lo que entendimos
             </h4>
             
             <div className="space-y-2 text-sm">
               <p className="text-gray-300">
-                <span className="text-blue-400 font-medium">Objetivo:</span> {' '}
+                <span className="text-blue-400 font-medium">Quieres:</span> {' '}
                 {PRIMARY_GOALS.find(g => g.value === formData.primaryGoal)?.label}
               </p>
               <p className="text-gray-300">
-                <span className="text-blue-400 font-medium">Audiencia:</span> {' '}
+                <span className="text-blue-400 font-medium">Tus clientes:</span> {' '}
                 {formData.ageRanges.join(', ')} • {' '}
                 {AUDIENCE_LOCATIONS.find(l => l.value === formData.audienceLocation)?.label}
               </p>
