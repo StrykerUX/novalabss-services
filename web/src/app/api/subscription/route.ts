@@ -22,11 +22,17 @@ export async function GET(request: NextRequest) {
 
     // Buscar customer en Stripe por email
     console.log('🔍 Searching for customer in Stripe...')
-    const customers = await stripe.customers.list({
-      email: session.user.email,
-      limit: 1
-    })
-    console.log('✅ Customer search completed, found:', customers.data.length, 'customers')
+    let customers
+    try {
+      customers = await stripe.customers.list({
+        email: session.user.email,
+        limit: 1
+      })
+      console.log('✅ Customer search completed, found:', customers.data.length, 'customers')
+    } catch (customerError) {
+      console.error('❌ ERROR searching customers:', customerError)
+      throw customerError
+    }
 
     if (customers.data.length === 0) {
       console.log('❌ No customer found')
@@ -44,12 +50,18 @@ export async function GET(request: NextRequest) {
 
     // Obtener suscripciones activas del cliente
     console.log('🔍 Searching for active subscriptions...')
-    const subscriptions = await stripe.subscriptions.list({
-      customer: customer.id,
-      status: 'active',
-      limit: 1
-    })
-    console.log('✅ Active subscriptions found:', subscriptions.data.length)
+    let subscriptions
+    try {
+      subscriptions = await stripe.subscriptions.list({
+        customer: customer.id,
+        status: 'active',
+        limit: 1
+      })
+      console.log('✅ Active subscriptions found:', subscriptions.data.length)
+    } catch (subscriptionError) {
+      console.error('❌ ERROR searching subscriptions:', subscriptionError)
+      throw subscriptionError
+    }
 
     if (subscriptions.data.length === 0) {
       console.log('❌ No active subscriptions found')
@@ -75,11 +87,27 @@ export async function GET(request: NextRequest) {
 
     const subscription = subscriptions.data[0]
     console.log('✅ Active subscription found:', subscription.id)
+    console.log('🔍 Subscription items:', subscription.items.data.length)
+    console.log('🔍 First item price ID:', subscription.items.data[0]?.price?.id)
+
+    // Verificar que existe la información del precio
+    if (!subscription.items.data[0]?.price) {
+      throw new Error('No price information found in subscription')
+    }
+
+    const subscriptionPrice = subscription.items.data[0].price
+    console.log('🔍 Price product ID:', subscriptionPrice.product)
 
     // Obtener información del producto
     console.log('🔍 Retrieving product information...')
-    const product = await stripe.products.retrieve(subscription.items.data[0].price.product as string)
-    console.log('✅ Product retrieved:', product.id)
+    let product
+    try {
+      product = await stripe.products.retrieve(subscriptionPrice.product as string)
+      console.log('✅ Product retrieved:', product.id)
+    } catch (productError) {
+      console.error('❌ ERROR retrieving product:', productError)
+      throw productError
+    }
 
     // Determinar el plan basado en el product ID
     const planMapping = {
@@ -88,10 +116,11 @@ export async function GET(request: NextRequest) {
     } as const
 
     const planType = planMapping[product.id as keyof typeof planMapping] || 'rocket'
+    console.log('✅ Plan type determined:', planType)
 
     // Obtener precio real de la suscripción (con descuentos aplicados)
-    const subscriptionPrice = subscription.items.data[0].price
     const actualPrice = subscriptionPrice.unit_amount || 0
+    console.log('✅ Actual price:', actualPrice)
     
     const planData = {
       rocket: {
@@ -123,6 +152,7 @@ export async function GET(request: NextRequest) {
     }
 
     const plan = planData[planType]
+    console.log('✅ Plan data prepared:', plan.name)
 
     // Calcular fechas y días
     const startDate = new Date(subscription.created * 1000)
@@ -132,9 +162,13 @@ export async function GET(request: NextRequest) {
     const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
     const daysRemaining = Math.max(0, Math.floor((currentPeriodEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
 
+    console.log('✅ Dates calculated - renewal:', currentPeriodEnd.toISOString())
+
     // Obtener información de descuentos
     const discount = subscription.discount
     const hasDiscount = discount && discount.coupon
+    console.log('✅ Discount info:', hasDiscount ? 'Yes' : 'No')
+
     const discountInfo = hasDiscount ? {
       coupon: {
         id: discount.coupon.id,
@@ -147,23 +181,7 @@ export async function GET(request: NextRequest) {
       }
     } : null
 
-    // Debug logging
-    console.log('🔍 DEBUG - Subscription data:', {
-      subscriptionId: subscription.id,
-      priceId: subscription.items.data[0].price.id,
-      unitAmount: subscription.items.data[0].price.unit_amount,
-      currency: subscription.items.data[0].price.currency,
-      currentPeriodEnd: subscription.current_period_end,
-      currentPeriodEndDate: currentPeriodEnd,
-      actualPrice,
-      planType,
-      hasDiscount,
-      discount: discount ? {
-        couponId: discount.coupon?.id,
-        percentOff: discount.coupon?.percent_off,
-        amountOff: discount.coupon?.amount_off
-      } : null
-    })
+    console.log('✅ About to return response')
 
     return NextResponse.json({
       subscription: {
@@ -174,11 +192,11 @@ export async function GET(request: NextRequest) {
         cancel_at_period_end: subscription.cancel_at_period_end,
         created: subscription.created,
         plan: {
-          id: subscription.items.data[0].price.id,
-          amount: subscription.items.data[0].price.unit_amount || 0,
-          currency: subscription.items.data[0].price.currency,
-          interval: subscription.items.data[0].price.recurring?.interval || 'month',
-          interval_count: subscription.items.data[0].price.recurring?.interval_count || 1,
+          id: subscriptionPrice.id,
+          amount: subscriptionPrice.unit_amount || 0,
+          currency: subscriptionPrice.currency,
+          interval: subscriptionPrice.recurring?.interval || 'month',
+          interval_count: subscriptionPrice.recurring?.interval_count || 1,
           product: product.id
         },
         customer: customer.id
@@ -193,13 +211,6 @@ export async function GET(request: NextRequest) {
       renewalDate: currentPeriodEnd,
       discount: discountInfo,
       hasDiscount,
-      // Debug info
-      debug: {
-        rawPrice: subscription.items.data[0].price.unit_amount,
-        computedPrice: actualPrice,
-        currentPeriodEndTimestamp: subscription.current_period_end,
-        currentPeriodEndFormatted: currentPeriodEnd.toISOString()
-      },
       customer: {
         id: customer.id,
         email: customer.email!,
@@ -210,11 +221,15 @@ export async function GET(request: NextRequest) {
 
   } catch (error) {
     console.error('❌ ERROR in subscription API:', error)
+    console.error('❌ ERROR name:', error instanceof Error ? error.name : 'Unknown')
+    console.error('❌ ERROR message:', error instanceof Error ? error.message : 'No message')
     console.error('❌ ERROR stack:', error instanceof Error ? error.stack : 'No stack trace')
+    
     return NextResponse.json(
       { 
         error: 'Error al obtener datos de suscripción',
         details: error instanceof Error ? error.message : 'Unknown error',
+        errorName: error instanceof Error ? error.name : 'Unknown',
         stack: error instanceof Error ? error.stack : null
       },
       { status: 500 }
