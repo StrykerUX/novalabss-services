@@ -154,10 +154,25 @@ export async function GET(request: NextRequest) {
     const plan = planData[planType]
     console.log('✅ Plan data prepared:', plan.name)
 
-    // Calcular fechas y días
-    const startDate = new Date(subscription.created * 1000)
-    const currentPeriodEnd = new Date(subscription.current_period_end * 1000)
+    // Calcular fechas y días con validación
+    console.log('🔍 Raw timestamps - created:', subscription.created, 'current_period_end:', subscription.current_period_end)
+    
+    // Validar timestamps antes de crear objetos Date
+    const createdTimestamp = subscription.created
+    const currentPeriodEndTimestamp = subscription.current_period_end
+    
+    if (!createdTimestamp || !currentPeriodEndTimestamp) {
+      throw new Error(`Invalid timestamps - created: ${createdTimestamp}, current_period_end: ${currentPeriodEndTimestamp}`)
+    }
+    
+    const startDate = new Date(createdTimestamp * 1000)
+    const currentPeriodEnd = new Date(currentPeriodEndTimestamp * 1000)
     const now = new Date()
+    
+    // Validar que las fechas se crearon correctamente
+    if (isNaN(startDate.getTime()) || isNaN(currentPeriodEnd.getTime())) {
+      throw new Error(`Invalid date objects - startDate: ${startDate}, currentPeriodEnd: ${currentPeriodEnd}`)
+    }
     
     const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
     const daysRemaining = Math.max(0, Math.floor((currentPeriodEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
