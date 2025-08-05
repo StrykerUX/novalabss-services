@@ -25,7 +25,11 @@ export default function Step4Branding() {
     },
     brandPersonality: {
       feeling: branding.brandPersonality?.feeling || '',
-      word: branding.brandPersonality?.word || ''
+      words: Array.isArray(branding.brandPersonality?.word) 
+        ? branding.brandPersonality?.word 
+        : branding.brandPersonality?.word 
+          ? [branding.brandPersonality.word] 
+          : []
     }
   })
 
@@ -106,6 +110,48 @@ export default function Step4Branding() {
     }
   }
 
+  const handleWordToggle = (word: string) => {
+    setFormData(prev => {
+      const currentWords = prev.brandPersonality.words
+      const isSelected = currentWords.includes(word)
+      
+      if (isSelected) {
+        // Remove word
+        return {
+          ...prev,
+          brandPersonality: {
+            ...prev.brandPersonality,
+            words: currentWords.filter(w => w !== word)
+          }
+        }
+      } else {
+        // Add word (max 2)
+        if (currentWords.length >= 2) {
+          // Replace first word with new one
+          return {
+            ...prev,
+            brandPersonality: {
+              ...prev.brandPersonality,
+              words: [currentWords[1], word]
+            }
+          }
+        } else {
+          return {
+            ...prev,
+            brandPersonality: {
+              ...prev.brandPersonality,
+              words: [...currentWords, word]
+            }
+          }
+        }
+      }
+    })
+    
+    if (errors.words) {
+      setErrors(prev => ({ ...prev, words: '' }))
+    }
+  }
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
@@ -117,8 +163,8 @@ export default function Step4Branding() {
       newErrors.feeling = 'Describe cómo quieres que se sientan los clientes'
     }
 
-    if (!formData.brandPersonality.word) {
-      newErrors.word = 'Selecciona una palabra que describa tu negocio'
+    if (formData.brandPersonality.words.length === 0) {
+      newErrors.words = 'Selecciona al menos una palabra que describa tu negocio'
     }
 
     setErrors(newErrors)
@@ -132,7 +178,12 @@ export default function Step4Branding() {
     updateBranding({
       brandStyles: formData.brandStyles,
       socialMedia: formData.socialMedia,
-      brandPersonality: formData.brandPersonality
+      brandPersonality: {
+        feeling: formData.brandPersonality.feeling,
+        words: formData.brandPersonality.words,
+        // Mantener compatibilidad con formato anterior (primera palabra como string)
+        word: formData.brandPersonality.words[0] || ''
+      }
     })
 
     markStepCompleted(4)
@@ -331,37 +382,60 @@ export default function Step4Branding() {
             {/* Pregunta cerrada */}
             <div>
               <label className="block text-white font-medium mb-4">
-                ¿Qué palabra describe mejor tu negocio? *
+                ¿Qué palabras describen mejor tu negocio? *
+                <span className="text-sm font-normal text-gray-400 ml-2">
+                  (Puedes seleccionar hasta 2)
+                </span>
               </label>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {BRAND_PERSONALITY_OPTIONS.map((option, index) => (
-                  <motion.button
-                    key={option}
-                    onClick={() => handlePersonalityChange('word', option)}
-                    className={`p-3 rounded-xl border text-center transition-all ${
-                      formData.brandPersonality.word === option
-                        ? 'bg-blue-500/20 border-blue-500/50 text-white'
-                        : 'bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600'
-                    }`}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.9 + index * 0.05 }}
-                    whileHover={{ scale: 1.02 }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <span className="font-medium text-sm">{option}</span>
-                  </motion.button>
-                ))}
+                {BRAND_PERSONALITY_OPTIONS.map((option, index) => {
+                  const isSelected = formData.brandPersonality.words.includes(option)
+                  const maxReached = formData.brandPersonality.words.length >= 2 && !isSelected
+                  
+                  return (
+                    <motion.button
+                      key={option}
+                      onClick={() => !maxReached && handleWordToggle(option)}
+                      disabled={maxReached}
+                      className={`p-3 rounded-xl border text-center transition-all ${
+                        isSelected
+                          ? 'bg-blue-500/20 border-blue-500/50 text-white'
+                          : maxReached
+                            ? 'bg-gray-800/30 border-gray-700/30 text-gray-500 cursor-not-allowed opacity-50'
+                            : 'bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600'
+                      }`}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: 0.9 + index * 0.05 }}
+                      whileHover={{ scale: maxReached ? 1 : 1.02 }}
+                      whileTap={{ scale: maxReached ? 1 : 0.98 }}
+                    >
+                      <span className="font-medium text-sm">{option}</span>
+                      {isSelected && (
+                        <div className="text-blue-400 text-xs mt-1">✓ Seleccionado</div>
+                      )}
+                    </motion.button>
+                  )
+                })}
               </div>
-              {errors.word && (
-                <p className="text-red-400 text-sm mt-2">{errors.word}</p>
+              {errors.words && (
+                <p className="text-red-400 text-sm mt-2">{errors.words}</p>
+              )}
+              
+              {formData.brandPersonality.words.length > 0 && (
+                <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/30 rounded-xl">
+                  <p className="text-blue-400 text-sm">
+                    <span className="font-medium">Palabras seleccionadas:</span> {' '}
+                    {formData.brandPersonality.words.join(' + ')}
+                  </p>
+                </div>
               )}
             </div>
           </div>
         </motion.div>
 
         {/* Resumen */}
-        {(formData.brandStyles.length > 0 || formData.brandPersonality.feeling || formData.brandPersonality.word) && (
+        {(formData.brandStyles.length > 0 || formData.brandPersonality.feeling || formData.brandPersonality.words.length > 0) && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -384,10 +458,10 @@ export default function Step4Branding() {
                 </p>
               )}
               
-              {formData.brandPersonality.word && (
+              {formData.brandPersonality.words.length > 0 && (
                 <p className="text-gray-300">
                   <span className="text-blue-400 font-medium">Personalidad:</span> {' '}
-                  {formData.brandPersonality.word}
+                  {formData.brandPersonality.words.join(' + ')}
                 </p>
               )}
               
@@ -414,7 +488,7 @@ export default function Step4Branding() {
         >
           <button
             onClick={handleContinue}
-            disabled={formData.brandStyles.length === 0 || !formData.brandPersonality.feeling || !formData.brandPersonality.word}
+            disabled={formData.brandStyles.length === 0 || !formData.brandPersonality.feeling || formData.brandPersonality.words.length === 0}
             className="w-full px-6 py-4 bg-blue-500 text-white rounded-xl font-semibold text-lg hover:bg-blue-600 disabled:bg-gray-700 disabled:cursor-not-allowed transition-all"
           >
             Continuar a Configuración Técnica 🌐

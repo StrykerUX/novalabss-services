@@ -5,6 +5,7 @@ import SmoothMagneticButton from "@/components/SmoothMagneticButton"
 import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
+import { BRAND_STYLES, ROCKET_SECTIONS, GALAXY_PAGES, ROCKET_FEATURES, GALAXY_FEATURES } from "@/lib/onboarding-config"
 
 interface ProjectData {
   project: {
@@ -529,17 +530,9 @@ function OnboardingTab({
 
             {/* Website (Configuración por plan) */}
             {data.optimizedFields.websiteDetails && (
-              <OnboardingSection 
+              <OptimizedWebsiteSection 
                 title="📄 Estructura del Sitio Web (Sistema Optimizado)"
                 data={data.optimizedFields.websiteDetails}
-                fields={[
-                  { key: 'plan', label: 'Plan seleccionado' },
-                  { key: 'pages', label: 'Páginas/Secciones', isArray: true },
-                  { key: 'features', label: 'Funcionalidades', isArray: true },
-                  { key: 'priority', label: 'Prioridad principal' },
-                  { key: 'hasContent', label: 'Tiene contenido existente', isBoolean: true },
-                  { key: 'needsCopywriting', label: 'Necesita copywriting', isBoolean: true }
-                ]}
               />
             )}
 
@@ -714,6 +707,93 @@ function OnboardingSection({
   )
 }
 
+// Componente especializado para mostrar website del sistema optimizado
+function OptimizedWebsiteSection({ 
+  title, 
+  data 
+}: { 
+  title: string; 
+  data: any;
+}) {
+  const getAllPages = () => [...ROCKET_SECTIONS, ...GALAXY_PAGES]
+  const getAllFeatures = () => [...ROCKET_FEATURES, ...GALAXY_FEATURES]
+
+  return (
+    <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
+      <h4 className="text-white font-bold text-lg mb-4">{title}</h4>
+      
+      <div className="space-y-6">
+        {/* Plan seleccionado */}
+        {data.plan && (
+          <div className="space-y-2">
+            <span className="text-white/60 text-sm font-medium">Plan seleccionado:</span>
+            <p className="text-white font-medium capitalize">{data.plan}</p>
+          </div>
+        )}
+
+        {/* Páginas/Secciones */}
+        {data.pages && data.pages.length > 0 && (
+          <div className="space-y-2">
+            <span className="text-white/60 text-sm font-medium">Páginas/Secciones seleccionadas:</span>
+            <div className="flex flex-wrap gap-2">
+              {data.pages.map((pageId: string, index: number) => {
+                const pageConfig = getAllPages().find(p => p.id === pageId)
+                const displayText = pageConfig 
+                  ? `${pageConfig.name} [${pageConfig.description}]`
+                  : pageId
+                
+                return (
+                  <span key={index} className="px-3 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-lg text-sm">
+                    {displayText}
+                  </span>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Funcionalidades */}
+        {data.features && data.features.length > 0 && (
+          <div className="space-y-2">
+            <span className="text-white/60 text-sm font-medium">Funcionalidades seleccionadas:</span>
+            <div className="flex flex-wrap gap-2">
+              {data.features.map((featureId: string, index: number) => {
+                const featureConfig = getAllFeatures().find(f => f.id === featureId)
+                const displayText = featureConfig 
+                  ? `${featureConfig.name} [${featureConfig.description}]`
+                  : featureId
+                
+                return (
+                  <span key={index} className="px-3 py-1 bg-purple-500/20 text-purple-400 border border-purple-500/30 rounded-lg text-sm">
+                    {displayText}
+                  </span>
+                )
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Otras configuraciones */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {data.hasContent !== undefined && (
+            <div className="space-y-2">
+              <span className="text-white/60 text-sm font-medium">Tiene contenido existente:</span>
+              <p className="text-white font-medium">{data.hasContent ? 'Sí' : 'No'}</p>
+            </div>
+          )}
+          
+          {data.needsCopywriting !== undefined && (
+            <div className="space-y-2">
+              <span className="text-white/60 text-sm font-medium">Necesita copywriting:</span>
+              <p className="text-white font-medium">{data.needsCopywriting ? 'Sí' : 'No'}</p>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  )
+}
+
 // Componente especializado para mostrar branding del sistema optimizado
 function OptimizedBrandingSection({ 
   title, 
@@ -732,11 +812,18 @@ function OptimizedBrandingSection({
           <div className="space-y-2">
             <span className="text-white/60 text-sm font-medium">Estilos de marca seleccionados:</span>
             <div className="flex flex-wrap gap-2">
-              {data.brandStyles.map((style: string, index: number) => (
-                <span key={index} className="px-3 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg text-sm">
-                  {style}
-                </span>
-              ))}
+              {data.brandStyles.map((styleId: string, index: number) => {
+                const styleConfig = BRAND_STYLES.find(s => s.id === styleId)
+                const displayText = styleConfig 
+                  ? `${styleConfig.name} [${styleConfig.description}]`
+                  : styleId
+                
+                return (
+                  <span key={index} className="px-3 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg text-sm">
+                    {displayText}
+                  </span>
+                )
+              })}
             </div>
           </div>
         )}
