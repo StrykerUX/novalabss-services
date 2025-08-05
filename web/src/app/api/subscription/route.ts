@@ -9,19 +9,27 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('🚀 Starting subscription API call')
+    
     // Verificar autenticación
     const session = await getServerSession(authOptions)
     if (!session?.user?.email) {
+      console.log('❌ No session or email found')
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
+    
+    console.log('✅ Session found for email:', session.user.email)
 
     // Buscar customer en Stripe por email
+    console.log('🔍 Searching for customer in Stripe...')
     const customers = await stripe.customers.list({
       email: session.user.email,
       limit: 1
     })
+    console.log('✅ Customer search completed, found:', customers.data.length, 'customers')
 
     if (customers.data.length === 0) {
+      console.log('❌ No customer found')
       return NextResponse.json({
         subscription: null,
         plan: null,
@@ -32,15 +40,19 @@ export async function GET(request: NextRequest) {
     }
 
     const customer = customers.data[0]
+    console.log('✅ Customer found:', customer.id)
 
     // Obtener suscripciones activas del cliente
+    console.log('🔍 Searching for active subscriptions...')
     const subscriptions = await stripe.subscriptions.list({
       customer: customer.id,
       status: 'active',
       limit: 1
     })
+    console.log('✅ Active subscriptions found:', subscriptions.data.length)
 
     if (subscriptions.data.length === 0) {
+      console.log('❌ No active subscriptions found')
       // Verificar si hay suscripciones en otros estados
       const allSubscriptions = await stripe.subscriptions.list({
         customer: customer.id,
@@ -62,9 +74,12 @@ export async function GET(request: NextRequest) {
     }
 
     const subscription = subscriptions.data[0]
+    console.log('✅ Active subscription found:', subscription.id)
 
     // Obtener información del producto
+    console.log('🔍 Retrieving product information...')
     const product = await stripe.products.retrieve(subscription.items.data[0].price.product as string)
+    console.log('✅ Product retrieved:', product.id)
 
     // Determinar el plan basado en el product ID
     const planMapping = {
@@ -194,11 +209,13 @@ export async function GET(request: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Error fetching subscription:', error)
+    console.error('❌ ERROR in subscription API:', error)
+    console.error('❌ ERROR stack:', error instanceof Error ? error.stack : 'No stack trace')
     return NextResponse.json(
       { 
         error: 'Error al obtener datos de suscripción',
-        details: error instanceof Error ? error.message : 'Unknown error'
+        details: error instanceof Error ? error.message : 'Unknown error',
+        stack: error instanceof Error ? error.stack : null
       },
       { status: 500 }
     )
