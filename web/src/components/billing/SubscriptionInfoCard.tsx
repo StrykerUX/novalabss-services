@@ -3,7 +3,18 @@
 import { useSubscription } from '@/hooks/useSubscription'
 
 export default function SubscriptionInfoCard() {
-  const { subscription, plan, isActive, status, renewalDate, daysRemaining, loading, error } = useSubscription()
+  const { subscription, plan, isActive, status, renewalDate, daysRemaining, discount, hasDiscount, loading, error } = useSubscription()
+
+  // Debug logging
+  console.log('🔍 DEBUG - SubscriptionInfoCard data:', {
+    plan,
+    renewalDate,
+    renewalDateType: typeof renewalDate,
+    daysRemaining,
+    hasDiscount,
+    loading,
+    error
+  })
 
   if (loading) {
     return (
@@ -105,9 +116,20 @@ export default function SubscriptionInfoCard() {
             <div className="text-2xl font-bold text-white">
               {formatPrice(plan.price)}
             </div>
+            {hasDiscount && plan.originalPrice && plan.originalPrice > plan.price && (
+              <div className="text-red-400 text-sm line-through">
+                {formatPrice(plan.originalPrice)}
+              </div>
+            )}
             <div className="text-white/60 text-sm">
               {plan.interval === 'month' ? 'bimestral' : plan.interval}
             </div>
+            {hasDiscount && discount?.coupon && (
+              <div className="text-green-400 text-xs mt-1">
+                {discount.coupon.percent_off && `${discount.coupon.percent_off}% descuento`}
+                {discount.coupon.amount_off && `$${(discount.coupon.amount_off / 100).toFixed(2)} descuento`}
+              </div>
+            )}
           </div>
         </div>
 
@@ -145,6 +167,40 @@ export default function SubscriptionInfoCard() {
           </p>
         </div>
       </div>
+
+      {/* Discount Information */}
+      {hasDiscount && discount?.coupon && (
+        <div className="mt-6 p-4 bg-green-500/10 border border-green-500/30 rounded-xl">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-green-400">🎉</span>
+            <h5 className="text-green-400 font-medium">Descuento Activo</h5>
+          </div>
+          <div className="space-y-1 text-sm">
+            {discount.coupon.name && (
+              <p className="text-green-400">
+                <span className="font-medium">Promoción:</span> {discount.coupon.name}
+              </p>
+            )}
+            <p className="text-green-400/80">
+              <span className="font-medium">Descuento:</span> {' '}
+              {discount.coupon.percent_off && `${discount.coupon.percent_off}% de descuento`}
+              {discount.coupon.amount_off && `$${(discount.coupon.amount_off / 100).toFixed(2)} MXN de descuento`}
+            </p>
+            {discount.coupon.valid_until && (
+              <p className="text-green-400/70 text-xs">
+                Válido hasta: {formatDate(discount.coupon.valid_until)}
+              </p>
+            )}
+            {discount.coupon.duration && (
+              <p className="text-green-400/70 text-xs">
+                Duración: {discount.coupon.duration === 'forever' ? 'Permanente' : 
+                         discount.coupon.duration === 'once' ? 'Una vez' : 
+                         `${discount.coupon.duration_in_months} meses`}
+              </p>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Warning for canceled subscriptions */}
       {subscription.cancel_at_period_end && (

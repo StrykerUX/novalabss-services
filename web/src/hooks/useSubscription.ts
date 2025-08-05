@@ -16,6 +16,8 @@ export function useSubscription() {
     daysElapsed: 0,
     daysRemaining: 0,
     renewalDate: null,
+    discount: null,
+    hasDiscount: false,
     loading: true,
     error: null
   })
@@ -52,6 +54,13 @@ export function useSubscription() {
 
       const data = await response.json()
 
+      // Debug logging
+      console.log('🔍 DEBUG - Frontend received data:', {
+        plan: data.plan,
+        renewalDate: data.renewalDate,
+        debug: data.debug
+      })
+
       if (data.error) {
         throw new Error(data.error)
       }
@@ -67,6 +76,14 @@ export function useSubscription() {
         daysElapsed: data.daysElapsed || 0,
         daysRemaining: data.daysRemaining || 0,
         renewalDate: data.renewalDate ? new Date(data.renewalDate) : null,
+        discount: data.discount ? {
+          ...data.discount,
+          coupon: {
+            ...data.discount.coupon,
+            valid_until: data.discount.coupon.valid_until ? new Date(data.discount.coupon.valid_until) : null
+          }
+        } : null,
+        hasDiscount: data.hasDiscount || false,
         loading: false,
         error: null
       }

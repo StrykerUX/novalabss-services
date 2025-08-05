@@ -74,15 +74,20 @@ export async function GET(request: NextRequest) {
 
     const planType = planMapping[product.id as keyof typeof planMapping] || 'rocket'
 
+    // Obtener precio real de la suscripción (con descuentos aplicados)
+    const subscriptionPrice = subscription.items.data[0].price
+    const actualPrice = subscriptionPrice.unit_amount || 0
+    
     const planData = {
       rocket: {
         id: 'rocket' as const,
         name: 'Plan Rocket',
         productId: 'prod_SgkgdpKFJDM2ox',
-        price: 99900,
-        currency: 'mxn',
-        interval: 'month',
-        interval_count: 2,
+        price: actualPrice, // Precio real de Stripe
+        originalPrice: 99900, // Precio original sin descuento
+        currency: subscriptionPrice.currency,
+        interval: subscriptionPrice.recurring?.interval || 'month',
+        interval_count: subscriptionPrice.recurring?.interval_count || 2,
         features: ['Landing page optimizada', 'Hosting incluido', 'SSL gratis', '2 revisiones'],
         description: 'Sitio web profesional optimizado',
         credits: 2
@@ -91,10 +96,11 @@ export async function GET(request: NextRequest) {
         id: 'galaxy' as const,
         name: 'Plan Galaxy',
         productId: 'prod_Sgkk0fGoUzKtOk',
-        price: 179900,
-        currency: 'mxn',
-        interval: 'month',
-        interval_count: 2,
+        price: actualPrice, // Precio real de Stripe
+        originalPrice: 179900, // Precio original sin descuento
+        currency: subscriptionPrice.currency,
+        interval: subscriptionPrice.recurring?.interval || 'month',
+        interval_count: subscriptionPrice.recurring?.interval_count || 2,
         features: ['Todo del Plan Rocket', 'Marketing personalizado', 'Analytics avanzado', '5 revisiones'],
         description: 'Plan completo con marketing personalizado',
         credits: 5
@@ -110,6 +116,39 @@ export async function GET(request: NextRequest) {
     
     const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
     const daysRemaining = Math.max(0, Math.floor((currentPeriodEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
+
+    // Obtener información de descuentos
+    const discount = subscription.discount
+    const hasDiscount = discount && discount.coupon
+    const discountInfo = hasDiscount ? {
+      coupon: {
+        id: discount.coupon.id,
+        name: discount.coupon.name,
+        percent_off: discount.coupon.percent_off,
+        amount_off: discount.coupon.amount_off,
+        duration: discount.coupon.duration,
+        duration_in_months: discount.coupon.duration_in_months,
+        valid_until: discount.end ? new Date(discount.end * 1000) : null
+      }
+    } : null
+
+    // Debug logging
+    console.log('🔍 DEBUG - Subscription data:', {
+      subscriptionId: subscription.id,
+      priceId: subscription.items.data[0].price.id,
+      unitAmount: subscription.items.data[0].price.unit_amount,
+      currency: subscription.items.data[0].price.currency,
+      currentPeriodEnd: subscription.current_period_end,
+      currentPeriodEndDate: currentPeriodEnd,
+      actualPrice,
+      planType,
+      hasDiscount,
+      discount: discount ? {
+        couponId: discount.coupon?.id,
+        percentOff: discount.coupon?.percent_off,
+        amountOff: discount.coupon?.amount_off
+      } : null
+    })
 
     return NextResponse.json({
       subscription: {
@@ -137,6 +176,15 @@ export async function GET(request: NextRequest) {
       daysElapsed,
       daysRemaining,
       renewalDate: currentPeriodEnd,
+      discount: discountInfo,
+      hasDiscount,
+      // Debug info
+      debug: {
+        rawPrice: subscription.items.data[0].price.unit_amount,
+        computedPrice: actualPrice,
+        currentPeriodEndTimestamp: subscription.current_period_end,
+        currentPeriodEndFormatted: currentPeriodEnd.toISOString()
+      },
       customer: {
         id: customer.id,
         email: customer.email!,

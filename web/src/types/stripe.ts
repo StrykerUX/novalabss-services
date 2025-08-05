@@ -21,12 +21,25 @@ export interface StripePlan {
   name: string
   productId: string
   price: number
+  originalPrice?: number
   currency: string
   interval: string
   interval_count: number
   features: string[]
   description: string
   credits: number
+}
+
+export interface StripeDiscount {
+  coupon: {
+    id: string
+    name: string | null
+    percent_off: number | null
+    amount_off: number | null
+    duration: string
+    duration_in_months: number | null
+    valid_until: Date | null
+  }
 }
 
 export interface SubscriptionData {
@@ -39,6 +52,8 @@ export interface SubscriptionData {
   daysElapsed: number
   daysRemaining: number
   renewalDate: Date | null
+  discount?: StripeDiscount | null
+  hasDiscount?: boolean
   loading: boolean
   error: string | null
 }
