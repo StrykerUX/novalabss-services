@@ -22,7 +22,6 @@ export default function Step3Website() {
   const [userPlan, setUserPlan] = useState<'rocket' | 'galaxy'>('rocket')
   const [selectedPages, setSelectedPages] = useState<string[]>(website.pages || [])
   const [selectedFeatures, setSelectedFeatures] = useState<string[]>(website.features || [])
-  const [priority, setPriority] = useState(website.priority || '')
   const [validationError, setValidationError] = useState('')
 
   useEffect(() => {
@@ -95,17 +94,11 @@ export default function Step3Website() {
       return
     }
 
-    if (!priority) {
-      setValidationError('Por favor selecciona qué es lo más importante para tu sitio')
-      return
-    }
-
     // Guardar datos
     updateWebsite({
       plan: userPlan,
       pages: selectedPages,
-      features: selectedFeatures,
-      priority
+      features: selectedFeatures
     })
 
     markStepCompleted(3)
@@ -306,44 +299,7 @@ export default function Step3Website() {
         </motion.div>
       </div>
 
-      {/* Prioridad */}
-      <motion.div
-        className="mt-8"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8 }}
-      >
-        <h3 className="text-xl font-semibold text-white mb-4 flex items-center gap-2">
-          <span>🎯</span>
-          ¿Qué es lo más importante para tu sitio?
-        </h3>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
-          {[
-            'Generar más ventas',
-            'Capturar leads/contactos',
-            'Mostrar profesionalismo',
-            'Diferenciarse de la competencia'
-          ].map((option, index) => (
-            <motion.button
-              key={option}
-              className={`p-4 rounded-xl border text-left transition-all ${
-                priority === option
-                  ? 'bg-blue-500/20 border-blue-500/50 text-white'
-                  : 'bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600'
-              }`}
-              onClick={() => setPriority(option)}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.9 + index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-            >
-              <div className="font-medium">{option}</div>
-            </motion.button>
-          ))}
-        </div>
-      </motion.div>
+      {/* Sección de prioridad eliminada */}
 
       {/* Validation Messages */}
       {validationError && (
@@ -386,7 +342,6 @@ export default function Step3Website() {
           disabled={
             selectedPages.length === 0 || 
             selectedFeatures.length === 0 || 
-            !priority ||
             (userPlan === 'rocket' && selectedPages.length < restrictions.minSections) ||
             (userPlan === 'galaxy' && selectedPages.length < restrictions.minPages)
           }

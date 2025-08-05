@@ -36,26 +36,7 @@ const AGE_RANGES = [
   '45-54 años', '55-64 años', '65+ años'
 ]
 
-const AUDIENCE_LOCATIONS = [
-  {
-    value: 'local',
-    label: 'De mi ciudad',
-    emoji: '🏘️',
-    description: 'Solo de donde vivo o cerca'
-  },
-  {
-    value: 'national',
-    label: 'De todo México',
-    emoji: '🇲🇽',
-    description: 'De cualquier parte del país'
-  },
-  {
-    value: 'international',
-    label: 'De otros países',
-    emoji: '🌍',
-    description: 'También de fuera de México'
-  }
-]
+// Eliminada la constante AUDIENCE_LOCATIONS ya que no se usa más
 
 export default function Step2Goals() {
   const { 
@@ -68,7 +49,6 @@ export default function Step2Goals() {
   const [formData, setFormData] = useState({
     primaryGoal: goals.primaryGoal || '',
     ageRanges: goals.targetAudience?.ageRanges || [],
-    audienceLocation: goals.targetAudience?.location || '',
     audienceDescription: goals.targetAudience?.description || ''
   })
 
@@ -100,13 +80,6 @@ export default function Step2Goals() {
     }
   }
 
-  const handleLocationSelect = (location: string) => {
-    setFormData(prev => ({ ...prev, audienceLocation: location }))
-    if (errors.audienceLocation) {
-      setErrors(prev => ({ ...prev, audienceLocation: '' }))
-    }
-  }
-
   const validateForm = () => {
     const newErrors: Record<string, string> = {}
 
@@ -116,10 +89,6 @@ export default function Step2Goals() {
 
     if (formData.ageRanges.length === 0) {
       newErrors.ageRanges = 'Selecciona al menos un rango de edad'
-    }
-
-    if (!formData.audienceLocation) {
-      newErrors.audienceLocation = 'Selecciona el alcance de tu audiencia'
     }
 
     setErrors(newErrors)
@@ -134,7 +103,6 @@ export default function Step2Goals() {
       primaryGoal: formData.primaryGoal as any,
       targetAudience: {
         ageRanges: formData.ageRanges,
-        location: formData.audienceLocation as any,
         description: formData.audienceDescription.trim() || undefined
       }
     })
@@ -259,50 +227,13 @@ export default function Step2Goals() {
           )}
         </motion.div>
 
-        {/* Audiencia - Ubicación */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-        >
-          <h3 className="text-xl font-semibold text-white mb-4">
-            ¿De dónde son tus clientes? *
-          </h3>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {AUDIENCE_LOCATIONS.map((location, index) => (
-              <motion.button
-                key={location.value}
-                type="button"
-                onClick={() => handleLocationSelect(location.value)}
-                className={`p-6 rounded-xl border text-center transition-all ${
-                  formData.audienceLocation === location.value
-                    ? 'bg-purple-500/20 border-purple-500/50 text-white'
-                    : 'bg-gray-800/50 border-gray-700/50 text-gray-300 hover:border-gray-600'
-                }`}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.9 + index * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <div className="text-3xl mb-2">{location.emoji}</div>
-                <h4 className="font-semibold text-lg mb-1">{location.label}</h4>
-                <p className="text-sm opacity-75">{location.description}</p>
-              </motion.button>
-            ))}
-          </div>
-          
-          {errors.audienceLocation && (
-            <p className="text-red-400 text-sm mt-2">{errors.audienceLocation}</p>
-          )}
-        </motion.div>
+        {/* Sección de ubicación eliminada */}
 
         {/* Descripción adicional */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 0.8 }}
         >
           <h3 className="text-xl font-semibold text-white mb-4">
             ¿Cómo son tus clientes ideales? (opcional)
@@ -322,12 +253,12 @@ export default function Step2Goals() {
         </motion.div>
 
         {/* Resumen */}
-        {formData.primaryGoal && formData.ageRanges.length > 0 && formData.audienceLocation && (
+        {formData.primaryGoal && formData.ageRanges.length > 0 && (
           <motion.div
             className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-6"
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 1.1 }}
+            transition={{ delay: 0.9 }}
           >
             <h4 className="text-white font-semibold mb-3 flex items-center gap-2">
               <span>📋</span>
@@ -341,8 +272,7 @@ export default function Step2Goals() {
               </p>
               <p className="text-gray-300">
                 <span className="text-blue-400 font-medium">Tus clientes:</span> {' '}
-                {formData.ageRanges.join(', ')} • {' '}
-                {AUDIENCE_LOCATIONS.find(l => l.value === formData.audienceLocation)?.label}
+                {formData.ageRanges.join(', ')}
               </p>
               {formData.audienceDescription && (
                 <p className="text-gray-300">
@@ -359,11 +289,11 @@ export default function Step2Goals() {
           className="pt-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
+          transition={{ delay: 1.0 }}
         >
           <button
             onClick={handleContinue}
-            disabled={!formData.primaryGoal || formData.ageRanges.length === 0 || !formData.audienceLocation}
+            disabled={!formData.primaryGoal || formData.ageRanges.length === 0}
             className="w-full px-6 py-4 bg-blue-500 text-white rounded-xl font-semibold text-lg hover:bg-blue-600 disabled:bg-gray-700 disabled:cursor-not-allowed transition-all"
           >
             Continuar a Estructura del Sitio 📄

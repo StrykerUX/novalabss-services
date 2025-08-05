@@ -142,7 +142,7 @@ export const useOptimizedOnboarding = create<OptimizedOnboardingState>()(
             return !!(goals.primaryGoal && goals.targetAudience?.ageRanges?.length)
           
           case 3: // Website
-            return !!(website.pages?.length && website.features?.length && website.priority)
+            return !!(website.pages?.length && website.features?.length)
           
           case 4: // Branding
             return !!(branding.brandStyle)
@@ -352,7 +352,6 @@ export const useOnboardingValidation = () => {
       case 3:
         if (!website.pages?.length) errors.push('Selecciona al menos una página')
         if (!website.features?.length) errors.push('Selecciona al menos una funcionalidad')
-        if (!website.priority) errors.push('Define la prioridad principal')
         break
         
       case 4:
