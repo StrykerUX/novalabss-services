@@ -50,3 +50,50 @@ export interface CustomerData {
   created: number
   subscriptions: StripeSubscription[]
 }
+
+export interface StripeInvoice {
+  id: string
+  number: string | null
+  status: 'draft' | 'open' | 'paid' | 'uncollectible' | 'void'
+  amount_paid: number
+  amount_due: number
+  currency: string
+  created: number
+  period_start: number | null
+  period_end: number | null
+  hosted_invoice_url: string | null
+  invoice_pdf: string | null
+  paid: boolean
+  attempt_count: number
+  billing_reason: string | null
+  description: string | null
+  subscription_id: string | null
+  lines: InvoiceLine[]
+}
+
+export interface InvoiceLine {
+  id: string
+  amount: number
+  currency: string
+  description: string | null
+  period: {
+    start: number
+    end: number
+  }
+  price: {
+    id: string
+    unit_amount: number | null
+    currency: string
+    recurring: {
+      interval: string
+      interval_count: number
+    } | null
+  } | null
+}
+
+export interface InvoicesResponse {
+  invoices: StripeInvoice[]
+  has_more: boolean
+  total_count: number
+  message?: string
+}
