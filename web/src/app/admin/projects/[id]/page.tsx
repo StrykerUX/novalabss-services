@@ -5,7 +5,7 @@ import SmoothMagneticButton from "@/components/SmoothMagneticButton"
 import { useState, useEffect } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
-import { BRAND_STYLES, ROCKET_SECTIONS, GALAXY_PAGES, ROCKET_FEATURES, GALAXY_FEATURES } from "@/lib/onboarding-config"
+import { BRAND_STYLES, ROCKET_SECTIONS, GALAXY_PAGES, ROCKET_FEATURES, AVAILABLE_FEATURES } from "@/lib/onboarding-config"
 
 interface ProjectData {
   project: {
@@ -716,7 +716,7 @@ function OptimizedWebsiteSection({
   data: any;
 }) {
   const getAllPages = () => [...ROCKET_SECTIONS, ...GALAXY_PAGES]
-  const getAllFeatures = () => [...ROCKET_FEATURES, ...GALAXY_FEATURES]
+  const getAllFeatures = () => AVAILABLE_FEATURES
 
   return (
     <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
