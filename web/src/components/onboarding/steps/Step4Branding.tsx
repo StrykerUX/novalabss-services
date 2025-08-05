@@ -15,10 +15,13 @@ export default function Step4Branding() {
 
   const [formData, setFormData] = useState({
     brandStyles: branding.brandStyles || [],
-    socialMedia: branding.socialMedia || {
-      currentWebsite: '',
-      facebook: '',
-      additional: { platform: '', url: '' }
+    socialMedia: {
+      currentWebsite: branding.socialMedia?.currentWebsite || '',
+      facebook: branding.socialMedia?.facebook || '',
+      additional: {
+        platform: branding.socialMedia?.additional?.platform || '',
+        url: branding.socialMedia?.additional?.url || ''
+      }
     },
     brandPersonality: {
       feeling: branding.brandPersonality?.feeling || '',
@@ -67,7 +70,7 @@ export default function Step4Branding() {
         ...prev,
         socialMedia: {
           ...prev.socialMedia,
-          additional: { ...prev.socialMedia.additional, platform: value, url: '' }
+          additional: { ...(prev.socialMedia.additional || {}), platform: value, url: '' }
         }
       }))
     } else if (field === 'additionalUrl') {
@@ -75,7 +78,7 @@ export default function Step4Branding() {
         ...prev,
         socialMedia: {
           ...prev.socialMedia,
-          additional: { ...prev.socialMedia.additional, url: value }
+          additional: { ...(prev.socialMedia.additional || {}), url: value }
         }
       }))
     } else {
@@ -266,7 +269,7 @@ export default function Step4Branding() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <select
-                  value={formData.socialMedia.additional.platform}
+                  value={formData.socialMedia.additional?.platform || ''}
                   onChange={(e) => handleSocialMediaChange('additionalPlatform', e.target.value)}
                   className="px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
                 >
@@ -278,14 +281,14 @@ export default function Step4Branding() {
 
                 <input
                   type="url"
-                  value={formData.socialMedia.additional.url}
+                  value={formData.socialMedia.additional?.url || ''}
                   onChange={(e) => handleSocialMediaChange('additionalUrl', e.target.value)}
                   placeholder={
-                    formData.socialMedia.additional.platform 
+                    formData.socialMedia.additional?.platform 
                       ? SOCIAL_NETWORKS.find(n => n.id === formData.socialMedia.additional.platform)?.placeholder || 'https://...'
                       : 'Primero selecciona una red social'
                   }
-                  disabled={!formData.socialMedia.additional.platform}
+                  disabled={!formData.socialMedia.additional?.platform}
                   className="px-4 py-3 bg-gray-800 border border-gray-700 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 />
               </div>
@@ -394,7 +397,7 @@ export default function Step4Branding() {
                   {[
                     formData.socialMedia.currentWebsite && 'Sitio web',
                     formData.socialMedia.facebook && 'Facebook',
-                    formData.socialMedia.additional.url && SOCIAL_NETWORKS.find(n => n.id === formData.socialMedia.additional.platform)?.name
+                    formData.socialMedia.additional?.url && formData.socialMedia.additional?.platform && SOCIAL_NETWORKS.find(n => n.id === formData.socialMedia.additional.platform)?.name
                   ].filter(Boolean).join(', ') || 'Ninguna configurada'}
                 </p>
               )}
