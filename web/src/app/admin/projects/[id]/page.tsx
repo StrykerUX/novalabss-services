@@ -494,95 +494,174 @@ function OnboardingTab({
 
       {/* Onboarding Sections */}
       <div className="grid gap-6">
-        {/* Business Info */}
-        {data.businessInfo && (
-          <OnboardingSection 
-            title="🏢 Información del Negocio"
-            data={data.businessInfo}
-            fields={[
-              { key: 'name', label: 'Nombre del negocio' },
-              { key: 'industry', label: 'Industria' },
-              { key: 'customIndustry', label: 'Industria personalizada' },
-              { key: 'businessRegion', label: 'Región del negocio' },
-              { key: 'businessCountry', label: 'País del negocio' },
-              { key: 'size', label: 'Tamaño' },
-              { key: 'location', label: 'Ubicación' },
-              { key: 'yearsOperating', label: 'Años operando' }
-            ]}
-          />
+        {/* Sistema Optimizado - Secciones Detalladas */}
+        {data.optimizedFields && (
+          <>
+            {/* Business Info (Detallado) */}
+            {data.optimizedFields.businessDetails && (
+              <OnboardingSection 
+                title="🏢 Información del Negocio (Sistema Optimizado)"
+                data={data.optimizedFields.businessDetails}
+                fields={[
+                  { key: 'name', label: 'Nombre del negocio' },
+                  { key: 'industry', label: 'Industria' },
+                  { key: 'customIndustry', label: 'Industria personalizada' },
+                  { key: 'size', label: 'Tamaño de empresa' },
+                  { key: 'region', label: 'Región del negocio' },
+                  { key: 'country', label: 'País del negocio' }
+                ]}
+              />
+            )}
+
+            {/* Goals (Detallado con respuestas completas) */}
+            {data.optimizedFields.goalDetails && (
+              <OnboardingSection 
+                title="🎯 Objetivos y Audiencia (Sistema Optimizado)"
+                data={data.optimizedFields.goalDetails}
+                fields={[
+                  { key: 'primaryGoal', label: 'Objetivo principal' },
+                  { key: 'targetAudience.ageRanges', label: 'Rangos de edad', isArray: true },
+                  { key: 'targetAudience.location', label: 'Ubicación objetivo' },
+                  { key: 'targetAudience.description', label: 'Descripción completa de audiencia', isLongText: true }
+                ]}
+              />
+            )}
+
+            {/* Website (Configuración por plan) */}
+            {data.optimizedFields.websiteDetails && (
+              <OnboardingSection 
+                title="📄 Estructura del Sitio Web (Sistema Optimizado)"
+                data={data.optimizedFields.websiteDetails}
+                fields={[
+                  { key: 'plan', label: 'Plan seleccionado' },
+                  { key: 'pages', label: 'Páginas/Secciones', isArray: true },
+                  { key: 'features', label: 'Funcionalidades', isArray: true },
+                  { key: 'priority', label: 'Prioridad principal' },
+                  { key: 'hasContent', label: 'Tiene contenido existente', isBoolean: true },
+                  { key: 'needsCopywriting', label: 'Necesita copywriting', isBoolean: true }
+                ]}
+              />
+            )}
+
+            {/* Branding (Respuestas completas sin resumir) */}
+            {data.optimizedFields.brandingDetails && (
+              <OptimizedBrandingSection 
+                title="🎨 Identidad Visual (Sistema Optimizado)"
+                data={data.optimizedFields.brandingDetails}
+              />
+            )}
+
+            {/* Technical (Configuración detallada) */}
+            {data.optimizedFields.technicalDetails && (
+              <OnboardingSection 
+                title="🌐 Configuración Técnica (Sistema Optimizado)"
+                data={data.optimizedFields.technicalDetails}
+                fields={[
+                  { key: 'domain.hasDomain', label: 'Tiene dominio', isBoolean: true },
+                  { key: 'domain.domainName', label: 'Nombre del dominio' },
+                  { key: 'domain.needsHelp', label: 'Necesita ayuda con dominio', isBoolean: true },
+                  { key: 'hasContent', label: 'Tiene contenido existente', isBoolean: true },
+                  { key: 'needsCopywriting', label: 'Necesita copywriting', isBoolean: true }
+                ]}
+              />
+            )}
+          </>
         )}
 
-        {/* Objectives */}
-        {data.objectives && (
-          <OnboardingSection 
-            title="🎯 Objetivos y Audiencia"
-            data={data.objectives}
-            fields={[
-              { key: 'primaryGoal', label: 'Meta principal' },
-              { key: 'competitors', label: 'Competidores', isArray: true },
-              { key: 'targetAudience.ageRange', label: 'Rango de edad objetivo' },
-              { key: 'targetAudience.location', label: 'Ubicación objetivo' },
-              { key: 'targetAudience.interests', label: 'Intereses objetivo', isArray: true }
-            ]}
-          />
-        )}
+        {/* Secciones del sistema anterior (como fallback) */}
+        {!data.optimizedFields && (
+          <>
+            {/* Business Info */}
+            {data.businessInfo && (
+              <OnboardingSection 
+                title="🏢 Información del Negocio"
+                data={data.businessInfo}
+                fields={[
+                  { key: 'name', label: 'Nombre del negocio' },
+                  { key: 'industry', label: 'Industria' },
+                  { key: 'customIndustry', label: 'Industria personalizada' },
+                  { key: 'businessRegion', label: 'Región del negocio' },
+                  { key: 'businessCountry', label: 'País del negocio' },
+                  { key: 'size', label: 'Tamaño' },
+                  { key: 'location', label: 'Ubicación' },
+                  { key: 'yearsOperating', label: 'Años operando' }
+                ]}
+              />
+            )}
 
-        {/* Content Architecture */}
-        {data.contentArchitecture && (
-          <OnboardingSection 
-            title="📄 Arquitectura de Contenido"
-            data={data.contentArchitecture}
-            fields={[
-              { key: 'pages', label: 'Páginas necesarias', isArray: true },
-              { key: 'features', label: 'Funcionalidades', isArray: true },
-              { key: 'existingContent', label: 'Contenido existente', isBoolean: true },
-              { key: 'needsCopywriting', label: 'Necesita copywriting', isBoolean: true }
-            ]}
-          />
-        )}
+            {/* Objectives */}
+            {data.objectives && (
+              <OnboardingSection 
+                title="🎯 Objetivos y Audiencia"
+                data={data.objectives}
+                fields={[
+                  { key: 'primaryGoal', label: 'Meta principal' },
+                  { key: 'competitors', label: 'Competidores', isArray: true },
+                  { key: 'targetAudience.ageRange', label: 'Rango de edad objetivo' },
+                  { key: 'targetAudience.location', label: 'Ubicación objetivo' },
+                  { key: 'targetAudience.interests', label: 'Intereses objetivo', isArray: true }
+                ]}
+              />
+            )}
 
-        {/* Brand Design */}
-        {data.brandDesign && (
-          <OnboardingSection 
-            title="🎨 Diseño y Marca"
-            data={data.brandDesign}
-            fields={[
-              { key: 'colors', label: 'Colores preferidos', isArray: true },
-              { key: 'style', label: 'Estilo' },
-              { key: 'references', label: 'Referencias', isArray: true },
-              { key: 'logoStatus', label: 'Estado del logo' }
-            ]}
-          />
-        )}
+            {/* Content Architecture */}
+            {data.contentArchitecture && (
+              <OnboardingSection 
+                title="📄 Arquitectura de Contenido"
+                data={data.contentArchitecture}
+                fields={[
+                  { key: 'pages', label: 'Páginas necesarias', isArray: true },
+                  { key: 'features', label: 'Funcionalidades', isArray: true },
+                  { key: 'existingContent', label: 'Contenido existente', isBoolean: true },
+                  { key: 'needsCopywriting', label: 'Necesita copywriting', isBoolean: true }
+                ]}
+              />
+            )}
 
-        {/* Technical Setup */}
-        {data.technicalSetup && (
-          <OnboardingSection 
-            title="⚙️ Configuración Técnica"
-            data={data.technicalSetup}
-            fields={[
-              { key: 'domain.existing', label: 'Dominio existente', isBoolean: true },
-              { key: 'domain.name', label: 'Nombre del dominio' },
-              { key: 'domain.needsRegistration', label: 'Necesita registro', isBoolean: true },
-              { key: 'integrations', label: 'Integraciones', isArray: true },
-              { key: 'ssl', label: 'SSL requerido', isBoolean: true },
-              { key: 'corporateEmail', label: 'Email corporativo', isBoolean: true }
-            ]}
-          />
-        )}
+            {/* Brand Design */}
+            {data.brandDesign && (
+              <OnboardingSection 
+                title="🎨 Diseño y Marca"
+                data={data.brandDesign}
+                fields={[
+                  { key: 'colors', label: 'Colores preferidos', isArray: true },
+                  { key: 'style', label: 'Estilo' },
+                  { key: 'references', label: 'Referencias', isArray: true },
+                  { key: 'logoStatus', label: 'Estado del logo' }
+                ]}
+              />
+            )}
 
-        {/* Project Planning */}
-        {data.projectPlanning && (
-          <OnboardingSection 
-            title="📅 Planificación del Proyecto"
-            data={data.projectPlanning}
-            fields={[
-              { key: 'timeline', label: 'Timeline (semanas)' },
-              { key: 'deliverables', label: 'Entregables', isArray: true },
-              { key: 'communicationChannel', label: 'Canal de comunicación' },
-              { key: 'priority', label: 'Prioridad' }
-            ]}
-          />
+            {/* Technical Setup */}
+            {data.technicalSetup && (
+              <OnboardingSection 
+                title="⚙️ Configuración Técnica"
+                data={data.technicalSetup}
+                fields={[
+                  { key: 'domain.existing', label: 'Dominio existente', isBoolean: true },
+                  { key: 'domain.name', label: 'Nombre del dominio' },
+                  { key: 'domain.needsRegistration', label: 'Necesita registro', isBoolean: true },
+                  { key: 'integrations', label: 'Integraciones', isArray: true },
+                  { key: 'ssl', label: 'SSL requerido', isBoolean: true },
+                  { key: 'corporateEmail', label: 'Email corporativo', isBoolean: true }
+                ]}
+              />
+            )}
+
+            {/* Project Planning */}
+            {data.projectPlanning && (
+              <OnboardingSection 
+                title="📅 Planificación del Proyecto"
+                data={data.projectPlanning}
+                fields={[
+                  { key: 'timeline', label: 'Timeline (semanas)' },
+                  { key: 'deliverables', label: 'Entregables', isArray: true },
+                  { key: 'communicationChannel', label: 'Canal de comunicación' },
+                  { key: 'priority', label: 'Prioridad' }
+                ]}
+              />
+            )}
+          </>
         )}
       </div>
     </div>
@@ -597,7 +676,7 @@ function OnboardingSection({
 }: { 
   title: string; 
   data: any; 
-  fields: Array<{ key: string; label: string; isArray?: boolean; isBoolean?: boolean }> 
+  fields: Array<{ key: string; label: string; isArray?: boolean; isBoolean?: boolean; isLongText?: boolean }> 
 }) {
   const getValue = (obj: any, path: string) => {
     return path.split('.').reduce((current, key) => current?.[key], obj)
@@ -607,23 +686,169 @@ function OnboardingSection({
     <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
       <h4 className="text-white font-bold text-lg mb-4">{title}</h4>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="space-y-4">
         {fields.map((field) => {
           const value = getValue(data, field.key)
           
           if (value === undefined || value === null || value === '') return null
 
           return (
-            <div key={field.key} className="space-y-1">
-              <span className="text-white/60 text-sm">{field.label}:</span>
-              <p className="text-white font-medium">
-                {field.isBoolean ? (value ? 'Sí' : 'No') :
-                 field.isArray ? (Array.isArray(value) ? value.join(', ') : value) :
-                 value}
-              </p>
+            <div key={field.key} className={`space-y-2 ${field.isLongText ? 'col-span-full' : ''}`}>
+              <span className="text-white/60 text-sm font-medium">{field.label}:</span>
+              {field.isLongText ? (
+                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                  <p className="text-white leading-relaxed whitespace-pre-wrap">{value}</p>
+                </div>
+              ) : (
+                <p className="text-white font-medium">
+                  {field.isBoolean ? (value ? 'Sí' : 'No') :
+                   field.isArray ? (Array.isArray(value) ? value.join(', ') : value) :
+                   value}
+                </p>
+              )}
             </div>
           )
         })}
+      </div>
+    </div>
+  )
+}
+
+// Componente especializado para mostrar branding del sistema optimizado
+function OptimizedBrandingSection({ 
+  title, 
+  data 
+}: { 
+  title: string; 
+  data: any;
+}) {
+  return (
+    <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
+      <h4 className="text-white font-bold text-lg mb-4">{title}</h4>
+      
+      <div className="space-y-6">
+        {/* Estilos de marca */}
+        {data.brandStyles && data.brandStyles.length > 0 && (
+          <div className="space-y-2">
+            <span className="text-white/60 text-sm font-medium">Estilos de marca seleccionados:</span>
+            <div className="flex flex-wrap gap-2">
+              {data.brandStyles.map((style: string, index: number) => (
+                <span key={index} className="px-3 py-1 bg-blue-500/20 text-blue-400 border border-blue-500/30 rounded-lg text-sm">
+                  {style}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Redes sociales */}
+        {data.socialMedia && (
+          <div className="space-y-3">
+            <span className="text-white/60 text-sm font-medium">Redes sociales:</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+              {data.socialMedia.currentWebsite && (
+                <div className="bg-white/5 rounded-lg p-3 border border-white/10">
+                  <span className="text-white/60 text-xs">Sitio web actual:</span>
+                  <p className="text-white font-medium">{data.socialMedia.currentWebsite}</p>
+                </div>
+              )}
+              {data.socialMedia.facebook && (
+                <div className="bg-white/5 rounded-lg p-3 border border-white/10">
+                  <span className="text-white/60 text-xs">Facebook:</span>
+                  <p className="text-white font-medium">{data.socialMedia.facebook}</p>
+                </div>
+              )}
+              {data.socialMedia.additional?.platform && data.socialMedia.additional?.url && (
+                <div className="bg-white/5 rounded-lg p-3 border border-white/10">
+                  <span className="text-white/60 text-xs">{data.socialMedia.additional.platform}:</span>
+                  <p className="text-white font-medium">{data.socialMedia.additional.url}</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Personalidad de marca */}
+        {data.brandPersonality && (
+          <div className="space-y-3">
+            <span className="text-white/60 text-sm font-medium">Personalidad de marca:</span>
+            
+            {data.brandPersonality.feeling && (
+              <div className="space-y-2">
+                <span className="text-white/60 text-xs">¿Cómo quiere que se sientan los clientes?</span>
+                <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+                  <p className="text-white leading-relaxed whitespace-pre-wrap">{data.brandPersonality.feeling}</p>
+                </div>
+              </div>
+            )}
+            
+            {data.brandPersonality.word && (
+              <div className="space-y-2">
+                <span className="text-white/60 text-xs">Palabra que describe el negocio:</span>
+                <div className="inline-block px-3 py-1 bg-green-500/20 text-green-400 border border-green-500/30 rounded-lg text-sm font-medium">
+                  {data.brandPersonality.word}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Colores de marca */}
+        {data.brandColors && data.brandColors.length > 0 && (
+          <div className="space-y-2">
+            <span className="text-white/60 text-sm font-medium">Colores de marca:</span>
+            <div className="flex flex-wrap gap-2">
+              {data.brandColors.map((color: string, index: number) => (
+                <div key={index} className="flex items-center space-x-2 bg-white/5 rounded-lg p-2 border border-white/10">
+                  <div 
+                    className="w-6 h-6 rounded border-2 border-white/20"
+                    style={{ backgroundColor: color }}
+                  />
+                  <span className="text-white text-sm font-mono">{color}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Assets */}
+        {(data.assets?.logo || data.assets?.brandGuide || data.assets?.images) && (
+          <div className="space-y-2">
+            <span className="text-white/60 text-sm font-medium">Assets cargados:</span>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+              {data.assets.logo && (
+                <div className="bg-white/5 rounded-lg p-3 border border-white/10 text-center">
+                  <span className="text-white/60 text-xs">Logo</span>
+                  <p className="text-green-400 text-sm">✓ Cargado</p>
+                </div>
+              )}
+              {data.assets.brandGuide && (
+                <div className="bg-white/5 rounded-lg p-3 border border-white/10 text-center">
+                  <span className="text-white/60 text-xs">Guía de marca</span>
+                  <p className="text-green-400 text-sm">✓ Cargado</p>
+                </div>
+              )}
+              {data.assets.images && (
+                <div className="bg-white/5 rounded-lg p-3 border border-white/10 text-center">
+                  <span className="text-white/60 text-xs">Imágenes</span>
+                  <p className="text-green-400 text-sm">✓ Cargado</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* Análisis de IA */}
+        {data.aiAnalysis && (
+          <div className="space-y-2">
+            <span className="text-white/60 text-sm font-medium">Análisis de IA:</span>
+            <div className="bg-purple-500/10 border border-purple-500/20 rounded-lg p-4">
+              <pre className="text-purple-300 text-sm whitespace-pre-wrap overflow-x-auto">
+                {JSON.stringify(data.aiAnalysis, null, 2)}
+              </pre>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

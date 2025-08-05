@@ -90,6 +90,71 @@ export async function GET(
       completedSteps: parseJsonSafely(onboarding.completedSteps) || []
     }
 
+    // Enriquecer con datos específicos del sistema optimizado
+    const enrichedData = {
+      ...onboardingData,
+      // Campos específicos del sistema optimizado para mostrar datos completos
+      optimizedFields: {
+        // Step 1: Business (datos completos)
+        businessDetails: {
+          name: onboardingData.businessInfo?.name,
+          industry: onboardingData.businessInfo?.industry,
+          customIndustry: onboardingData.businessInfo?.customIndustry,
+          size: onboardingData.businessInfo?.size,
+          region: onboardingData.businessInfo?.businessRegion,
+          country: onboardingData.businessInfo?.businessCountry
+        },
+        
+        // Step 2: Goals (respuestas detalladas completas)
+        goalDetails: {
+          primaryGoal: onboardingData.objectives?.primaryGoal,
+          targetAudience: {
+            ageRanges: onboardingData.objectives?.targetAudience?.ageRanges || [],
+            location: onboardingData.objectives?.targetAudience?.location,
+            description: onboardingData.objectives?.targetAudience?.description || null // Descripción completa
+          }
+        },
+        
+        // Step 3: Website (configuración detallada por plan)
+        websiteDetails: {
+          plan: onboardingData.contentArchitecture?.plan,
+          pages: onboardingData.contentArchitecture?.pages || [],
+          features: onboardingData.contentArchitecture?.features || [],
+          priority: onboardingData.contentArchitecture?.priority,
+          hasContent: onboardingData.contentArchitecture?.existingContent,
+          needsCopywriting: onboardingData.contentArchitecture?.needsCopywriting
+        },
+        
+        // Step 4: Branding (datos completos sin resumir)
+        brandingDetails: {
+          brandStyles: onboardingData.brandDesign?.brandStyles || onboardingData.brandDesign?.brandStyle || [],
+          brandColors: onboardingData.brandDesign?.brandColors || [],
+          socialMedia: {
+            currentWebsite: onboardingData.brandDesign?.socialMedia?.currentWebsite,
+            facebook: onboardingData.brandDesign?.socialMedia?.facebook,
+            additional: onboardingData.brandDesign?.socialMedia?.additional || {}
+          },
+          brandPersonality: {
+            feeling: onboardingData.brandDesign?.brandPersonality?.feeling || null, // Respuesta completa
+            word: onboardingData.brandDesign?.brandPersonality?.word || null
+          },
+          assets: onboardingData.brandDesign?.assets || {},
+          aiAnalysis: onboardingData.brandDesign?.aiAnalysis || null
+        },
+        
+        // Step 5: Technical (configuración detallada)
+        technicalDetails: {
+          domain: {
+            hasDomain: onboardingData.technicalSetup?.domain?.hasDomain,
+            domainName: onboardingData.technicalSetup?.domain?.domainName,
+            needsHelp: onboardingData.technicalSetup?.domain?.needsHelp
+          },
+          hasContent: onboardingData.technicalSetup?.hasContent,
+          needsCopywriting: onboardingData.technicalSetup?.needsCopywriting
+        }
+      }
+    }
+
     // Estadísticas de completitud
     const totalSections = 6
     const completedSections = Object.values(onboardingData).filter(section => section !== null && section !== undefined).length - 1 // -1 para completedSteps
@@ -117,7 +182,7 @@ export async function GET(
         completionPercentage,
         sectionsCompleted: completedSections,
         totalSections,
-        data: onboardingData
+        data: enrichedData
       }
     })
 

@@ -93,9 +93,11 @@ export async function POST(request: NextRequest) {
       }),
       
       brandDesign: JSON.stringify({
+        brandStyles: onboardingData.branding?.brandStyles,
         brandStyle: onboardingData.branding?.brandStyle,
         brandColors: onboardingData.branding?.brandColors,
         socialMedia: onboardingData.branding?.socialMedia,
+        brandPersonality: onboardingData.branding?.brandPersonality,
         assets: {
           logo: onboardingData.branding?.logo,
           brandGuide: onboardingData.branding?.brandGuide,
