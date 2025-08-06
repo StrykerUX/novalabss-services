@@ -135,7 +135,7 @@ export default function SubscriptionInfoCard() {
 
         {/* Features */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-          {plan.features.slice(0, 4).map((feature, index) => (
+          {plan.features.filter(feature => !feature.includes('revisiones')).slice(0, 4).map((feature, index) => (
             <div key={index} className="flex items-center text-white/80 text-sm">
               <svg className="w-4 h-4 text-green-400 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
                 <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -143,28 +143,6 @@ export default function SubscriptionInfoCard() {
               {feature}
             </div>
           ))}
-        </div>
-      </div>
-
-      {/* Details */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <h5 className="text-white/60 text-sm font-medium mb-2">Próxima Renovación</h5>
-          <p className="text-white font-semibold">
-            {renewalDate ? formatDate(renewalDate) : 'No disponible'}
-          </p>
-          {daysRemaining > 0 && (
-            <p className="text-white/60 text-xs mt-1">
-              {daysRemaining} días restantes
-            </p>
-          )}
-        </div>
-
-        <div>
-          <h5 className="text-white/60 text-sm font-medium mb-2">ID de Suscripción</h5>
-          <p className="text-white font-mono text-sm">
-            {subscription.id.slice(0, 12)}...
-          </p>
         </div>
       </div>
 

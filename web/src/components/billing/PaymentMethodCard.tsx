@@ -51,8 +51,8 @@ export default function PaymentMethodCard() {
     return (
       <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
         <h3 className="text-xl font-bold text-white flex items-center gap-2 mb-4">
-          <span>💳</span>
-          Método de Pago
+          <span>⚙️</span>
+          Gestión de suscripción
         </h3>
         <div className="text-center py-6">
           <div className="text-4xl mb-3">💳</div>
@@ -68,32 +68,43 @@ export default function PaymentMethodCard() {
     <div className="bg-[#1A1A1A] rounded-[24px] p-6 border border-white/10">
       {/* Header */}
       <h3 className="text-xl font-bold text-white flex items-center gap-2 mb-6">
-        <span>💳</span>
-        Método de Pago
+        <span>⚙️</span>
+        Gestión de suscripción
       </h3>
 
-      {/* Payment Method Info */}
-      <div className="bg-white/5 rounded-xl p-4 mb-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            {/* Credit Card Icon */}
-            <div className="w-12 h-8 bg-gradient-to-r from-blue-500 to-purple-500 rounded-lg flex items-center justify-center">
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-              </svg>
-            </div>
-            
-            <div>
-              <p className="text-white font-medium">Método de pago configurado</p>
-              <p className="text-white/60 text-sm">
-                Gestiona tu información de pago de forma segura
-              </p>
-            </div>
+      {/* Info Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        {/* Payment Methods Card */}
+        <div className="bg-white/5 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-blue-400">💳</span>
+            <h4 className="text-white font-medium text-sm">Métodos de pago</h4>
           </div>
+          <p className="text-white/60 text-xs">
+            Modifica tus tarjetas y métodos de pago
+          </p>
+        </div>
 
-          <div className="text-right">
-            <div className="text-green-400 text-sm font-medium">✅ Configurado</div>
+        {/* Invoices Card */}
+        <div className="bg-white/5 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-green-400">📄</span>
+            <h4 className="text-white font-medium text-sm">Todas tus facturas</h4>
           </div>
+          <p className="text-white/60 text-xs">
+            Descarga el historial completo de pagos
+          </p>
+        </div>
+
+        {/* Security Card */}
+        <div className="bg-white/5 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-2">
+            <span className="text-purple-400">🔒</span>
+            <h4 className="text-white font-medium text-sm">Portal seguro</h4>
+          </div>
+          <p className="text-white/60 text-xs">
+            Stripe protege toda tu información
+          </p>
         </div>
       </div>
 
@@ -114,7 +125,7 @@ export default function PaymentMethodCard() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
-            Gestionar Métodos de Pago
+            Acceder al Portal de Stripe
           </>
         )}
       </button>
@@ -128,8 +139,8 @@ export default function PaymentMethodCard() {
           <div>
             <p className="text-blue-400 font-medium text-sm">Portal Seguro de Stripe</p>
             <p className="text-blue-400/70 text-xs mt-1">
-              Te redirigiremos al portal seguro de Stripe donde podrás actualizar tu método de pago, 
-              descargar facturas y gestionar tu suscripción de forma segura.
+              Accede al portal seguro de Stripe para modificar métodos de pago, ver todas tus facturas 
+              y gestionar tu suscripción con total seguridad.
             </p>
           </div>
         </div>
