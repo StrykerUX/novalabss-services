@@ -32,29 +32,17 @@ export default function BillingPage() {
             ¿Necesitas ayuda?
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <h4 className="text-white font-semibold mb-2">Cambiar plan</h4>
-              <p className="text-white/60 text-sm mb-3">
-                Puedes actualizar o cambiar tu plan en cualquier momento desde el portal de Stripe.
-              </p>
-              <button className="text-[#0147FF] text-sm font-medium hover:text-[#0147FF]/80 transition-colors">
-                Gestionar plan →
-              </button>
-            </div>
-            
-            <div>
-              <h4 className="text-white font-semibold mb-2">Soporte</h4>
-              <p className="text-white/60 text-sm mb-3">
-                ¿Tienes problemas con tu facturación? Nuestro equipo está aquí para ayudarte.
-              </p>
-              <button 
-                onClick={() => window.location.href = '/dashboard/support'}
-                className="text-[#0147FF] text-sm font-medium hover:text-[#0147FF]/80 transition-colors"
-              >
-                Contactar soporte →
-              </button>
-            </div>
+          <div>
+            <h4 className="text-white font-semibold mb-2">Soporte</h4>
+            <p className="text-white/60 text-sm mb-3">
+              ¿Tienes problemas con tu facturación? Nuestro equipo está aquí para ayudarte.
+            </p>
+            <button 
+              onClick={() => window.location.href = '/dashboard/support'}
+              className="text-[#0147FF] text-sm font-medium hover:text-[#0147FF]/80 transition-colors"
+            >
+              Contactar soporte →
+            </button>
           </div>
         </div>
 
