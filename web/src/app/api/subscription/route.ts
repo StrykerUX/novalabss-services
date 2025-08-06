@@ -161,23 +161,47 @@ export async function GET(request: NextRequest) {
     const createdTimestamp = subscription.created
     const currentPeriodEndTimestamp = subscription.current_period_end
     
-    if (!createdTimestamp || !currentPeriodEndTimestamp) {
-      throw new Error(`Invalid timestamps - created: ${createdTimestamp}, current_period_end: ${currentPeriodEndTimestamp}`)
+    if (!createdTimestamp) {
+      throw new Error(`Invalid created timestamp: ${createdTimestamp}`)
     }
     
     const startDate = new Date(createdTimestamp * 1000)
-    const currentPeriodEnd = new Date(currentPeriodEndTimestamp * 1000)
-    const now = new Date()
     
-    // Validar que las fechas se crearon correctamente
-    if (isNaN(startDate.getTime()) || isNaN(currentPeriodEnd.getTime())) {
-      throw new Error(`Invalid date objects - startDate: ${startDate}, currentPeriodEnd: ${currentPeriodEnd}`)
+    // Manejar el caso donde current_period_end es undefined
+    let currentPeriodEnd: Date
+    let daysRemaining = 0
+    let renewalDate: Date | null = null
+    
+    if (currentPeriodEndTimestamp) {
+      currentPeriodEnd = new Date(currentPeriodEndTimestamp * 1000)
+      
+      // Validar que la fecha se creó correctamente
+      if (isNaN(currentPeriodEnd.getTime())) {
+        console.log('⚠️ Invalid current_period_end, using fallback')
+        currentPeriodEnd = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 días desde ahora
+      }
+      
+      renewalDate = currentPeriodEnd
+      const now = new Date()
+      daysRemaining = Math.max(0, Math.floor((currentPeriodEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
+    } else {
+      console.log('⚠️ current_period_end is undefined, using fallback')
+      // Fallback: crear una fecha futura estimada (30 días desde la creación)
+      currentPeriodEnd = new Date(startDate.getTime() + 30 * 24 * 60 * 60 * 1000)
+      // No establecer renewalDate si no tenemos datos reales
+      renewalDate = null
+      daysRemaining = 0
     }
     
+    // Validar que startDate se creó correctamente
+    if (isNaN(startDate.getTime())) {
+      throw new Error(`Invalid startDate: ${startDate}`)
+    }
+    
+    const now = new Date()
     const daysElapsed = Math.floor((now.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24))
-    const daysRemaining = Math.max(0, Math.floor((currentPeriodEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)))
 
-    console.log('✅ Dates calculated - renewal:', currentPeriodEnd.toISOString())
+    console.log('✅ Dates calculated - renewal:', renewalDate ? renewalDate.toISOString() : 'No disponible')
 
     // Obtener información de descuentos
     const discount = subscription.discount
@@ -220,10 +244,10 @@ export async function GET(request: NextRequest) {
       isActive: subscription.status === 'active',
       status: subscription.status,
       startDate,
-      endDate: currentPeriodEnd,
+      endDate: renewalDate,
       daysElapsed,
       daysRemaining,
-      renewalDate: currentPeriodEnd,
+      renewalDate,
       discount: discountInfo,
       hasDiscount,
       customer: {
