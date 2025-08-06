@@ -163,31 +163,6 @@ function CheckoutPageContent() {
             </div>
           </div>
 
-          {/* Header */}
-          <div className="text-center mb-8">
-            <h1 className="text-3xl lg:text-4xl font-bold text-white mb-2">
-              🎆 ¡Excelente elección!
-            </h1>
-            <p className="text-gray-400 text-lg">
-              Revisemos los detalles de tu {currentPlan.name} antes del pago
-            </p>
-          </div>
-
-          {/* Trust Badges */}
-          <div className="flex justify-center items-center space-x-8 mb-8 text-sm text-gray-400">
-            <div className="flex items-center">
-              <span className="text-green-400 mr-1">🔒</span>
-              Pago 100% Seguro
-            </div>
-            <div className="flex items-center">
-              <span className="text-green-400 mr-1">🚀</span>
-              Soporte Continuo
-            </div>
-            <div className="flex items-center">
-              <span className="text-green-400 mr-1">🚀</span>
-              Entrega Garantizada
-            </div>
-          </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             
