@@ -51,13 +51,14 @@ function CheckoutPageContent() {
       pricing: getplanPricing('rocket'),
       features: [
         "1 landing page profesional",
-        "Entrega garantizada en 3 días",
+        "Entrega en 3 días",
         "Optimización para Google",
         "Analytics de rendimiento",
         "Versión optimizada para móvil",
         "Formulario de contacto",
         "Soporte continuo",
-        "Hosting seguro incluido"
+        "Hosting seguro incluido",
+        "Dominio personalizado (desde 2º pago)"
       ]
     },
     galaxy: {
@@ -65,13 +66,14 @@ function CheckoutPageContent() {
       pricing: getplanPricing('galaxy'),
       features: [
         "Sitio completo de 3-5 páginas",
-        "Entrega garantizada en 5 días",
+        "Entrega en 5 días",
         "Optimización avanzada para Google",
         "Analytics de rendimiento avanzado",
         "Versión optimizada para móvil",
         "Múltiples formularios de contacto",
         "Soporte prioritario continuo",
-        "Hosting seguro incluido"
+        "Hosting seguro incluido",
+        "Dominio personalizado (desde 2º pago)"
       ]
     }
   }
@@ -231,18 +233,6 @@ function CheckoutPageContent() {
                 </p>
               </div>
 
-              {/* Social Proof */}
-              <div className="bg-blue-900/20 border border-blue-500/20 rounded-lg p-4 mb-4">
-                <h3 className="text-blue-400 font-semibold mb-2 flex items-center">
-                  ⭐ ¡Elección inteligente!
-                </h3>
-                <p className="text-sm text-gray-300">
-                  {plan === 'rocket' 
-                    ? 'El 78% de nuestros clientes eligen este plan para empezar'
-                    : 'Plan recomendado para negocios serios que buscan resultados'
-                  }
-                </p>
-              </div>
 
               {/* Flow Data Display */}
               {flowData && (
@@ -256,13 +246,13 @@ function CheckoutPageContent() {
                 </div>
               )}
               
-              {/* Delivery Promise */}
-              <div className="bg-orange-900/20 border border-orange-500/20 rounded-lg p-4">
-                <h3 className="text-orange-400 font-semibold mb-2 flex items-center">
-                  ⏰ Promesa de entrega
+              {/* Domain Info */}
+              <div className="bg-green-900/20 border border-green-500/20 rounded-lg p-4">
+                <h3 className="text-green-400 font-semibold mb-2 flex items-center">
+                  🌐 Dominio incluido
                 </h3>
                 <p className="text-sm text-gray-300">
-                  Tu sitio estará listo en {plan === 'rocket' ? '3 días' : '5 días'} laborales garantizados
+                  Tu dominio personalizado se agrega de forma gratuita en el segundo pago
                 </p>
               </div>
             </div>
