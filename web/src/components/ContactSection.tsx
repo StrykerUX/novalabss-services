@@ -12,6 +12,9 @@ export default function ContactSection() {
     subject: '',
     message: ''
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -21,10 +24,38 @@ export default function ContactSection() {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle form submission logic here
-    console.log('Form submitted:', formData);
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    setErrorMessage('');
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Error al enviar el mensaje');
+      }
+
+      setSubmitStatus('success');
+      setFormData({ name: '', email: '', subject: '', message: '' });
+      console.log('✅ Mensaje enviado correctamente:', data);
+      
+    } catch (error) {
+      console.error('❌ Error:', error);
+      setSubmitStatus('error');
+      setErrorMessage(error instanceof Error ? error.message : 'Error desconocido');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -182,22 +213,57 @@ export default function ContactSection() {
                     required
                   />
 
+                  {/* Status Messages */}
+                  {submitStatus === 'success' && (
+                    <div className="bg-green-900/20 border border-green-500/30 rounded-lg p-4 text-center">
+                      <div className="text-green-400 font-semibold mb-2">✅ ¡Mensaje enviado!</div>
+                      <p className="text-green-300 text-sm">Te contactaremos pronto. Gracias por tu interés.</p>
+                    </div>
+                  )}
+                  
+                  {submitStatus === 'error' && (
+                    <div className="bg-red-900/20 border border-red-500/30 rounded-lg p-4 text-center">
+                      <div className="text-red-400 font-semibold mb-2">❌ Error al enviar</div>
+                      <p className="text-red-300 text-sm">{errorMessage}</p>
+                    </div>
+                  )}
+
                   {/* Submit button */}
                   <div className="pt-4">
                     <SmoothMagneticButton
-                      className="w-full text-white px-8 py-4 font-semibold text-base hover:shadow-2xl hover:shadow-blue-500/40 transition-shadow duration-300 shadow-xl shadow-blue-600/30 flex items-center justify-center space-x-3"
-                      magneticStrength={0.15}
+                      className={`w-full px-8 py-4 font-semibold text-base transition-all duration-300 flex items-center justify-center space-x-3 ${
+                        isSubmitting 
+                          ? 'bg-gray-600 cursor-not-allowed' 
+                          : submitStatus === 'success'
+                          ? 'bg-green-600 hover:bg-green-700 shadow-xl shadow-green-600/30'
+                          : 'text-white hover:shadow-2xl hover:shadow-blue-500/40 shadow-xl shadow-blue-600/30'
+                      }`}
+                      magneticStrength={isSubmitting ? 0 : 0.15}
                       onClick={handleSubmit}
+                      disabled={isSubmitting}
                     >
-                      <span>Enviar mensaje</span>
-                      <svg 
-                        className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
-                        fill="none" 
-                        stroke="currentColor" 
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                      </svg>
+                      {isSubmitting ? (
+                        <>
+                          <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                          <span>Enviando...</span>
+                        </>
+                      ) : submitStatus === 'success' ? (
+                        <>
+                          <span>✅ Enviado</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Enviar mensaje</span>
+                          <svg 
+                            className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                          </svg>
+                        </>
+                      )}
                     </SmoothMagneticButton>
                   </div>
                 </form>
