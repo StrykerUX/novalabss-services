@@ -3,25 +3,104 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+// Función para enviar notificación a Discord
+async function sendDiscordNotification(name: string, email?: string, whatsapp?: string, message: string) {
+  if (!process.env.DISCORD_WEBHOOK_URL) {
+    console.log('⚠️ Discord webhook URL no configurada');
+    return null;
+  }
+
+  const embed = {
+    title: "📧 Nuevo mensaje de contacto",
+    color: 0x0147FF, // Azul de NovaLabs
+    thumbnail: {
+      url: "https://novalabss.com/logo.png" // Opcional: logo de la empresa
+    },
+    fields: [
+      {
+        name: "👤 Nombre",
+        value: name,
+        inline: true
+      },
+      {
+        name: "📧 Email",
+        value: email || "No proporcionado",
+        inline: true
+      },
+      {
+        name: "📱 WhatsApp",
+        value: whatsapp || "No proporcionado",
+        inline: true
+      },
+      {
+        name: "💬 Mensaje",
+        value: message.length > 1000 ? message.substring(0, 1000) + "..." : message,
+        inline: false
+      }
+    ],
+    footer: {
+      text: "NovaLabs - Formulario de contacto",
+      icon_url: "https://novalabss.com/favicon.ico" // Opcional: favicon
+    },
+    timestamp: new Date().toISOString()
+  };
+
+  const webhookData = {
+    content: "🚀 **Nuevo contacto desde novalabss.com**",
+    embeds: [embed]
+  };
+
+  try {
+    const response = await fetch(process.env.DISCORD_WEBHOOK_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(webhookData)
+    });
+
+    if (!response.ok) {
+      throw new Error(`Discord webhook failed: ${response.status}`);
+    }
+
+    console.log('✅ Notificación de Discord enviada correctamente');
+    return { success: true };
+    
+  } catch (error) {
+    console.error('❌ Error enviando notificación a Discord:', error);
+    return { error };
+  }
+}
+
 export async function POST(request: NextRequest) {
   try {
-    const { name, email, subject, message } = await request.json();
+    const { name, email, whatsapp, message } = await request.json();
 
     // Validar campos requeridos
-    if (!name || !email || !subject || !message) {
+    if (!name || !message) {
       return NextResponse.json(
-        { error: 'Todos los campos son requeridos' },
+        { error: 'Nombre y mensaje son requeridos' },
         { status: 400 }
       );
     }
 
-    // Validar formato de email
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    // Validar que al menos email o whatsapp estén presentes
+    if (!email && !whatsapp) {
       return NextResponse.json(
-        { error: 'Formato de email inválido' },
+        { error: 'Debes proporcionar al menos un email o WhatsApp para contactarte' },
         { status: 400 }
       );
+    }
+
+    // Validar formato de email si está presente
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        return NextResponse.json(
+          { error: 'Formato de email inválido' },
+          { status: 400 }
+        );
+      }
     }
 
     // Template HTML para el email
@@ -57,12 +136,12 @@ export async function POST(request: NextRequest) {
             
             <div class="field">
               <div class="label">Email:</div>
-              <div class="value">${email}</div>
+              <div class="value">${email || 'No proporcionado'}</div>
             </div>
             
             <div class="field">
-              <div class="label">Asunto:</div>
-              <div class="value">${subject}</div>
+              <div class="label">WhatsApp:</div>
+              <div class="value">${whatsapp || 'No proporcionado'}</div>
             </div>
             
             <div class="field">
@@ -79,21 +158,25 @@ export async function POST(request: NextRequest) {
       </html>
     `;
 
-    // Enviar email
-    const data = await resend.emails.send({
+    // Enviar email con Resend
+    const emailResult = await resend.emails.send({
       from: process.env.FROM_EMAIL!,
       to: process.env.TO_EMAIL!,
-      subject: `💬 Nuevo contacto: ${subject}`,
+      subject: `💬 Nuevo contacto de ${name}`,
       html: htmlTemplate,
-      reply_to: email,
+      reply_to: email || undefined,
     });
 
-    console.log('✅ Email enviado correctamente:', data);
+    console.log('✅ Email enviado correctamente:', emailResult);
 
+    // Enviar notificación a Discord (en paralelo, no bloquea si falla)
+    const discordResult = await sendDiscordNotification(name, email, whatsapp, message);
+    
     return NextResponse.json(
       { 
         message: 'Mensaje enviado correctamente',
-        id: data.id 
+        email: { id: emailResult.id },
+        discord: discordResult
       },
       { status: 200 }
     );

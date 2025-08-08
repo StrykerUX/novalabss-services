@@ -9,7 +9,7 @@ export default function ContactSection() {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
-    subject: '',
+    whatsapp: '',
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,6 +30,14 @@ export default function ContactSection() {
     setSubmitStatus('idle');
     setErrorMessage('');
 
+    // Validación personalizada: al menos email o whatsapp
+    if (!formData.email && !formData.whatsapp) {
+      setSubmitStatus('error');
+      setErrorMessage('Debes proporcionar al menos un email o WhatsApp para contactarte');
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
@@ -46,7 +54,7 @@ export default function ContactSection() {
       }
 
       setSubmitStatus('success');
-      setFormData({ name: '', email: '', subject: '', message: '' });
+      setFormData({ name: '', email: '', whatsapp: '', message: '' });
       console.log('✅ Mensaje enviado correctamente:', data);
       
     } catch (error) {
@@ -186,21 +194,26 @@ export default function ContactSection() {
                   <AnimatedInput
                     type="email"
                     name="email"
-                    placeholder="Email"
+                    placeholder="Email (opcional)"
                     value={formData.email}
                     onChange={handleInputChange}
-                    required
                   />
 
-                  {/* Subject field */}
+                  {/* WhatsApp field */}
                   <AnimatedInput
-                    type="text"
-                    name="subject"
-                    placeholder="Asunto"
-                    value={formData.subject}
+                    type="tel"
+                    name="whatsapp"
+                    placeholder="WhatsApp (opcional)"
+                    value={formData.whatsapp}
                     onChange={handleInputChange}
-                    required
                   />
+                  
+                  {/* Contact method hint */}
+                  <div className="text-center">
+                    <p className="text-white/60 text-xs">
+                      * Proporciona al menos un email o WhatsApp para contactarte
+                    </p>
+                  </div>
 
                   {/* Message field */}
                   <AnimatedInput
