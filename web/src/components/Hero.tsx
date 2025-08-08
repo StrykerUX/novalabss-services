@@ -324,7 +324,7 @@ export default function Hero({ loaderComplete = false, showOfferModal = false, s
           />
           
           {/* Modal Content */}
-          <div className="relative bg-gradient-to-br from-gray-900 to-black border border-red-500/50 rounded-2xl p-8 max-w-md mx-4 shadow-2xl shadow-red-500/25">
+          <div className="relative bg-gradient-to-br from-gray-900 to-black border border-blue-500/50 rounded-3xl p-8 max-w-md mx-4 shadow-2xl shadow-blue-500/25">
             {/* Close Button */}
             <button
               onClick={() => setShowOfferModal?.(false)}
@@ -337,7 +337,7 @@ export default function Hero({ loaderComplete = false, showOfferModal = false, s
             
             {/* Header */}
             <div className="text-center mb-6">
-              <h3 className="text-2xl font-black text-red-400 mb-2">
+              <h3 className="text-2xl font-black text-blue-400 mb-2">
                 🔥 OFERTA EXCLUSIVA
               </h3>
               <p className="text-white/60 text-sm">
@@ -379,12 +379,6 @@ export default function Hero({ loaderComplete = false, showOfferModal = false, s
               </div>
             </div>
             
-            {/* Urgency */}
-            <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-3 mb-6 text-center">
-              <p className="text-red-200 text-sm font-bold">
-                ⏰ Esta oferta expira cuando se agoten los espacios
-              </p>
-            </div>
             
             {/* CTA */}
             <button
@@ -398,7 +392,7 @@ export default function Hero({ loaderComplete = false, showOfferModal = false, s
                   });
                 }
               }}
-              className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white px-8 py-4 font-bold text-lg rounded-xl shadow-xl shadow-red-500/40 transition-all duration-300 flex items-center justify-center space-x-2"
+              className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white px-8 py-4 font-bold text-lg rounded-xl shadow-xl shadow-blue-500/40 transition-all duration-300 flex items-center justify-center space-x-2"
             >
               <span>🚀 Aprovechar oferta ahora</span>
             </button>
