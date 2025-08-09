@@ -22,7 +22,7 @@ export default function Portfolio() {
             {/* Background Image */}
             <div className="absolute inset-0 opacity-30">
               <img 
-                src="https://r-storage.novalabss.com/u/20c8ea89-d7a2-4256-b248-eef0d04d6502.png" 
+                src="https://r-storage.novalabss.com/u/216f9cf7-7c40-4387-858d-05eb21f71a7f.png" 
                 alt="Proyecto destacado"
                 className="w-full h-full object-cover rounded-[48px]"
               />
@@ -33,7 +33,7 @@ export default function Portfolio() {
             <div className="relative z-10 flex-1 flex flex-col">
               {/* Title at top */}
               <h3 className="text-white text-3xl font-black mb-4 font-space-grotesk">
-                Elizabeth Achirica - Psicóloga Online
+                Just Breathe - Psicologa
               </h3>
 
               {/* Description - hidden by default, visible on hover */}
@@ -82,7 +82,7 @@ export default function Portfolio() {
               {/* Background Image */}
               <div className="absolute inset-0 opacity-30">
                 <img 
-                  src="https://r-storage.novalabss.com/u/0ee6298f-5f35-4f50-98bb-7f9b201b0436.png" 
+                  src="https://r-storage.novalabss.com/u/e6f63caf-c463-4af9-acfd-b7cef42b32d1.png" 
                   alt="Sonrisa de Oro"
                   className="w-full h-full object-cover rounded-[48px]"
                 />
@@ -138,7 +138,7 @@ export default function Portfolio() {
               {/* Background Image */}
               <div className="absolute inset-0 opacity-30">
                 <img 
-                  src="https://r-storage.novalabss.com/u/0191341d-f6b8-41b1-8ea9-91c73b5121e5.png" 
+                  src="https://r-storage.novalabss.com/u/2c18055a-d603-495e-9d5c-d267807f6b5c.png" 
                   alt="La Cocina de María"
                   className="w-full h-full object-cover rounded-[48px]"
                 />

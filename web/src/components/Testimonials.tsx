@@ -55,7 +55,7 @@ export default function Testimonials() {
     {
       category: "PLATAFORMA PERFECTA",
       quote: "La plataforma que crearon para mis consultas online es increíble. Mis pacientes se sienten cómodos y seguros. Ha sido fundamental para el crecimiento de mi práctica.",
-      name: "Elizabeth Achirica",
+      name: "Just Breathe",
       role: "Psicóloga Clínica Online",
       image: "/imgs/client2.jpg"
     },
