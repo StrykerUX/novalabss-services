@@ -223,7 +223,7 @@ function CheckoutPageContent() {
               {/* Value Proposition */}
               <div className="bg-gradient-to-r from-green-900/20 to-green-800/20 border border-green-500/20 rounded-lg p-4 mb-4">
                 <h3 className="text-green-400 font-semibold mb-2 flex items-center">
-                  💰 Ahorro garantizado
+                  💰 Ahorro asegurado
                 </h3>
                 <p className="text-sm text-gray-300">
                   {plan === 'rocket' 

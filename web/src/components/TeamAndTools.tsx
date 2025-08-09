@@ -78,7 +78,7 @@ export default function TeamAndTools() {
             EL PODER DETRÁS DE NOVALABS
           </h2>
           <p className="text-lg lg:text-xl text-white/80 max-w-4xl mx-auto">
-            3 especialistas + 4 herramientas de vanguardia = Tu éxito garantizado
+            3 especialistas + 4 herramientas de vanguardia = Tu éxito asegurado
           </p>
         </div>
 
