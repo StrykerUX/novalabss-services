@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface ShareButtonsProps {
   title: string;
@@ -10,12 +10,19 @@ interface ShareButtonsProps {
 
 export default function ShareButtons({ title, url, description }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
+  const [canShare, setCanShare] = useState(false);
 
   const shareData = {
     title,
     text: description || title,
     url,
   };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && navigator.share) {
+      setCanShare(true);
+    }
+  }, []);
 
   const handleCopyLink = async () => {
     try {
@@ -97,7 +104,7 @@ export default function ShareButtons({ title, url, description }: ShareButtonsPr
         <h3 className="text-lg font-semibold text-white">Compartir artículo</h3>
         
         {/* Native Share Button (Mobile) */}
-        {typeof window !== 'undefined' && navigator.share && (
+        {canShare && (
           <button
             onClick={handleNativeShare}
             className="md:hidden flex items-center space-x-2 px-4 py-2 bg-blue-600/20 text-blue-400 rounded-full text-sm font-medium hover:bg-blue-600/30 transition-all duration-300"
