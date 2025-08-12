@@ -5,8 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import { BlogPost, BlogPostMeta } from '@/lib/blog';
-import ShareButtons from '@/components/ShareButtons';
-import ReadingProgress from '@/components/ReadingProgress';
+import FloatingActions from '@/components/FloatingActions';
 import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
@@ -41,15 +40,13 @@ export default function BlogPostClient({ post, prevPost, nextPost }: BlogPostCli
 
   return (
     <>
-      <ReadingProgress />
-      
       <div className="min-h-screen bg-black">
         <Navigation />
         
         {/* Hero Section */}
         <div className="relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-900/40 via-black to-purple-900/40"></div>
-          <div className="relative z-10 container mx-auto px-6 pt-32 pb-16">
+          <div className="relative z-10 w-full max-w-[1780px] mx-auto px-[5%] pt-32 pb-16">
             <div className={`max-w-4xl mx-auto text-center text-white transition-all duration-1000 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}>
@@ -101,16 +98,8 @@ export default function BlogPostClient({ post, prevPost, nextPost }: BlogPostCli
         )}
 
         {/* Content */}
-        <div className="container mx-auto px-6 py-16">
+        <div className="w-full max-w-[1780px] mx-auto px-[5%] py-16">
           <div className="max-w-4xl mx-auto">
-            {/* Share Buttons */}
-            <div className="mb-12">
-              <ShareButtons
-                title={post.meta.title}
-                url={typeof window !== 'undefined' ? window.location.href : ''}
-              />
-            </div>
-
             {/* Article Content */}
             <article className={`bg-[#1A1A1A] rounded-3xl border border-white/10 p-8 md:p-16 transition-all duration-1000 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
@@ -227,6 +216,12 @@ export default function BlogPostClient({ post, prevPost, nextPost }: BlogPostCli
         
         <Footer />
       </div>
+      
+      {/* Floating Actions */}
+      <FloatingActions
+        title={post.meta.title}
+        url={typeof window !== 'undefined' ? window.location.href : ''}
+      />
     </>
   );
 }
