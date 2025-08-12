@@ -50,6 +50,17 @@ export default function BlogPostClient({ post, prevPost, nextPost }: BlogPostCli
             <div className={`max-w-4xl mx-auto text-left text-white transition-all duration-1000 ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
             }`}>
+              {/* Botón Regresar */}
+              <button
+                onClick={() => navigateWithTransition('/blog')}
+                className="inline-flex items-center gap-2 text-blue-600 hover:text-blue-500 font-medium transition-colors text-lg group mb-8"
+              >
+                <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
+                </svg>
+                Regresar
+              </button>
+
               <h1 className="text-3xl md:text-6xl font-bold mb-8 leading-tight font-space-grotesk">
                 {post.meta.title}
               </h1>
@@ -244,17 +255,55 @@ export default function BlogPostClient({ post, prevPost, nextPost }: BlogPostCli
               </div>
             </div>
 
+            {/* Related Posts */}
+            <div className="mt-16">
+              <h3 className="text-2xl font-bold text-white mb-8 font-space-grotesk">
+                Artículos relacionados
+              </h3>
+              
+              <div className="grid md:grid-cols-3 gap-6 mb-12">
+                {/* Placeholder para posts relacionados */}
+                {[1, 2, 3].map((index) => (
+                  <div
+                    key={index}
+                    className="group bg-[#1A1A1A] border border-white/10 overflow-hidden hover:border-white/20 hover:shadow-xl hover:shadow-black/20 transition-all duration-500 hover:-translate-y-1 opacity-50"
+                    style={{borderRadius: '48px'}}
+                  >
+                    <div className="relative h-32 w-full overflow-hidden bg-gradient-to-br from-blue-600/20 to-purple-600/20">
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <svg className="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                        </svg>
+                      </div>
+                    </div>
+                    
+                    <div className="p-4">
+                      <h4 className="text-sm font-semibold text-white/60 mb-2 line-clamp-2 font-space-grotesk">
+                        Próximo artículo {index}
+                      </h4>
+                      <p className="text-xs text-white/40 mb-3 line-clamp-2">
+                        Contenido relacionado que complementará esta lectura...
+                      </p>
+                      <div className="flex items-center gap-2 text-xs text-white/30">
+                        <span>Próximamente</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
             {/* Back to Blog */}
-            <div className="mt-16 text-center">
-              <Link
-                href="/blog"
-                className="inline-flex items-center gap-3 text-blue-400 hover:text-blue-300 font-medium transition-colors text-lg group"
+            <div className="mt-8 text-center">
+              <button
+                onClick={() => navigateWithTransition('/blog')}
+                className="inline-flex items-center gap-3 text-blue-600 hover:text-blue-500 font-medium transition-colors text-lg group"
               >
                 <svg className="w-5 h-5 group-hover:-translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
                 </svg>
                 Volver al blog
-              </Link>
+              </button>
             </div>
           </div>
         </div>
