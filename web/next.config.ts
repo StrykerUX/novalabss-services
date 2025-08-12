@@ -11,6 +11,10 @@ const nextConfig: NextConfig = {
   },
   // Optimizaciones para producción
   serverExternalPackages: ['@prisma/client'],
+  // Configuración de imágenes
+  images: {
+    domains: ['r-storage.novalabss.com'],
+  },
 };
 
 export default nextConfig;
