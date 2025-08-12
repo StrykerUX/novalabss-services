@@ -1,6 +1,5 @@
 import { getAllPosts, getAllTags } from '@/lib/blog';
 import BlogList from '@/components/BlogList';
-import Navigation from '@/components/Navigation';
 import Footer from '@/components/Footer';
 
 export default async function BlogPage() {
@@ -9,7 +8,6 @@ export default async function BlogPage() {
 
   return (
     <div className="min-h-screen bg-black">
-      <Navigation />
       
       {/* Hero Section */}
       <div className="relative overflow-hidden">

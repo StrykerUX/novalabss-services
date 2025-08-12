@@ -4,12 +4,13 @@ import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import SmoothMagneticButton from "./SmoothMagneticButton"
+import { usePageTransition } from "@/hooks/usePageTransition"
 
 export default function Navigation() {
   const { data: session, status } = useSession()
+  const { navigateWithTransition } = usePageTransition()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const [activeSection, setActiveSection] = useState('inicio')
   const [scrollOpacity, setScrollOpacity] = useState(0)
 
   useEffect(() => {
@@ -19,19 +20,6 @@ export default function Navigation() {
       setScrollOpacity(newOpacity)
       setIsScrolled(scrollTop > 50)
       
-      // Detectar sección activa
-      const sections = ['inicio', 'planes', 'contacto']
-      
-      for (const section of sections) {
-        const element = document.getElementById(section)
-        if (element) {
-          const rect = element.getBoundingClientRect()
-          if (rect.top <= 150 && rect.bottom >= 150) {
-            setActiveSection(section)
-            break
-          }
-        }
-      }
     }
 
     window.addEventListener('scroll', handleScroll)
@@ -43,21 +31,14 @@ export default function Navigation() {
     setIsMenuOpen(!isMenuOpen)
   }
 
-  const handleSmoothScroll = (e: React.MouseEvent<HTMLAnchorElement>, targetId: string) => {
-    e.preventDefault()
-    const targetElement = document.getElementById(targetId)
-    if (targetElement) {
-      targetElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'start',
-      })
-    }
-    // Close mobile menu if open
-    setIsMenuOpen(false)
+  const handleNavigation = (href: string) => {
+    setIsMenuOpen(false) // Cerrar menú móvil si está abierto
+    navigateWithTransition(href)
   }
 
+
   return (
-    <nav className={`w-full sticky top-0 z-50 ${isScrolled ? 'py-0' : 'py-4'} transition-all duration-300`}>
+    <nav className={`w-full fixed top-0 z-[60] ${isScrolled ? 'py-0' : 'py-4'} transition-all duration-300`}>
       <div className="w-full max-w-[1780px] mx-auto px-[5%]">
         <div 
           className={`transition-all duration-500 ease-out ${isScrolled ? 'py-4 pl-6 pr-4 max-h-[80px] shadow-xl shadow-black/40' : ''}`}
@@ -83,49 +64,27 @@ export default function Navigation() {
           
           <div className="hidden md:flex items-center space-x-8">
             <div className="flex items-center space-x-6">
-              <a 
-                href="#inicio" 
-                onClick={(e) => handleSmoothScroll(e, 'inicio')}
-                className={`text-white/80 hover:text-white transition-all duration-300 relative group ${
-                  activeSection === 'inicio' ? 'text-blue-400' : ''
-                }`}
+              <button
+                onClick={() => handleNavigation("/")}
+                className="text-white/80 hover:text-white transition-all duration-300 relative group"
               >
                 Inicio
-                <div className={`absolute -bottom-1 left-0 h-0.5 bg-blue-400 rounded-full transition-all duration-300 ${
-                  activeSection === 'inicio' ? 'w-full' : 'w-0 group-hover:w-full'
-                }`}></div>
-              </a>
-              <Link
-                href="/blog"
+                <div className="absolute -bottom-1 left-0 h-0.5 bg-blue-400 rounded-full transition-all duration-300 w-0 group-hover:w-full"></div>
+              </button>
+              <button
+                onClick={() => handleNavigation("/blog")}
                 className="text-white/80 hover:text-white transition-all duration-300 relative group"
               >
                 Blog
                 <div className="absolute -bottom-1 left-0 h-0.5 bg-blue-400 rounded-full transition-all duration-300 w-0 group-hover:w-full"></div>
-              </Link>
-              <a 
-                href="#planes" 
-                onClick={(e) => handleSmoothScroll(e, 'planes')}
-                className={`text-white/80 hover:text-white transition-all duration-300 relative group ${
-                  activeSection === 'planes' ? 'text-blue-400' : ''
-                }`}
+              </button>
+              <button
+                onClick={() => handleNavigation("/planes")}
+                className="text-white/80 hover:text-white transition-all duration-300 relative group"
               >
                 Planes
-                <div className={`absolute -bottom-1 left-0 h-0.5 bg-blue-400 rounded-full transition-all duration-300 ${
-                  activeSection === 'planes' ? 'w-full' : 'w-0 group-hover:w-full'
-                }`}></div>
-              </a>
-              <a 
-                href="#contacto" 
-                onClick={(e) => handleSmoothScroll(e, 'contacto')}
-                className={`text-white/80 hover:text-white transition-all duration-300 relative group ${
-                  activeSection === 'contacto' ? 'text-blue-400' : ''
-                }`}
-              >
-                Contacto
-                <div className={`absolute -bottom-1 left-0 h-0.5 bg-blue-400 rounded-full transition-all duration-300 ${
-                  activeSection === 'contacto' ? 'w-full' : 'w-0 group-hover:w-full'
-                }`}></div>
-              </a>
+                <div className="absolute -bottom-1 left-0 h-0.5 bg-blue-400 rounded-full transition-all duration-300 w-0 group-hover:w-full"></div>
+              </button>
             </div>
             
             {/* Divisor visual */}
@@ -186,49 +145,24 @@ export default function Navigation() {
         {isMenuOpen && (
           <div className="md:hidden mt-4 bg-[#1A1A1A] rounded-2xl p-6 border border-white/10 overflow-hidden">
             <div className="space-y-4">
-              <a 
-                href="#inicio" 
-                onClick={(e) => handleSmoothScroll(e, 'inicio')}
-                className={`block text-white/80 hover:text-white transition-all duration-300 py-2 transform hover:translate-x-2 relative ${
-                  activeSection === 'inicio' ? 'text-blue-400 translate-x-2' : ''
-                }`}
+              <button
+                onClick={() => handleNavigation("/")}
+                className="block w-full text-left text-white/80 hover:text-white transition-all duration-300 py-2 transform hover:translate-x-2 relative"
               >
                 Inicio
-                {activeSection === 'inicio' && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-400 rounded-full"></div>
-                )}
-              </a>
-              <Link
-                href="/blog"
-                onClick={() => setIsMenuOpen(false)}
-                className="block text-white/80 hover:text-white transition-all duration-300 py-2 transform hover:translate-x-2 relative"
+              </button>
+              <button
+                onClick={() => handleNavigation("/blog")}
+                className="block w-full text-left text-white/80 hover:text-white transition-all duration-300 py-2 transform hover:translate-x-2 relative"
               >
                 Blog
-              </Link>
-              <a 
-                href="#planes" 
-                onClick={(e) => handleSmoothScroll(e, 'planes')}
-                className={`block text-white/80 hover:text-white transition-all duration-300 py-2 transform hover:translate-x-2 relative ${
-                  activeSection === 'planes' ? 'text-blue-400 translate-x-2' : ''
-                }`}
+              </button>
+              <button
+                onClick={() => handleNavigation("/planes")}
+                className="block w-full text-left text-white/80 hover:text-white transition-all duration-300 py-2 transform hover:translate-x-2 relative"
               >
                 Planes
-                {activeSection === 'planes' && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-400 rounded-full"></div>
-                )}
-              </a>
-              <a 
-                href="#contacto" 
-                onClick={(e) => handleSmoothScroll(e, 'contacto')}
-                className={`block text-white/80 hover:text-white transition-all duration-300 py-2 transform hover:translate-x-2 relative ${
-                  activeSection === 'contacto' ? 'text-blue-400 translate-x-2' : ''
-                }`}
-              >
-                Contacto
-                {activeSection === 'contacto' && (
-                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-400 rounded-full"></div>
-                )}
-              </a>
+              </button>
               
               <div className="border-t border-white/10 pt-4 mt-4">
                 {status === "loading" ? (

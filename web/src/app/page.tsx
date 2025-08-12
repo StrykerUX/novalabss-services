@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from 'react';
-import Navigation from "@/components/Navigation";
+import { useState, useEffect } from 'react';
 import Hero from "@/components/Hero";
 import WhyNovaLabs from "@/components/WhyNovaLabs";
 import PricingPlans from "@/components/PricingPlans";
@@ -18,6 +17,23 @@ export default function Home() {
   const [showLoader, setShowLoader] = useState(true);
   const [loaderComplete, setLoaderComplete] = useState(false);
   const [showOfferModal, setShowOfferModal] = useState(false);
+  const [isFirstVisit, setIsFirstVisit] = useState(true);
+
+  useEffect(() => {
+    // Verificar si ya visitó la página en esta sesión
+    const hasVisited = sessionStorage.getItem('novalabss-visited');
+    
+    if (hasVisited) {
+      // No es primera visita, omitir loader
+      setIsFirstVisit(false);
+      setShowLoader(false);
+      setLoaderComplete(true);
+    } else {
+      // Es primera visita, marcar como visitado
+      sessionStorage.setItem('novalabss-visited', 'true');
+      setIsFirstVisit(true);
+    }
+  }, []);
 
   const handleLoaderComplete = () => {
     setShowLoader(false);
@@ -30,15 +46,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-black">
-      {showLoader && (
+      {showLoader && isFirstVisit && (
         <GalaxyFormation 
           onComplete={handleLoaderComplete}
           duration={3600}
         />
       )}
-      {!showLoader && (
+      {(!showLoader || !isFirstVisit) && (
         <>
-          <Navigation />
           <Hero 
             loaderComplete={loaderComplete} 
             showOfferModal={showOfferModal}

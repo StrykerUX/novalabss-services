@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { BlogPost } from '@/lib/blog';
+import SmoothMagneticButton from './SmoothMagneticButton';
 
 interface BlogListProps {
   initialPosts: BlogPost[];
@@ -66,10 +67,10 @@ export default function BlogList({ initialPosts, initialTags }: BlogListProps) {
       {/* Grid de Posts */}
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
         {filteredPosts.map((post) => (
-          <article
-            key={post.slug}
-            className="group bg-[#1A1A1A] rounded-2xl border border-white/10 overflow-hidden hover:border-white/20 hover:shadow-xl hover:shadow-black/20 transition-all duration-500 hover:-translate-y-2"
-          >
+          <Link href={`/blog/${post.slug}`} key={post.slug}>
+            <article
+              className="group bg-[#1A1A1A] rounded-2xl border border-white/10 overflow-hidden hover:border-white/20 hover:shadow-xl hover:shadow-black/20 transition-all duration-500 hover:-translate-y-2 cursor-pointer block"
+            >
             {post.meta.coverImage && (
               <div className="relative h-48 w-full overflow-hidden">
                 <Image
@@ -83,13 +84,8 @@ export default function BlogList({ initialPosts, initialTags }: BlogListProps) {
             )}
             
             <div className="p-6">
-              <h2 className="text-xl font-bold text-white mb-3 line-clamp-2 font-space-grotesk">
-                <Link 
-                  href={`/blog/${post.slug}`}
-                  className="hover:text-blue-400 transition-colors duration-300"
-                >
-                  {post.meta.title}
-                </Link>
+              <h2 className="text-xl font-bold text-white mb-3 line-clamp-2 font-space-grotesk group-hover:text-blue-400 transition-colors duration-300">
+                {post.meta.title}
               </h2>
               
               <p className="text-white/70 mb-6 line-clamp-3 leading-relaxed">
@@ -107,7 +103,7 @@ export default function BlogList({ initialPosts, initialTags }: BlogListProps) {
                 ))}
               </div>
               
-              <div className="flex items-center justify-between text-sm text-white/50">
+              <div className="flex items-center justify-between text-sm text-white/50 mb-4">
                 <time dateTime={post.meta.publishedAt}>
                   {new Date(post.meta.publishedAt).toLocaleDateString('es-ES', {
                     year: 'numeric',
@@ -115,19 +111,26 @@ export default function BlogList({ initialPosts, initialTags }: BlogListProps) {
                     day: 'numeric'
                   })}
                 </time>
-                
-                <Link 
-                  href={`/blog/${post.slug}`}
-                  className="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-300 flex items-center gap-2 group/link"
-                >
-                  Leer más 
-                  <svg className="w-4 h-4 group-hover/link:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                  </svg>
-                </Link>
               </div>
+              
+              {/* Botón con estilo de "Comenzar ahora" */}
+              <SmoothMagneticButton 
+                className="w-full text-white px-6 py-3 font-space-grotesk font-semibold text-sm hover:shadow-lg hover:shadow-blue-500/40 transition-shadow duration-300 shadow-md shadow-blue-600/30 flex items-center justify-center space-x-2"
+                magneticStrength={0.15}
+              >
+                <span>📖 Leer más</span>
+                <svg 
+                  className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                >
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                </svg>
+              </SmoothMagneticButton>
             </div>
           </article>
+          </Link>
         ))}
       </div>
 

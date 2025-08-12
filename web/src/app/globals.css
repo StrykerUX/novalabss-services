@@ -25,6 +25,37 @@ body {
   font-family: var(--font-poppins), sans-serif;
 }
 
+/* Prevenir scroll horizontal global */
+html, body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* Asegurar que las transiciones no causen overflow */
+.page-content {
+  overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+  background-color: black; /* Fondo negro por defecto */
+  min-height: 100vh;
+}
+
+/* Prevenir destellos blancos durante transiciones */
+* {
+  box-sizing: border-box;
+}
+
+/* Asegurar fondo negro durante carga */
+html {
+  background-color: black;
+  transition: background-color 0.3s ease;
+}
+
+body {
+  background-color: black;
+  transition: background-color 0.3s ease;
+}
+
 /* Typography Classes */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-space-grotesk), sans-serif;
@@ -70,4 +101,21 @@ p, span, a, button, div, label, input, textarea {
   font-optical-sizing: auto;
   font-weight: 700;
   font-style: normal;
+}
+
+/* Fix para fixed navigation - agregar padding-top para evitar que el contenido se oculte */
+body {
+  padding-top: 80px; /* Espacio para la navegación fixed */
+}
+
+/* En pantallas más pequeñas ajustar el padding */
+@media (max-width: 768px) {
+  body {
+    padding-top: 70px;
+  }
+}
+
+.page-content {
+  position: relative;
+  z-index: 1;
 }
