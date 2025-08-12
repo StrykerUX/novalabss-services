@@ -95,6 +95,13 @@ export default function Navigation() {
                   activeSection === 'inicio' ? 'w-full' : 'w-0 group-hover:w-full'
                 }`}></div>
               </a>
+              <Link
+                href="/blog"
+                className="text-white/80 hover:text-white transition-all duration-300 relative group"
+              >
+                Blog
+                <div className="absolute -bottom-1 left-0 h-0.5 bg-blue-400 rounded-full transition-all duration-300 w-0 group-hover:w-full"></div>
+              </Link>
               <a 
                 href="#planes" 
                 onClick={(e) => handleSmoothScroll(e, 'planes')}
@@ -191,6 +198,13 @@ export default function Navigation() {
                   <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-blue-400 rounded-full"></div>
                 )}
               </a>
+              <Link
+                href="/blog"
+                onClick={() => setIsMenuOpen(false)}
+                className="block text-white/80 hover:text-white transition-all duration-300 py-2 transform hover:translate-x-2 relative"
+              >
+                Blog
+              </Link>
               <a 
                 href="#planes" 
                 onClick={(e) => handleSmoothScroll(e, 'planes')}
