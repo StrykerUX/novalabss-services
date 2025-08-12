@@ -61,7 +61,7 @@ export default function Testimonials() {
     },
     {
       category: "RESULTADOS VISIBLES",
-      quote: "Trabajar con NovaLabs fue una decisión acertada. El sitio web refleja perfectamente la calidad de nuestros servicios y nos ha ayudado a conectar con más clientes.",
+      quote: "Trabajar con NovaLabss fue una decisión acertada. El sitio web refleja perfectamente la calidad de nuestros servicios y nos ha ayudado a conectar con más clientes.",
       name: "Andrés Morales",
       role: "Director de Marketing Digital",
       image: "/imgs/client3.jpg"

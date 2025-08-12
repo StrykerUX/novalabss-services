@@ -62,7 +62,7 @@ export default function SignUp() {
         <div className="bg-[#1A1A1A] rounded-2xl p-8 border border-gray-800">
           {/* Logo */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-white mb-2">NovaLabs</h1>
+            <h1 className="text-2xl font-bold text-white mb-2">NovaLabss</h1>
             <p className="text-gray-400">Crea tu cuenta y comienza</p>
           </div>
 

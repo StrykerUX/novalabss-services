@@ -75,7 +75,7 @@ export default function TeamAndTools() {
         {/* Title */}
         <div className="text-center mb-16">
           <h2 className="text-5xl sm:text-5xl lg:text-6xl font-black bg-gradient-to-b from-white to-white/10 bg-clip-text text-transparent leading-[100%] tracking-tight mb-6">
-            EL PODER DETRÁS DE NOVALABS
+            EL PODER DETRÁS DE NOVALABSS
           </h2>
           <p className="text-lg lg:text-xl text-white/80 max-w-4xl mx-auto">
             3 especialistas + 4 herramientas de vanguardia = Tu éxito asegurado
@@ -105,7 +105,7 @@ export default function TeamAndTools() {
                 </h3>
                 <div className="text-white/90 text-sm leading-relaxed">
                   <p className="mb-3">
-                    <span className="text-blue-300 font-semibold">Soy el fundador de NovaLabs</span>, y creo que cada negocio mexicano merece las mismas herramientas digitales que las grandes empresas.
+                    <span className="text-blue-300 font-semibold">Soy el fundador de NovaLabss</span>, y creo que cada negocio mexicano merece las mismas herramientas digitales que las grandes empresas.
                   </p>
                   <p className="mb-3">
                     He trabajado con <span className="text-blue-300">equipos en Canadá y Estados Unidos</span>, viendo de cerca la brecha tecnológica que existe.

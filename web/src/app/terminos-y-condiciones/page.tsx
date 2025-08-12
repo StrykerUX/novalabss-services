@@ -1,8 +1,8 @@
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Términos y Condiciones | NovaLabs',
-  description: 'Términos y condiciones de servicio de NovaLabs. Conoce las condiciones que rigen nuestros servicios de desarrollo web profesional.',
+  title: 'Términos y Condiciones | NovaLabss',
+  description: 'Términos y condiciones de servicio de NovaLabss. Conoce las condiciones que rigen nuestros servicios de desarrollo web profesional.',
   robots: 'index, follow',
 };
 
@@ -59,11 +59,11 @@ export default function TerminosYCondiciones() {
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-[#0147FF] mb-4">Información General</h2>
             <p className="text-white/90 leading-relaxed mb-4">
-              <strong>NovaLabs</strong> es una empresa mexicana dedicada al desarrollo de sitios web profesionales. 
+              <strong>NovaLabss</strong> es una empresa mexicana dedicada al desarrollo de sitios web profesionales. 
               Al contratar nuestros servicios, aceptas estos términos y condiciones en su totalidad.
             </p>
             <p className="text-white/90 leading-relaxed">
-              Estos términos constituyen un acuerdo legal entre tú (el "Cliente") y NovaLabs (la "Empresa") 
+              Estos términos constituyen un acuerdo legal entre tú (el "Cliente") y NovaLabss (la "Empresa") 
               y rigen el uso de nuestros servicios de desarrollo web.
             </p>
           </section>
@@ -231,7 +231,7 @@ export default function TerminosYCondiciones() {
 
           {/* Responsabilidades de NovaLabs */}
           <section className="mb-12">
-            <h2 className="text-2xl font-bold text-[#0147FF] mb-4">Responsabilidades de NovaLabs</h2>
+            <h2 className="text-2xl font-bold text-[#0147FF] mb-4">Responsabilidades de NovaLabss</h2>
             <p className="text-white/90 leading-relaxed mb-4">
               Nos comprometemos a:
             </p>
@@ -287,7 +287,7 @@ export default function TerminosYCondiciones() {
               
               <div className="bg-white/5 border border-white/10 rounded-xl p-4">
                 <h4 className="font-semibold text-white mb-2">⚙️ Código y desarrollo</h4>
-                <p className="text-white/80 text-sm">NovaLabs retiene derechos sobre el código base, metodología y herramientas propietarias</p>
+                <p className="text-white/80 text-sm">NovaLabss retiene derechos sobre el código base, metodología y herramientas propietarias</p>
               </div>
               
               <div className="bg-white/5 border border-white/10 rounded-xl p-4">
@@ -325,7 +325,7 @@ export default function TerminosYCondiciones() {
           <section className="mb-12">
             <h2 className="text-2xl font-bold text-[#0147FF] mb-4">Limitaciones de Responsabilidad</h2>
             <p className="text-white/90 leading-relaxed mb-4">
-              NovaLabs no será responsable por:
+              NovaLabss no será responsable por:
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

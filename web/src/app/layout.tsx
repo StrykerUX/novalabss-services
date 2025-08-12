@@ -16,22 +16,22 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "NovaLabs - DaaS Platform",
+  title: "NovaLabss - DaaS Platform",
   description: "Plataforma de Diseño como Servicio para PyMEs en México",
   keywords: "diseño web, desarrollo web, PyMEs México, sitios web profesionales, diseño como servicio, DaaS",
-  authors: [{ name: "NovaLabs", url: "https://novalabs.com" }],
+  authors: [{ name: "NovaLabss", url: "https://novalabs.com" }],
   robots: "index, follow",
   openGraph: {
     type: "website",
     locale: "es_MX",
     url: "https://novalabs.com",
-    title: "NovaLabs - DaaS Platform",
+    title: "NovaLabss - DaaS Platform",
     description: "Plataforma de Diseño como Servicio para PyMEs en México",
-    siteName: "NovaLabs",
+    siteName: "NovaLabss",
   },
   twitter: {
     card: "summary_large_image",
-    title: "NovaLabs - DaaS Platform",
+    title: "NovaLabss - DaaS Platform",
     description: "Plataforma de Diseño como Servicio para PyMEs en México",
   },
   icons: {

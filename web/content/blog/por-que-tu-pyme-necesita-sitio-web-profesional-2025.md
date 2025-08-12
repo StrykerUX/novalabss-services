@@ -187,7 +187,7 @@ El mercado digital mexicano está en pleno crecimiento, y las oportunidades para
 
 **La pregunta no es si necesitas un sitio web, sino cuánto tiempo más puedes permitirte estar sin uno.**
 
-En NovaLabs, entendemos las necesidades específicas de las PYMEs mexicanas. Creamos sitios web que no solo se ven profesionales, sino que realmente impulsan tu negocio.
+En NovaLabss, entendemos las necesidades específicas de las PYMEs mexicanas. Creamos sitios web que no solo se ven profesionales, sino que realmente impulsan tu negocio.
 
 ### ¿Listo para transformar tu PYME?
 

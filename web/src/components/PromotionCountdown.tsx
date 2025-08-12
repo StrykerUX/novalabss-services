@@ -128,7 +128,7 @@ export default function PromotionCountdown({ onClaimDiscount }: PromotionCountdo
                   </span>
                 </h2>
                 <p className="text-lg lg:text-xl text-white/90 leading-relaxed max-w-lg">
-                  Asegura tu ventaja competitiva con NovaLabs y únete al futuro del marketing digital mexicano.
+                  Asegura tu ventaja competitiva con NovaLabss y únete al futuro del marketing digital mexicano.
                 </p>
               </div>
 

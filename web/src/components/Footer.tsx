@@ -45,7 +45,7 @@ export default function Footer() {
           {/* Left side - Branding */}
           <div className="text-center lg:text-left space-y-4">
             <h3 className="text-2xl font-black text-white font-space-grotesk">
-              NovaLabs
+              NovaLabss
             </h3>
             <p className="text-[#0147FF] text-sm font-semibold">
               El futuro del marketing digital mexicano
@@ -122,7 +122,7 @@ export default function Footer() {
             {/* Copyright and made in Mexico */}
             <div className="flex flex-col sm:flex-row items-center gap-4 text-center lg:text-left">
               <p className="text-white/60 text-xs">
-                © 2024 NovaLabs. Todos los derechos reservados.
+                © 2024 NovaLabss. Todos los derechos reservados.
               </p>
               <p className="text-white/60 text-xs flex items-center gap-1">
                 Hecho con <span className="text-red-500">❤️</span> en México
