@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import { getPostBySlug, getAdjacentPosts } from '@/lib/blog';
+import { getPostBySlug, getAdjacentPosts, getRelatedPosts } from '@/lib/blog';
 import BlogPostClient from '@/components/BlogPostClient';
 
 interface BlogPostPageProps {
@@ -15,12 +15,14 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
   }
 
   const { prevPost, nextPost } = getAdjacentPosts(slug);
+  const relatedPosts = getRelatedPosts(slug, 3);
 
   return (
     <BlogPostClient 
       post={post}
       prevPost={prevPost}
       nextPost={nextPost}
+      relatedPosts={relatedPosts}
     />
   );
 }

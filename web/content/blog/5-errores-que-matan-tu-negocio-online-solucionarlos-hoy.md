@@ -1,7 +1,7 @@
 ---
 title: "5 errores que matan tu negocio online (y cómo solucionarlos hoy)"
 excerpt: "¿Tu negocio online no despega? Estos 5 errores están matando tus ventas sin que te des cuenta. Descubre qué está fallando y cómo empezar a solucionarlo HOY."
-publishedAt: "2024-12-13"
+publishedAt: "2025-07-15"
 tags: ["PyME", "Marketing Digital", "Conversión", "Sitio Web"]
 coverImage: "https://storage.novalabss.app/u/laptop-business.jpg"
 ---

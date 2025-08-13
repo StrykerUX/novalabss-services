@@ -1,7 +1,7 @@
 ---
 title: "¿Tu landing page está perdiendo ventas? Auditoría completa en 20 minutos"
 excerpt: "¿Tu landing convierte visitantes en clientes o los espanta? Descubre los elementos críticos que separan una landing exitosa de una que fracasa. Scorecard gratuito + checklist descargable."
-publishedAt: "2024-12-12"
+publishedAt: "2025-06-08"
 tags: ["Landing Pages", "Conversión", "Marketing Digital", "Auditoría Web"]
 coverImage: "https://storage.novalabss.app/u/2150706431.jpg"
 ---
@@ -125,7 +125,7 @@ Es más barato crear una nueva que arreglar esta. Necesitas ayuda profesional YA
 
 ## Checklist descargable: Los 15 elementos no negociables
 
-[📥 **Descargar PDF completo**](https://r-storage.novalabss.com/u/Novalabss-15-elementos-para-una-landingpage_compressed.pdf) - Versión imprimible del checklist
+[📥 **Descargar PDF completo**](https://storage.novalabss.app/u/Novalabss-15-elementos-para-una-landingpage_compressed.pdf) - Versión imprimible del checklist
 
 ### ✅ Elementos obligatorios (si falta uno, tu landing falla)
 
@@ -287,4 +287,4 @@ En NovaLabss hemos optimizado cientos de landing pages con resultados comprobado
 
 ---
 
-*¿Te sirvió este scorecard? Compártelo con otros empresarios que necesiten optimizar sus landing pages. No olvides [descargar el PDF completo](https://r-storage.novalabss.com/u/Novalabss-15-elementos-para-una-landingpage_compressed.pdf) del checklist. Y si quieres una auditoría profesional gratuita de tu landing, [agenda tu llamada aquí](/planes).*
+*¿Te sirvió este scorecard? Compártelo con otros empresarios que necesiten optimizar sus landing pages. No olvides [descargar el PDF completo](https://storage.novalabss.app/u/Novalabss-15-elementos-para-una-landingpage_compressed.pdf) del checklist. Y si quieres una auditoría profesional gratuita de tu landing, [agenda tu llamada aquí](/planes).*

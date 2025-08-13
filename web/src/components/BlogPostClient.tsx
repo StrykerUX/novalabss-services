@@ -14,9 +14,10 @@ interface BlogPostClientProps {
   post: BlogPost;
   prevPost: { slug: string; meta: BlogPostMeta } | null;
   nextPost: { slug: string; meta: BlogPostMeta } | null;
+  relatedPosts?: { slug: string; meta: BlogPostMeta }[];
 }
 
-export default function BlogPostClient({ post, prevPost, nextPost }: BlogPostClientProps) {
+export default function BlogPostClient({ post, prevPost, nextPost, relatedPosts }: BlogPostClientProps) {
   const [isVisible, setIsVisible] = useState(false);
   const { navigateWithTransition } = usePageTransition();
 
@@ -296,42 +297,74 @@ export default function BlogPostClient({ post, prevPost, nextPost }: BlogPostCli
             </div>
 
             {/* Related Posts */}
-            <div className="mt-16">
-              <h3 className="text-2xl font-bold text-white mb-8 font-space-grotesk">
-                Artículos relacionados
-              </h3>
-              
-              <div className="grid md:grid-cols-3 gap-6 mb-12">
-                {/* Placeholder para posts relacionados */}
-                {[1, 2, 3].map((index) => (
-                  <div
-                    key={index}
-                    className="group bg-[#1A1A1A] border border-white/10 overflow-hidden hover:border-white/20 hover:shadow-xl hover:shadow-black/20 transition-all duration-500 hover:-translate-y-1 opacity-50"
-                    style={{borderRadius: '48px'}}
-                  >
-                    <div className="relative h-32 w-full overflow-hidden bg-gradient-to-br from-blue-600/20 to-purple-600/20">
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <svg className="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                        </svg>
+            {relatedPosts && relatedPosts.length > 0 && (
+              <div className="mt-16">
+                <h3 className="text-2xl font-bold text-white mb-8 font-space-grotesk">
+                  Artículos relacionados
+                </h3>
+                
+                <div className="grid md:grid-cols-3 gap-6 mb-12">
+                  {relatedPosts.map((relatedPost) => (
+                    <Link
+                      key={relatedPost.slug}
+                      href={`/blog/${relatedPost.slug}`}
+                      className="group bg-[#1A1A1A] border border-white/10 overflow-hidden hover:border-white/20 hover:shadow-xl hover:shadow-black/20 transition-all duration-500 hover:-translate-y-1 cursor-pointer block"
+                      style={{borderRadius: '48px'}}
+                    >
+                      {relatedPost.meta.coverImage ? (
+                        <div className="relative h-32 w-full overflow-hidden">
+                          <Image
+                            src={relatedPost.meta.coverImage}
+                            alt={relatedPost.meta.title}
+                            fill
+                            className="object-cover group-hover:scale-110 transition-transform duration-700"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
+                        </div>
+                      ) : (
+                        <div className="relative h-32 w-full overflow-hidden bg-gradient-to-br from-blue-600/20 to-purple-600/20">
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <svg className="w-8 h-8 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+                            </svg>
+                          </div>
+                        </div>
+                      )}
+                      
+                      <div className="p-4">
+                        <h4 className="text-sm font-semibold text-white mb-2 line-clamp-2 font-space-grotesk group-hover:text-blue-400 transition-colors duration-300">
+                          {relatedPost.meta.title}
+                        </h4>
+                        <p className="text-xs text-white/70 mb-3 line-clamp-2 leading-relaxed">
+                          {relatedPost.meta.excerpt}
+                        </p>
+                        
+                        <div className="flex flex-wrap gap-1 mb-3">
+                          {relatedPost.meta.tags.slice(0, 2).map((tag) => (
+                            <span
+                              key={tag}
+                              className="inline-block bg-blue-600/20 text-blue-400 text-xs px-2 py-1 rounded-full border border-blue-400/20"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                        
+                        <div className="flex items-center gap-2 text-xs text-white/50">
+                          <time dateTime={relatedPost.meta.publishedAt}>
+                            {new Date(relatedPost.meta.publishedAt).toLocaleDateString('es-ES', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </time>
+                        </div>
                       </div>
-                    </div>
-                    
-                    <div className="p-4">
-                      <h4 className="text-sm font-semibold text-white/60 mb-2 line-clamp-2 font-space-grotesk">
-                        Próximo artículo {index}
-                      </h4>
-                      <p className="text-xs text-white/40 mb-3 line-clamp-2">
-                        Contenido relacionado que complementará esta lectura...
-                      </p>
-                      <div className="flex items-center gap-2 text-xs text-white/30">
-                        <span>Próximamente</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
 
             {/* Back to Blog */}
             <div className="mt-8 text-center">

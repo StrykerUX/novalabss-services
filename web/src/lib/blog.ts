@@ -106,3 +106,37 @@ export function getAdjacentPosts(currentSlug: string): {
     nextPost: currentIndex < posts.length - 1 ? { slug: posts[currentIndex + 1].slug, meta: posts[currentIndex + 1].meta } : null,
   };
 }
+
+export function getRelatedPosts(currentSlug: string, limit: number = 3): { slug: string; meta: BlogPostMeta }[] {
+  const posts = getAllPosts();
+  const currentPost = posts.find((post) => post.slug === currentSlug);
+  
+  if (!currentPost) {
+    return posts.slice(0, limit).map(post => ({ slug: post.slug, meta: post.meta }));
+  }
+  
+  // Obtener posts que no sean el actual
+  const otherPosts = posts.filter((post) => post.slug !== currentSlug);
+  
+  // Calcular relevancia basada en tags compartidos
+  const relatedPosts = otherPosts.map((post) => {
+    const sharedTags = post.meta.tags.filter((tag) => 
+      currentPost.meta.tags.includes(tag)
+    ).length;
+    
+    return {
+      ...post,
+      relevanceScore: sharedTags
+    };
+  });
+  
+  // Ordenar por relevancia (tags compartidos) y luego por fecha
+  relatedPosts.sort((a, b) => {
+    if (a.relevanceScore !== b.relevanceScore) {
+      return b.relevanceScore - a.relevanceScore;
+    }
+    return new Date(b.meta.publishedAt).getTime() - new Date(a.meta.publishedAt).getTime();
+  });
+  
+  return relatedPosts.slice(0, limit).map(post => ({ slug: post.slug, meta: post.meta }));
+}

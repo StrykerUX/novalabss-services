@@ -2,7 +2,7 @@
 title: "¿Por qué tu PYME necesita un sitio web profesional en 2025?"
 excerpt: "Descubre cómo un sitio web profesional puede transformar tu pequeña o mediana empresa y ayudarte a competir en el mercado digital actual."
 tags: ["PYME", "Sitio Web", "Marketing Digital", "Negocios", "México"]
-publishedAt: "2024-05-22"
+publishedAt: "2025-05-22"
 coverImage: "https://storage.novalabss.app/u/199450.jpg"
 ---
 
