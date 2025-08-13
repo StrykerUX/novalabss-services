@@ -136,11 +136,24 @@ export default function BlogPostClient({ post, prevPost, nextPost }: BlogPostCli
                         {children}
                       </h2>
                     ),
-                    h3: ({ children }) => (
-                      <h3 className="text-xl md:text-3xl font-bold text-white mt-12 mb-6 font-space-grotesk">
-                        {children}
-                      </h3>
-                    ),
+                    h3: ({ children }) => {
+                      // Verificar si el h3 contiene un enlace de descarga (con emoji 📥)
+                      const childrenString = String(children);
+                      if (childrenString.includes('📥') && childrenString.includes('Descargar')) {
+                        return (
+                          <div className="text-center my-12">
+                            <h3 className="text-xl md:text-2xl font-bold text-white mb-4 font-space-grotesk">
+                              {children}
+                            </h3>
+                          </div>
+                        );
+                      }
+                      return (
+                        <h3 className="text-xl md:text-3xl font-bold text-white mt-12 mb-6 font-space-grotesk">
+                          {children}
+                        </h3>
+                      );
+                    },
                     p: ({ children }) => (
                       <p className="text-white/80 leading-relaxed mb-8 text-lg">
                         {children}
@@ -170,6 +183,33 @@ export default function BlogPostClient({ post, prevPost, nextPost }: BlogPostCli
                     strong: ({ children }) => (
                       <strong className="text-white font-semibold">{children}</strong>
                     ),
+                    a: ({ href, children, className }) => {
+                      // Verificar si es un enlace de descarga (con emoji 📥)
+                      const childrenString = String(children);
+                      if (childrenString.includes('📥') || childrenString.includes('Descargar')) {
+                        return (
+                          <a
+                            href={href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold px-8 py-4 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/40 shadow-md shadow-blue-600/30 no-underline"
+                            style={{borderRadius: '48px'}}
+                          >
+                            {children}
+                          </a>
+                        );
+                      }
+                      return (
+                        <a
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 hover:text-blue-300 underline hover:no-underline font-medium transition-colors duration-300"
+                        >
+                          {children}
+                        </a>
+                      );
+                    },
                   }}
                 >
                   {post.content}

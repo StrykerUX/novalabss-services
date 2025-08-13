@@ -1,14 +1,14 @@
 ---
-title: "Audita tu landing page en 20 minutos: Checklist definitivo + Scorecard"
-excerpt: "¿Tu landing convierte visitantes en clientes o los espanta? Descubre los 15 elementos críticos que separan una landing exitosa de una que fracasa. Scorecard gratuito + checklist descargable."
+title: "¿Tu landing page está perdiendo ventas? Auditoría completa en 20 minutos"
+excerpt: "¿Tu landing convierte visitantes en clientes o los espanta? Descubre los elementos críticos que separan una landing exitosa de una que fracasa. Scorecard gratuito + checklist descargable."
 publishedAt: "2024-12-12"
 tags: ["Landing Pages", "Conversión", "Marketing Digital", "Auditoría Web"]
-coverImage: "https://r-storage.novalabss.com/u/a0301fb3-49c1-4bef-ad35-1110646389a5.jpg"
+coverImage: "https://storage.novalabss.app/u/2150706431.jpg"
 ---
 
-**¿Tu landing page está perdiendo clientes mientras duermes?** 
+**¿Tu landing page está perdiendo ventas mientras duermes?** 
 
-Si eres como el 73% de las PyMEs mexicanas, probablemente sí. La diferencia entre una landing que convierte al 15% vs una que apenas alcanza el 2% puede significar **$50,000 MXN adicionales al mes** para tu negocio.
+Si eres como la mayoría de las PyMEs mexicanas, probablemente sí. La diferencia entre una landing que convierte visitantes en clientes vs una que los espanta puede representar **miles de pesos perdidos cada mes** para tu negocio.
 
 Hoy te enseño a auditar tu landing page en exactamente 20 minutos usando nuestro **scorecard** y **checklist probado** que ha ayudado a más de 200 empresas mexicanas a duplicar sus conversiones.
 
@@ -28,32 +28,86 @@ Los errores más comunes que encontramos:
 **Responde SÍ o NO a cada pregunta. Al final, suma tus puntos.**
 
 ### Sección 1: Primera impresión (5 puntos c/u)
-**1.** ¿Tu headline comunica el beneficio principal en menos de 5 segundos? *(SÍ = 5 pts / NO = 0 pts)*
-**2.** ¿Es obvio QUÉ vendes sin hacer scroll? *(SÍ = 5 pts / NO = 0 pts)*
-**3.** ¿Tu propuesta de valor es diferente a la competencia? *(SÍ = 5 pts / NO = 0 pts)*
-**4.** ¿El diseño se ve profesional y moderno? *(SÍ = 5 pts / NO = 0 pts)*
+
+**1. ¿Tu headline comunica el beneficio principal en menos de 5 segundos?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**2. ¿Es obvio QUÉ vendes sin hacer scroll?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**3. ¿Tu propuesta de valor es diferente a la competencia?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**4. ¿El diseño se ve profesional y moderno?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
 
 ### Sección 2: Estructura y navegación (5 puntos c/u)
-**5.** ¿Tu landing carga en menos de 3 segundos? *(SÍ = 5 pts / NO = 0 pts)*
-**6.** ¿Se ve perfecta en móvil? *(SÍ = 5 pts / NO = 0 pts)*
-**7.** ¿El CTA principal es imposible de ignorar? *(SÍ = 5 pts / NO = 0 pts)*
-**8.** ¿Tienes solo UNA acción principal que quieres que haga el usuario? *(SÍ = 5 pts / NO = 0 pts)*
+
+**5. ¿Tu landing carga en menos de 3 segundos?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**6. ¿Se ve perfecta en móvil?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**7. ¿El CTA principal es imposible de ignorar?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**8. ¿Tienes solo UNA acción principal que quieres que haga el usuario?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
 
 ### Sección 3: Contenido que convence (5 puntos c/u)
-**9.** ¿Muestras beneficios específicos (no solo características)? *(SÍ = 5 pts / NO = 0 pts)*
-**10.** ¿Tienes al menos 3 testimonios reales con fotos? *(SÍ = 5 pts / NO = 0 pts)*
-**11.** ¿Respondes las 3 objeciones principales de tu cliente? *(SÍ = 5 pts / NO = 0 pts)*
-**12.** ¿Usas números y datos específicos (no palabras vagas)? *(SÍ = 5 pts / NO = 0 pts)*
+
+**9. ¿Muestras beneficios específicos (no solo características)?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**10. ¿Tienes al menos 3 testimonios reales con fotos?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**11. ¿Respondes las 3 objeciones principales de tu cliente?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**12. ¿Usas números y datos específicos (no palabras vagas)?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
 
 ### Sección 4: Elementos de confianza (5 puntos c/u)
-**13.** ¿Tienes garantía o política de devolución visible? *(SÍ = 5 pts / NO = 0 pts)*
-**14.** ¿Muestras logos de clientes o certificaciones? *(SÍ = 5 pts / NO = 0 pts)*
-**15.** ¿Incluyes datos de contacto reales (teléfono, dirección)? *(SÍ = 5 pts / NO = 0 pts)*
+
+**13. ¿Tienes garantía o política de devolución visible?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**14. ¿Muestras logos de clientes o certificaciones?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**15. ¿Incluyes datos de contacto reales (teléfono, dirección)?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
 
 ### Sección 5: Psicología de conversión (5 puntos c/u)
-**16.** ¿Creas urgencia real (no falsa)? *(SÍ = 5 pts / NO = 0 pts)*
-**17.** ¿Tu CTA dice exactamente qué pasará al hacer clic? *(SÍ = 5 pts / NO = 0 pts)*
-**18.** ¿Eliminas distracciones (menú, links externos)? *(SÍ = 5 pts / NO = 0 pts)*
+
+**16. ¿Creas urgencia real (no falsa)?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**17. ¿Tu CTA dice exactamente qué pasará al hacer clic?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
+
+**18. ¿Eliminas distracciones (menú, links externos)?**
+- SÍ = 5 puntos 
+- NO = 0 puntos
 
 ## Resultados del scorecard
 
@@ -70,6 +124,8 @@ Tu landing está espantando clientes. Cada día que pasa pierdes dinero. Priorid
 Es más barato crear una nueva que arreglar esta. Necesitas ayuda profesional YA.
 
 ## Checklist descargable: Los 15 elementos no negociables
+
+[📥 **Descargar PDF completo**](https://r-storage.novalabss.com/u/Novalabss-15-elementos-para-una-landingpage_compressed.pdf) - Versión imprimible del checklist
 
 ### ✅ Elementos obligatorios (si falta uno, tu landing falla)
 
@@ -209,17 +265,26 @@ Tu landing necesita **reparación urgente**. Cada día que pasa estás perdiendo
 
 ## Tu próximo paso
 
-¿Tu landing obtuvo menos de 65 puntos? **No dejes que siga perdiendo dinero.**
+¿Tu landing necesita mejoras? **No dejes que siga perdiendo ventas.**
 
-En NovaLabss hemos optimizado más de 200 landing pages con un promedio de **+180% mejora en conversiones**. Nuestro proceso probado incluye:
+En NovaLabss hemos optimizado cientos de landing pages con resultados comprobados. Nuestro proceso incluye:
 
 ✅ **Auditoría completa** en 48 horas
 ✅ **Rediseño optimizado** para tu industria específica  
 ✅ **A/B testing** hasta encontrar la versión ganadora
 ✅ **Garantía de resultados** o devolvemos tu inversión
 
-**¿Quieres que auditemos tu landing page gratis?**
+### 🚀 ¿Listo para optimizar tu landing?
+
+**Opción 1: Ve nuestros planes** 
+[Descubre nuestros servicios de optimización](/planes) - La manera más rápida de empezar
+
+**Opción 2: Hablemos de tu proyecto**
+¿Tienes dudas específicas? Conversemos:
+- 📧 [Contacto directo](/contact) - Cuéntanos tu situación
+- 💼 [LinkedIn](https://linkedin.com/company/novalabss) - Síguenos para más consejos
+- 📸 [Instagram](https://instagram.com/novalabss) - Tips diarios de conversión
 
 ---
 
-*¿Te sirvió este quiz? Compártelo con otros empresarios que necesiten optimizar sus landing pages. Y si quieres una auditoría profesional gratuita de tu landing, [agenda tu llamada aquí](/planes).*
+*¿Te sirvió este scorecard? Compártelo con otros empresarios que necesiten optimizar sus landing pages. No olvides [descargar el PDF completo](https://r-storage.novalabss.com/u/Novalabss-15-elementos-para-una-landingpage_compressed.pdf) del checklist. Y si quieres una auditoría profesional gratuita de tu landing, [agenda tu llamada aquí](/planes).*

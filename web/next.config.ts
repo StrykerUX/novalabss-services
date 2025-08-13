@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
   serverExternalPackages: ['@prisma/client'],
   // Configuración de imágenes
   images: {
-    domains: ['r-storage.novalabss.com'],
+    domains: ['r-storage.novalabss.com', 'storage.novalabss.app'],
   },
 };
 

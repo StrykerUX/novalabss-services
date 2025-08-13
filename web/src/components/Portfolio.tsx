@@ -22,7 +22,7 @@ export default function Portfolio() {
             {/* Background Image */}
             <div className="absolute inset-0 opacity-30">
               <img 
-                src="https://r-storage.novalabss.com/u/216f9cf7-7c40-4387-858d-05eb21f71a7f.png" 
+                src="https://storage.novalabss.app/u/just-breathe-website-1.jpg" 
                 alt="Proyecto destacado"
                 className="w-full h-full object-cover rounded-[48px]"
               />
@@ -82,7 +82,7 @@ export default function Portfolio() {
               {/* Background Image */}
               <div className="absolute inset-0 opacity-30">
                 <img 
-                  src="https://r-storage.novalabss.com/u/e6f63caf-c463-4af9-acfd-b7cef42b32d1.png" 
+                  src="https://storage.novalabss.app/u/Consultorio-dentista-website.jpg" 
                   alt="Sonrisa de Oro"
                   className="w-full h-full object-cover rounded-[48px]"
                 />
@@ -138,8 +138,8 @@ export default function Portfolio() {
               {/* Background Image */}
               <div className="absolute inset-0 opacity-30">
                 <img 
-                  src="https://r-storage.novalabss.com/u/2c18055a-d603-495e-9d5c-d267807f6b5c.png" 
-                  alt="La Cocina de María"
+                  src="https://storage.novalabss.app/u/joyeria-eterna-web.jpg" 
+                  alt="Joyería Eterna"
                   className="w-full h-full object-cover rounded-[48px]"
                 />
               </div>
@@ -149,24 +149,24 @@ export default function Portfolio() {
               <div className="relative z-10 flex-1 flex flex-col">
                 {/* Title at top */}
                 <h3 className="text-white text-3xl font-black mb-3 font-space-grotesk">
-                  La Cocina de María
+                  Joyería Eterna
                 </h3>
 
                 {/* Description - hidden by default, visible on hover */}
                 <p className="text-white/80 text-sm leading-relaxed mb-4 flex-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  Sitio web profesional para restaurante mexicano familiar con menú interactivo, galería de platillos y información de ubicación y contacto.
+                  E-commerce elegante para joyería artesanal con catálogo completo, carrito de compras, métodos de pago seguros y envíos nacionales.
                 </p>
 
                 {/* Badges at bottom - hidden by default, visible on hover */}
                 <div className="flex flex-wrap gap-3 mb-6 mt-auto opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                  <div className="bg-green-500/20 text-green-300 px-4 py-2 rounded-full text-sm font-semibold">
-                    +90% visitas web
+                  <div className="bg-golden-500/20 text-golden-300 px-4 py-2 rounded-full text-sm font-semibold">
+                    +180% ventas online
                   </div>
-                  <div className="bg-orange-500/20 text-orange-300 px-4 py-2 rounded-full text-sm font-semibold">
-                    +45% clientes nuevos
+                  <div className="bg-purple-500/20 text-purple-300 px-4 py-2 rounded-full text-sm font-semibold">
+                    +250% visibilidad
                   </div>
-                  <div className="bg-red-500/20 text-red-300 px-4 py-2 rounded-full text-sm font-semibold">
-                    SEO optimizado
+                  <div className="bg-blue-500/20 text-blue-300 px-4 py-2 rounded-full text-sm font-semibold">
+                    E-commerce completo
                   </div>
                 </div>
 
@@ -177,7 +177,7 @@ export default function Portfolio() {
                       Ver proyecto
                     </span>
                     <button 
-                      onClick={() => window.open('https://la-cocina-de-maria.novalabss.com/', '_blank')}
+                      onClick={() => window.open('https://joyeriaeterna.novalabss.com/', '_blank')}
                       className="w-10 h-10 bg-gradient-to-r from-[#0147FF] to-[#0147FF80] rounded-full flex items-center justify-center hover:shadow-lg hover:shadow-blue-600/30 transition-all duration-300"
                     >
                       <svg className="w-4 h-4 text-white transition-transform duration-300 group-hover/btn:-rotate-[35deg]" fill="currentColor" viewBox="0 0 20 20">
