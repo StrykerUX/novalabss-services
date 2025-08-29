@@ -113,7 +113,7 @@ export default function ContactSection() {
                     EMAIL
                   </h3>
                   <div className="space-y-2">
-                    <p className="text-white/90 font-medium">hola@novalabss.com</p>
+                    <p className="text-white/90 font-medium">novalabss.app@gmail.com</p>
                     <p className="text-white/70 text-sm">Respuesta garantizada en 24 horas</p>
                   </div>
                 </div>

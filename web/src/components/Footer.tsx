@@ -78,7 +78,7 @@ export default function Footer() {
               Contacto
             </h4>
             <div className="space-y-2">
-              <p className="text-white/90 text-sm">hola@novalabss.com</p>
+              <p className="text-white/90 text-sm">novalabss.app@gmail.com</p>
               <p className="text-white/60 text-xs">Lun-Vie 10:00 AM - 8:00 PM</p>
             </div>
           </div>

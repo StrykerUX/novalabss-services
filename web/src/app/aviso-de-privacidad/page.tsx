@@ -73,7 +73,7 @@ export default function AvisoDePrivacidad() {
               <div className="space-y-3">
                 <p className="text-white/90"><strong>Razón social:</strong> NovaLabs</p>
                 <p className="text-white/90"><strong>Domicilio:</strong> Ciudad de México, México</p>
-                <p className="text-white/90"><strong>Email:</strong> hola@novalabss.com</p>
+                <p className="text-white/90"><strong>Email:</strong> novalabss.app@gmail.com</p>
                 <p className="text-white/90"><strong>Teléfono:</strong> +52 55 1234 5678</p>
               </div>
             </div>
@@ -353,7 +353,7 @@ export default function AvisoDePrivacidad() {
             </p>
             <div className="bg-white/5 border border-white/10 rounded-xl p-6">
               <div className="space-y-3">
-                <p className="text-white/90"><strong>Email:</strong> hola@novalabss.com</p>
+                <p className="text-white/90"><strong>Email:</strong> novalabss.app@gmail.com</p>
                 <p className="text-white/90"><strong>Asunto:</strong> "Ejercicio de Derechos ARCO" o "Privacidad"</p>
                 <p className="text-white/90"><strong>Horario de atención:</strong> Lunes a Viernes, 10:00 AM - 8:00 PM (GMT-6)</p>
                 <p className="text-white/90"><strong>Tiempo de respuesta:</strong> Máximo 20 días hábiles</p>

@@ -217,7 +217,7 @@ export default function PoliticaDeCookies() {
             </p>
             <div className="bg-white/5 border border-white/10 rounded-xl p-6">
               <div className="space-y-2">
-                <p className="text-white/90"><strong>Email:</strong> hola@novalabss.com</p>
+                <p className="text-white/90"><strong>Email:</strong> novalabss.app@gmail.com</p>
                 <p className="text-white/90"><strong>Horario:</strong> Lunes a Viernes, 10:00 AM - 8:00 PM (GMT-6)</p>
                 <p className="text-white/90"><strong>Ubicación:</strong> Ciudad de México, México</p>
               </div>

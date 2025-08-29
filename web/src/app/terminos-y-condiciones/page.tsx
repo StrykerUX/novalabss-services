@@ -429,7 +429,7 @@ export default function TerminosYCondiciones() {
                 Nuestro equipo está aquí para aclarar cualquier duda
               </p>
               <div className="space-y-2">
-                <p className="text-white font-semibold">📧 hola@novalabss.com</p>
+                <p className="text-white font-semibold">📧 novalabss.app@gmail.com</p>
                 <p className="text-white/60 text-sm">Asunto: "Consulta Términos y Condiciones"</p>
                 <p className="text-white/60 text-sm">Respuesta garantizada en 48 horas</p>
                 <p className="text-white/60 text-sm">Lunes a Viernes, 10:00 AM - 8:00 PM (GMT-6)</p>
